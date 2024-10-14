@@ -1,4 +1,4 @@
-﻿class Program {
+class Program {
     public static void Main() {
         Database.Connect("database.db");
         Database.OpenConnection();

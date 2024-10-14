@@ -1,7 +1,7 @@
 namespace Restaurant_Manager_UnitTests
 {
     [TestClass]
-    public class UnitTest1
+    public class UnitTests
     {
         [TestMethod]
         public void TestMethod1()
