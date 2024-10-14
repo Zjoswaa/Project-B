@@ -45,6 +45,24 @@ static class Database {
         cmd.ExecuteNonQuery();
     }
 
+    public static void CreateLocationsTable() {
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY, Name TEXT NOT NULL)";
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void CreateReservationsTable() {
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Reservations(ID INTEGER PRIMARY KEY, User INTEGER, Location INTEGER, DateTime DATETIME NOT NULL, GroupSize INTEGER NOT NULL, FOREIGN KEY(User) REFERENCES Users(ID), FOREIGN KEY(Location) REFERENCES Locations(ID))";
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void CreateDishesTable() {
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Dishes(ID INTEGER PRIMARY KEY, Name TEXT NOT NULL, Price TEXT NOT NULL, IsVegan INTEGER NOT NULL, IsVegetarian INTEGER NOT NULL, IsHalal INTEGER NOT NULL, IsGlutenFree INTEGER NOT NULL)";
+        cmd.ExecuteNonQuery();
+    }
+
     public static void InsertUsersTable(string Username, string Password, string? FirstName, string? LastName, string Role) {
         if (Role != "USER" && Role != "ADMIN") {
             throw new InvalidDataException($"Role has to be \"USER\" or \"ADMIN\". Found \"{Role}\"");
@@ -94,13 +112,26 @@ static class Database {
         }
 
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = $"INSERT INTO users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
+        cmd.CommandText = $"INSERT INTO Users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@ID", ID);
         cmd.Parameters.AddWithValue("@Username", Username);
         cmd.Parameters.AddWithValue("@Password", Password);
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(FirstName) ? null : FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(LastName) ? null : LastName);
         cmd.Parameters.AddWithValue("@Role", Role);
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree) {
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = $"INSERT INTO Dishes(ID, Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES(@ID, @Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
+        cmd.Parameters.AddWithValue("@ID", 0);
+        cmd.Parameters.AddWithValue("@Name", Name);
+        cmd.Parameters.AddWithValue("@Price", Price);
+        cmd.Parameters.AddWithValue("@IsVegan", IsVegan ? "TRUE" : "FALSE");
+        cmd.Parameters.AddWithValue("@IsVegetarian", IsVegetarian ? "TRUE" : "FALSE");
+        cmd.Parameters.AddWithValue("@IsHalal", IsHalal ? "TRUE" : "FALSE");
+        cmd.Parameters.AddWithValue("@IsGlutenFree", IsGlutenFree ? "TRUE" : "FALSE");
         cmd.ExecuteNonQuery();
     }
 
