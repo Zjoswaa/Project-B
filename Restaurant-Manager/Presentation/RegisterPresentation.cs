@@ -1,7 +1,16 @@
 ﻿using Spectre.Console;
 
-static class RegisterPresentation {
-    public static void Present(bool InsertIntoUsersTable) {
+static class RegisterPresentation
+{
+    public static void Present(bool InsertIntoUsersTable)
+    {
+        // Display registration form in a box
+        var panel = new Panel(new Markup("[bold yellow]Registering[/]"))
+            .Border(BoxBorder.Rounded)
+            .Padding(1, 0); // Adjust padding to make the box more compact
+
+        AnsiConsole.Write(panel);
+
         // Ask for new user username
         string Username = PromptUsername();
 
@@ -10,31 +19,42 @@ static class RegisterPresentation {
 
         // Ask for user first name
         string FirstName = PromptFirstName(Username, Password);
-        
+
         // Ask for user last name
         string LastName = PromptLastName(Username, Password, FirstName);
 
         // Optionally insert a new user into the table
-        if (InsertIntoUsersTable) {
+        if (InsertIntoUsersTable)
+        {
             Database.InsertUsersTable(Username, Password, FirstName, LastName, "USER");
         }
+
+        // Display registration success message and redirect to choice page
+        ShowSuccessMessageAndRedirect();
     }
 
-    private static string PromptUsername() {
-        while (true) {
+    private static string PromptUsername()
+    {
+        while (true)
+        {
             AnsiConsole.Clear();
+            AnsiConsole.Write(
+                new Panel(new Markup("[bold yellow]Registering[/]"))
+                    .Border(BoxBorder.Rounded)
+                    .Padding(1, 0) // Adjust padding to make the box more compact
+            );
             string Username = AnsiConsole.Prompt(
-            new TextPrompt<string>("[green]Username[/]:")
+            new TextPrompt<string>("[green]Enter your username:[/]")
                 .Validate(n => {
                     // Another user with that username already exists
-                    if (Database.UsersTableContainsUser(n)) {
-                        AnsiConsole.Clear();
+                    if (Database.UsersTableContainsUser(n))
+                    {
                         return ValidationResult.Error("[red]This username is already taken[/]");
                     }
 
                     // Invalid username length, null or only whitespace
-                    if (!RegisterLogic.UsernameValid(n)) {
-                        AnsiConsole.Clear();
+                    if (!RegisterLogic.UsernameValid(n))
+                    {
                         return ValidationResult.Error("[red]Username must be at least 3 characters long[/]");
                     }
 
@@ -47,18 +67,24 @@ static class RegisterPresentation {
         }
     }
 
-    private static string PromptPassword(string Username) {
-        while (true) {
+    private static string PromptPassword(string Username)
+    {
+        while (true)
+        {
             AnsiConsole.Clear();
-            AnsiConsole.MarkupLine($"[green]Username[/]: {Username}");
+            AnsiConsole.Write(
+                new Panel(new Markup("[bold yellow]Registering[/]"))
+                    .Border(BoxBorder.Rounded)
+                    .Padding(1, 0) // Adjust padding to make the box more compact
+            );
+            AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
 
             string Password = AnsiConsole.Prompt(
-            new TextPrompt<string>("[green]Password[/]:")
+            new TextPrompt<string>("[green]Enter your password:[/]")
                 .Validate(p => {
                     // Invalid password length, null or only whitespace
-                    if (!RegisterLogic.PasswordValid(p)) {
-                        AnsiConsole.Clear();
-                        AnsiConsole.MarkupLine($"[green]Username[/]: {Username}");
+                    if (!RegisterLogic.PasswordValid(p))
+                    {
                         return ValidationResult.Error("[red]Password must be at least 3 characters long[/]");
                     }
 
@@ -72,18 +98,43 @@ static class RegisterPresentation {
         }
     }
 
-    private static string PromptFirstName(string Username, string Password) {
+    private static string PromptFirstName(string Username, string Password)
+    {
         AnsiConsole.Clear();
-        AnsiConsole.MarkupLine($"[green]Username[/]: {Username}");
-        AnsiConsole.MarkupLine($"[green]Password[/]: {new string('*', Password.Length)}");
-        return AnsiConsole.Prompt(new TextPrompt<string>("[blue]First name (Optional)[/]: ").AllowEmpty());
+        AnsiConsole.Write(
+            new Panel(new Markup("[bold yellow]Registering[/]"))
+                .Border(BoxBorder.Rounded)
+                .Padding(1, 0) // Adjust padding to make the box more compact
+        );
+        AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
+        AnsiConsole.MarkupLine($"[green]Password:[/] {new string('*', Password.Length)}");
+        return AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter your first name (Optional):[/]").AllowEmpty());
     }
 
-    private static string PromptLastName(string Username, string Password, string FirstName) {
+    private static string PromptLastName(string Username, string Password, string FirstName)
+    {
         AnsiConsole.Clear();
-        AnsiConsole.MarkupLine($"[green]Username[/]: {Username}");
-        AnsiConsole.MarkupLine($"[green]Password[/]: {new string('*', Password.Length)}");
-        AnsiConsole.MarkupLine($"[blue]First name (Optional)[/]: {FirstName}");
-        return AnsiConsole.Prompt(new TextPrompt<string>("[blue]Last name (Optional)[/]: ").AllowEmpty());
+        AnsiConsole.Write(
+            new Panel(new Markup("[bold yellow]Registering[/]"))
+                .Border(BoxBorder.Rounded)
+                .Padding(1, 0) // Adjust padding to make the box more compact
+        );
+        AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
+        AnsiConsole.MarkupLine($"[green]Password:[/] {new string('*', Password.Length)}");
+        AnsiConsole.MarkupLine($"[blue]First name (Optional):[/] {FirstName}");
+        return AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter your last name (Optional):[/]").AllowEmpty());
+    }
+
+    private static void ShowSuccessMessageAndRedirect()
+    {
+        AnsiConsole.Clear();
+        AnsiConsole.MarkupLine("[bold green]Registration Successful![/]");
+        AnsiConsole.MarkupLine("[bold yellow]Please log in.[/]");
+
+        // Pause for 2 seconds to allow the user to read the message
+        Thread.Sleep(2000);
+
+        // Redirect to the choice page
+        Program.ShowMainMenu();
     }
 }
