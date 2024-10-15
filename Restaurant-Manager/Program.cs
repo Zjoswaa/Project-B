@@ -1,4 +1,4 @@
-﻿using Spectre.Console;
+using Spectre.Console;
 
 class Program
 {
@@ -52,3 +52,4 @@ class Program
         }
     }
 }
+

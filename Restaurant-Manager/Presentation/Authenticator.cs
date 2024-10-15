@@ -1,36 +1,10 @@
-﻿//using Spectre.Console;
-
-//class Authenticator
-//{
-//    public const string SecretCode = "0000";
-//    public static bool Authenticate()
-//    {
-//        Console.Clear();
-//        Console.WriteLine("Welcome to GertSoft-Authenticator!");
-//        Console.WriteLine();
-//        Console.WriteLine("Please enter your authentication code:");
-
-//        string UserInput = Console.ReadLine();
-
-//        if (UserInput == SecretCode)
-//        {
-//            // Real application will start
-//            return true;
-//        }
-//        else
-//        {
-//            Console.WriteLine("Access Denied.");
-//            return false;
-//        }
-//    }
-//}
-//// SIMPLE START. I WILL MAKE THIS PRETTIER AND BETTER LATER <3
-
-using Spectre.Console;
+﻿using Spectre.Console;
 
 class Authenticator
 {
-    public static void Authenticate()
+    public const string SecretCode = "0000";
+
+    public static bool Authenticate()
     {
         string Buffer = ""; // Define an empty string as buffer
         Panel Panel = new(new Text($"Please enter your authentication code:\n{Buffer}\n").Centered()); // Define the Panel and Text within it
@@ -52,5 +26,19 @@ class Authenticator
             AnsiConsole.Clear(); // Clear the previous print of the panel
             AnsiConsole.Write(Panel); // Re-render the panel with the updated text
         }
+        if (Buffer == SecretCode)
+        {
+            Console.WriteLine("\x1b[32mAccess Granted!\x1b[37m");
+            Console.Write("Press enter to continue...");
+            Console.ReadKey();
+            // Real application will start
+            return true;
+        }
+        else
+        {
+            Console.WriteLine("\x1b[31mAccess Denied.\x1b[37m");
+            return false;
+        }
+
     }
 }
