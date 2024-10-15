@@ -31,14 +31,15 @@ class Authenticator
             Console.WriteLine("\x1b[32mAccess Granted!\x1b[37m");
             Console.Write("Press enter to continue...");
             Console.ReadKey();
+            Console.Clear();
             // Real application will start
             return true;
         }
         else
         {
-            Console.WriteLine("\x1b[31mAccess Denied.\x1b[37m");
+            Console.ReadKey();
+            Console.Clear();
             return false;
         }
-
     }
 }

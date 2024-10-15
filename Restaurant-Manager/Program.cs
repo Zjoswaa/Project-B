@@ -18,12 +18,13 @@ class Program
             AnsiConsole.MarkupLine($"[red]Error initializing the database: {ex.Message}[/]");
             Environment.Exit(1);
         }
-
+        while (!Authenticator.Authenticate()) { }
         ShowMainMenu();
     }
 
     public static void ShowMainMenu()
     {
+
         bool loggedIn = false;
         while (true)
         {
