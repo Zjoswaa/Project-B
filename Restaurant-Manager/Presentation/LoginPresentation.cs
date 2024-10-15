@@ -48,7 +48,7 @@ static class LoginPresentation
                     }
 
                     if (!LoginLogic.VerifyPassword(Username, p)) {
-                        return ValidationResult.Error("[red]Invalid password[/]");
+                        return ValidationResult.Error("[red]Invalid username or password[/]");
                     }
 
                     // If all checks pass
