@@ -1,4 +1,4 @@
-﻿static class LoginLogic {
+﻿public static class LoginLogic {
     public static bool VerifyPassword(string Username, string Password) {
         if (!Database.UsersTableContainsUser(Username)) {
             return false;

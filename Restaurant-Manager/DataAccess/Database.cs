@@ -1,6 +1,6 @@
 ﻿using System.Data.SQLite;
 
-static class Database {
+public static class Database {
     private static SQLiteConnection? Connection { get; set; }
 
     public static void Connect(string FilePath) {
@@ -29,6 +29,10 @@ static class Database {
 
     public static void CloseConnection() {
         Connection?.Close();
+    }
+
+    public static void DisposeConnection() {
+        Connection?.Dispose();
     }
 
     public static long GetUsersTableSize() {
