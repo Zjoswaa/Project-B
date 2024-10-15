@@ -155,4 +155,28 @@ static class Database {
         result.Read();
         return new User((long)result["ID"], (string)result["Username"], result["FirstName"] == DBNull.Value ? null : (string)result["FirstName"], result["LastName"] == DBNull.Value ? null : (string)result["LastName"], (string)result["Role"]);
     }
+
+        //Used for verifying if a user already exists when trying to register
+    public static bool ExistingUserVerifier(string username)
+    {
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "SELECT COUNT(*) FROM Users WHERE Username = @Username";
+        cmd.Parameters.AddWithValue("@Username", username);
+
+        int count = Convert.ToInt32(cmd.ExecuteScalar());
+        return count > 0;
+    }
+
+    //Adds a new user to the database
+    public static void AddUser(string username, string password, string firstname, string lastname,  string role)
+    {
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "INSERT INTO Users(Username, Password, FirstName, LastName, Role) VALUES(@username, @password, @firstname, @lastname, @role)";
+        cmd.Parameters.AddWithValue("@username", username);
+        cmd.Parameters.AddWithValue("@password", password);
+        cmd.Parameters.AddWithValue("@firstname", firstname);
+        cmd.Parameters.AddWithValue("@lastname", lastname);
+        cmd.Parameters.AddWithValue("@role", role);
+        cmd.ExecuteNonQuery();
+    }
 }
