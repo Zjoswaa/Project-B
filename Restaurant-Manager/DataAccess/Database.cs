@@ -19,7 +19,7 @@ static class Database {
             OpenConnection();
             User.NextID = GetUsersTableSize() + 1;
             CloseConnection();
-            Console.WriteLine($"Database \"{FilePath}\" found, {User.NextID - 1} users");
+            //Console.WriteLine($"Database \"{FilePath}\" found, {User.NextID - 1} users");
         }
     }
 
@@ -72,7 +72,7 @@ static class Database {
         cmd.CommandText = "INSERT INTO users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@ID", User.NextID);
         cmd.Parameters.AddWithValue("@Username", Username);
-        cmd.Parameters.AddWithValue("@Password", Password);
+        cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(FirstName) ? null : FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(LastName) ? null : LastName);
         cmd.Parameters.AddWithValue("@Role", Role);
@@ -93,7 +93,7 @@ static class Database {
         cmd.CommandText = "INSERT INTO users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@ID", User.NextID);
         cmd.Parameters.AddWithValue("@Username", User.Username);
-        cmd.Parameters.AddWithValue("@Password", Password);
+        cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(User.FirstName) ? null : User.FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(User.LastName) ? null : User.LastName);
         cmd.Parameters.AddWithValue("@Role", User.Role);
@@ -115,7 +115,7 @@ static class Database {
         cmd.CommandText = $"INSERT INTO Users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@ID", ID);
         cmd.Parameters.AddWithValue("@Username", Username);
-        cmd.Parameters.AddWithValue("@Password", Password);
+        cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(FirstName) ? null : FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(LastName) ? null : LastName);
         cmd.Parameters.AddWithValue("@Role", Role);
@@ -156,39 +156,15 @@ static class Database {
         return new User((long)result["ID"], (string)result["Username"], result["FirstName"] == DBNull.Value ? null : (string)result["FirstName"], result["LastName"] == DBNull.Value ? null : (string)result["LastName"], (string)result["Role"]);
     }
 
-        //Used for verifying if a user already exists when trying to register
-    public static bool ExistingUserVerifier(string username)
-    {
+    public static string? GetEncryptedPassword(string Username) {
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "SELECT COUNT(*) FROM Users WHERE Username = @Username";
-        cmd.Parameters.AddWithValue("@Username", username);
-
-        int count = Convert.ToInt32(cmd.ExecuteScalar());
-        return count > 0;
-    }
-
-    //Adds a new user to the database
-    public static void AddUser(string username, string password, string firstname, string lastname)
-    {
-        using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO Users(Username, Password, FirstName, LastName, Role) VALUES(@username, @password, @firstname, @lastname, @role)";
-        cmd.Parameters.AddWithValue("@username", username);
-        cmd.Parameters.AddWithValue("@password", password);
-        cmd.Parameters.AddWithValue("@firstname", firstname);
-        cmd.Parameters.AddWithValue("@lastname", lastname);
-        cmd.Parameters.AddWithValue("@role", "USER");
-        cmd.ExecuteNonQuery();
-    }
-
-    public static void AddAdmin(string username, string password, string firstname, string lastname)
-    {
-        using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO Users(Username, Password, FirstName, LastName, Role) VALUES(@username, @password, @firstname, @lastname, @role)";
-        cmd.Parameters.AddWithValue("@username", username);
-        cmd.Parameters.AddWithValue("@password", password);
-        cmd.Parameters.AddWithValue("@firstname", firstname);
-        cmd.Parameters.AddWithValue("@lastname", lastname);
-        cmd.Parameters.AddWithValue("@role", "ADMIN");
-        cmd.ExecuteNonQuery();
+        cmd.CommandText = $"SELECT Password FROM Users WHERE Username = @Username LIMIT 1";
+        cmd.Parameters.AddWithValue("@Username", Username);
+        SQLiteDataReader result = cmd.ExecuteReader();
+        if (!result.HasRows) {
+            return null;
+        }
+        result.Read();
+        return (string)result["Password"];
     }
 }

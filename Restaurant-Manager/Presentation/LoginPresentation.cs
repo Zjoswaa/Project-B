@@ -15,10 +15,12 @@ static class LoginPresentation
         AnsiConsole.WriteLine();
 
         // dsk for a username
-        string username = PromptUsername();
+        string Username = PromptUsername();
 
         // ask for a password kan ook prompt password zijn
-        string password = PromptPassword(username);
+        string Password = PromptPassword(Username);
+
+        Console.WriteLine(LoginLogic.VerifyPassword(Username, Password));
     }
 
     private static string PromptUsername()
@@ -33,7 +35,6 @@ static class LoginPresentation
 
     private static string PromptPassword(string username)
     {
-        AnsiConsole.MarkupLine($"[green]Username[/]: {username}");
         return AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Password[/]:")
                 .PromptStyle("yellow")

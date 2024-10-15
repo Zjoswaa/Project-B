@@ -1,6 +1,4 @@
-using Spectre.Console;
-using System;
-using System.Threading;
+﻿using Spectre.Console;
 
 class Program
 {
@@ -28,9 +26,7 @@ class Program
     {
         // Display welcome message in a box
         AnsiConsole.Write(
-            new Panel("[bold yellow]Welcome![/] [green]What would you like to do?[/]")
-                .Border(BoxBorder.Rounded)
-                .Padding(1, 1)
+            new Rule("[yellow]Welcome[/]")
         );
 
         // Display selection menu

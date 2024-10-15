@@ -55,7 +55,7 @@ static class RegisterPresentation
                     // Invalid username length, null or only whitespace
                     if (!RegisterLogic.UsernameValid(n))
                     {
-                        return ValidationResult.Error("[red]Username must be at least 3 characters long[/]");
+                        return ValidationResult.Error("[red]Username must be at least 4 characters long[/]");
                     }
 
                     // If all checks pass
@@ -85,7 +85,7 @@ static class RegisterPresentation
                     // Invalid password length, null or only whitespace
                     if (!RegisterLogic.PasswordValid(p))
                     {
-                        return ValidationResult.Error("[red]Password must be at least 3 characters long[/]");
+                        return ValidationResult.Error("[red]Password must be at least 8 characters long[/]");
                     }
 
                     // If all checks pass
