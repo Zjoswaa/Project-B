@@ -3,13 +3,13 @@
         if (string.IsNullOrWhiteSpace(Username)) {
             return false;
         }
-        return Username.Length > 2;
+        return Username.Length > 3;
     }
 
     public static bool PasswordValid(string Password) {
         if (string.IsNullOrWhiteSpace(Password)) {
             return false;
         }
-        return Password.Length > 2;
+        return Password.Length > 7;
     }
 }
