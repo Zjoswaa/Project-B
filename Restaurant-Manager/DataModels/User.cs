@@ -1,4 +1,4 @@
-﻿class User {
+﻿public class User {
     public long ID { get; }
     public string Username { get; }
     public string? FirstName { get; }
