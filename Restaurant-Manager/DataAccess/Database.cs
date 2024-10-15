@@ -168,7 +168,7 @@ static class Database {
     }
 
     //Adds a new user to the database
-    public static void AddUser(string username, string password, string firstname, string lastname,  string role)
+    public static void AddUser(string username, string password, string firstname, string lastname)
     {
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "INSERT INTO Users(Username, Password, FirstName, LastName, Role) VALUES(@username, @password, @firstname, @lastname, @role)";
@@ -176,7 +176,19 @@ static class Database {
         cmd.Parameters.AddWithValue("@password", password);
         cmd.Parameters.AddWithValue("@firstname", firstname);
         cmd.Parameters.AddWithValue("@lastname", lastname);
-        cmd.Parameters.AddWithValue("@role", role);
+        cmd.Parameters.AddWithValue("@role", "USER");
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void AddAdmin(string username, string password, string firstname, string lastname)
+    {
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "INSERT INTO Users(Username, Password, FirstName, LastName, Role) VALUES(@username, @password, @firstname, @lastname, @role)";
+        cmd.Parameters.AddWithValue("@username", username);
+        cmd.Parameters.AddWithValue("@password", password);
+        cmd.Parameters.AddWithValue("@firstname", firstname);
+        cmd.Parameters.AddWithValue("@lastname", lastname);
+        cmd.Parameters.AddWithValue("@role", "ADMIN");
         cmd.ExecuteNonQuery();
     }
 }
