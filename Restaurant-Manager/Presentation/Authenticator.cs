@@ -37,9 +37,9 @@ class Authenticator
         }
         else
         {
-            Console.WriteLine("\x1b[31mAccess Denied.\x1b[37m");
+            Console.ReadKey();
+            Console.Clear();
             return false;
         }
-
     }
 }
