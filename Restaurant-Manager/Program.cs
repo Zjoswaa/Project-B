@@ -26,7 +26,7 @@ class Program
     {
         // Display welcome message in a box
         AnsiConsole.Write(
-            new Rule("[yellow]Welcome[/]")
+            new Rule("[bold yellow]Welcome to: [/][bold blue]Escape & Dine[/]")
         );
 
         // Display selection menu

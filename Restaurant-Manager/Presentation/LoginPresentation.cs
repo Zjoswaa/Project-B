@@ -6,12 +6,10 @@ static class LoginPresentation
     {
         // display login header
         AnsiConsole.Clear();
-        var panel = new Panel("[bold yellow]Welcome to: [/] [bold blue]Escape & Dine[/]")
-            .Border(BoxBorder.Rounded)
-            .Padding(1, 1);
-        AnsiConsole.Write(panel);
+        AnsiConsole.Write(
+            new Rule("[bold yellow]Login[/]")
+        );
 
-        AnsiConsole.MarkupLine("[bold green]Please log in to continue[/]");
         AnsiConsole.WriteLine();
 
         // dsk for a username
@@ -20,7 +18,11 @@ static class LoginPresentation
         // ask for a password kan ook prompt password zijn
         string Password = PromptPassword(Username);
 
-        Console.WriteLine(LoginLogic.VerifyPassword(Username, Password));
+        // Check if user input correct password
+        if (LoginLogic.VerifyPassword(Username, Password)) {
+            State.LoggedInUser = Database.GetUserByUsername(Username);
+            Console.WriteLine("Successful login");
+        }
     }
 
     private static string PromptUsername()
@@ -33,14 +35,25 @@ static class LoginPresentation
         );
     }
 
-    private static string PromptPassword(string username)
+    private static string PromptPassword(string Username)
     {
         return AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Password[/]:")
                 .PromptStyle("yellow")
                 .Secret('*')
                 .ValidationErrorMessage("[red]Password cannot be empty[/]")
-                .Validate(password => !string.IsNullOrWhiteSpace(password))
-        );
+                .Validate(p => {
+                    if (string.IsNullOrWhiteSpace(p)) {
+                        return ValidationResult.Error("[red]Invalid password[/]");
+                    }
+
+                    if (!LoginLogic.VerifyPassword(Username, p)) {
+                        return ValidationResult.Error("[red]Invalid password[/]");
+                    }
+
+                    // If all checks pass
+                    return ValidationResult.Success();
+                }
+        ));
     }
 }
