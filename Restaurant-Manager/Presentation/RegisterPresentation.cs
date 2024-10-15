@@ -4,12 +4,10 @@ static class RegisterPresentation
 {
     public static void Present(bool InsertIntoUsersTable)
     {
-        // Display registration form in a box
-        var panel = new Panel(new Markup("[bold yellow]Registering[/]"))
-            .Border(BoxBorder.Rounded)
-            .Padding(1, 0); // Adjust padding to make the box more compact
 
-        AnsiConsole.Write(panel);
+        AnsiConsole.Write(
+                new Rule("[yellow]Register[/]")
+            );
 
         // Ask for new user username
         string Username = PromptUsername();
@@ -39,9 +37,7 @@ static class RegisterPresentation
         {
             AnsiConsole.Clear();
             AnsiConsole.Write(
-                new Panel(new Markup("[bold yellow]Registering[/]"))
-                    .Border(BoxBorder.Rounded)
-                    .Padding(1, 0) // Adjust padding to make the box more compact
+                new Rule("[yellow]Register[/]")
             );
             string Username = AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Enter your username:[/]")
@@ -73,9 +69,7 @@ static class RegisterPresentation
         {
             AnsiConsole.Clear();
             AnsiConsole.Write(
-                new Panel(new Markup("[bold yellow]Registering[/]"))
-                    .Border(BoxBorder.Rounded)
-                    .Padding(1, 0) // Adjust padding to make the box more compact
+                new Rule("[yellow]Register[/]")
             );
             AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
 
@@ -102,9 +96,7 @@ static class RegisterPresentation
     {
         AnsiConsole.Clear();
         AnsiConsole.Write(
-            new Panel(new Markup("[bold yellow]Registering[/]"))
-                .Border(BoxBorder.Rounded)
-                .Padding(1, 0) // Adjust padding to make the box more compact
+            new Rule("[yellow]Register[/]")
         );
         AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
         AnsiConsole.MarkupLine($"[green]Password:[/] {new string('*', Password.Length)}");
@@ -115,9 +107,7 @@ static class RegisterPresentation
     {
         AnsiConsole.Clear();
         AnsiConsole.Write(
-            new Panel(new Markup("[bold yellow]Registering[/]"))
-                .Border(BoxBorder.Rounded)
-                .Padding(1, 0) // Adjust padding to make the box more compact
+            new Rule("[yellow]Register[/]")
         );
         AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
         AnsiConsole.MarkupLine($"[green]Password:[/] {new string('*', Password.Length)}");
@@ -130,9 +120,8 @@ static class RegisterPresentation
         AnsiConsole.Clear();
         AnsiConsole.MarkupLine("[bold green]Registration Successful![/]");
         AnsiConsole.MarkupLine("[bold yellow]Please log in.[/]");
-
-        // Pause for 2 seconds to allow the user to read the message
-        Thread.Sleep(2000);
+        Console.Read();
+        AnsiConsole.Clear();
 
         // Redirect to the choice page
         Program.ShowMainMenu();
