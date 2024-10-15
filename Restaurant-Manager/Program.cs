@@ -18,14 +18,12 @@ class Program
             AnsiConsole.MarkupLine($"[red]Error initializing the database: {ex.Message}[/]");
             Environment.Exit(1);
         }
-
+        while (!Authenticator.Authenticate()) { }
         ShowMainMenu();
     }
 
     public static void ShowMainMenu()
     {
-        while (!Authenticator.Authenticate()) {}
-        
         // Display welcome message in a box
         AnsiConsole.Write(
             new Rule("[bold yellow]Welcome to: [/][bold blue]Escape & Dine[/]")
