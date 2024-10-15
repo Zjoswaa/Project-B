@@ -24,6 +24,7 @@ class Program
 
     public static void ShowMainMenu()
     {
+        bool loggedIn = false;
         while (true)
         {
             // Display welcome message in a box
@@ -37,7 +38,6 @@ class Program
                     .Title("")
                     .AddChoices(new[] { "Login", "Register", "Exit" }));
 
-            bool loggedIn;
             // Handle user selection
             switch (selection)
             {
@@ -55,36 +55,54 @@ class Program
                     break;
             }
 
-            var userSelectionPrompt = new SelectionPrompt<string>()
+            while (loggedIn)
+            {
+                Console.Clear();
+
+                AnsiConsole.Write(
+                    new Rule("[yellow]Reservation Menu[/]")
+                );
+
+                var userSelectionPrompt = new SelectionPrompt<string>()
                 .Title("")
                 .AddChoices(new[] { "Make a Reservation", "View Menu", "View Reservations", "Edit Reservation", "Remove Reservation", "Logout", });
 
-            var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
+                var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
-            switch (userSelection)
-            {
-                case "Make a Reservation":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
-                    break;
-                case "View Menu":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
-                    break;
-                case "View Reservations":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
-                    break;
-                case "Edit Reservation":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
-                    break;
-                case "Remove Reservation":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
-                    break;
-                case "Logout":
-                    return;
+                switch (userSelection)
+                {
+                    case "Make a Reservation":
+                        Console.WriteLine("TBA...");
+                        Thread.Sleep(1000);
+                        Console.Clear();
+                        break;
+                    case "View Menu":
+                        Console.WriteLine("TBA...");
+                        Thread.Sleep(1000);
+                        Console.Clear();
+                        break;
+                    case "View Reservations":
+                        Console.WriteLine("TBA...");
+                        Thread.Sleep(1000);
+                        Console.Clear();
+                        break;
+                    case "Edit Reservation":
+                        Console.WriteLine("TBA...");
+                        Thread.Sleep(1000);
+                        break;
+                    case "Remove Reservation":
+                        Console.WriteLine("TBA...");
+                        Thread.Sleep(1000);
+                        Console.Clear();
+                        break;
+                    case "Logout":
+                        loggedIn = false;
+                        Console.WriteLine("Logging out...");
+                        //If CurrentUser object exists, reset it
+                        Thread.Sleep(1000);
+                        Console.Clear();
+                        break;
+                }
             }
         }
     }
