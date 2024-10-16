@@ -1,41 +1,11 @@
 ﻿using System.Data.SQLite;
 
 public static class Database {
-    private static SQLiteConnection? Connection { get; set; }
-
-    public static void Connect(string FilePath) {
-        // If a connection is already open, close it first
-        if (Connection != null && Connection?.State != System.Data.ConnectionState.Closed) {
-            Connection?.Close();
-        }
-
-        // Establish connection
-        Connection = new($"Data Source={FilePath}");
-        if (!File.Exists(FilePath)) {
-            SQLiteConnection.CreateFile(FilePath);
-            User.NextID = 1;
-            Console.WriteLine($"Database \"{FilePath}\" created");
-        } else {
-            OpenConnection();
-            User.NextID = GetUsersTableSize() + 1;
-            CloseConnection();
-            //Console.WriteLine($"Database \"{FilePath}\" found, {User.NextID - 1} users");
-        }
-    }
-
-    public static void OpenConnection() {
-        Connection?.Open();
-    }
-
-    public static void CloseConnection() {
-        Connection?.Close();
-    }
-
-    public static void DisposeConnection() {
-        Connection?.Dispose();
-    }
+    public static string ConnectionString { get; set; } = "database.db";
 
     public static long GetUsersTableSize() {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "SELECT COUNT(*) FROM Users";
         Object result = cmd.ExecuteScalar();
@@ -44,24 +14,32 @@ public static class Database {
     }
 
     public static void CreateUsersTable() {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "CREATE TABLE IF NOT EXISTS Users(ID INTEGER PRIMARY KEY, Username TEXT NOT NULL, Password TEXT NOT NULL, FirstName TEXT, LastName TEXT, Role TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
     public static void CreateLocationsTable() {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY, Name TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
     public static void CreateReservationsTable() {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "CREATE TABLE IF NOT EXISTS Reservations(ID INTEGER PRIMARY KEY, User INTEGER, Location INTEGER, DateTime DATETIME NOT NULL, GroupSize INTEGER NOT NULL, FOREIGN KEY(User) REFERENCES Users(ID), FOREIGN KEY(Location) REFERENCES Locations(ID))";
         cmd.ExecuteNonQuery();
     }
 
     public static void CreateDishesTable() {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "CREATE TABLE IF NOT EXISTS Dishes(ID INTEGER PRIMARY KEY, Name TEXT NOT NULL, Price TEXT NOT NULL, IsVegan INTEGER NOT NULL, IsVegetarian INTEGER NOT NULL, IsHalal INTEGER NOT NULL, IsGlutenFree INTEGER NOT NULL)";
         cmd.ExecuteNonQuery();
@@ -72,6 +50,8 @@ public static class Database {
             throw new InvalidDataException($"Role has to be \"USER\" or \"ADMIN\". Found \"{Role}\"");
         }
 
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "INSERT INTO users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@ID", User.NextID);
@@ -93,6 +73,8 @@ public static class Database {
             throw new InvalidDataException($"ID has to be a positive non-zero long. Found \"{User.ID}\"");
         }
 
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "INSERT INTO users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@ID", User.NextID);
@@ -115,6 +97,8 @@ public static class Database {
             throw new InvalidDataException($"ID has to be a positive non-zero long. Found \"{ID}\"");
         }
 
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = $"INSERT INTO Users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@ID", ID);
@@ -127,6 +111,8 @@ public static class Database {
     }
 
     public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree) {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = $"INSERT INTO Dishes(ID, Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES(@ID, @Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
         cmd.Parameters.AddWithValue("@ID", 0);
@@ -140,6 +126,8 @@ public static class Database {
     }
 
     public static bool UsersTableContainsUser(string Username) {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = $"SELECT COUNT(*) FROM Users WHERE Username = @Username";
         cmd.Parameters.AddWithValue("@Username", Username);
@@ -149,6 +137,8 @@ public static class Database {
     }
 
     public static User? GetUserByUsername(string Username) {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = $"SELECT * FROM Users WHERE Username = @Username LIMIT 1";
         cmd.Parameters.AddWithValue("@Username", Username);
@@ -161,6 +151,8 @@ public static class Database {
     }
 
     public static string? GetEncryptedPassword(string Username) {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = $"SELECT Password FROM Users WHERE Username = @Username LIMIT 1";
         cmd.Parameters.AddWithValue("@Username", Username);

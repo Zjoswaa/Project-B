@@ -6,8 +6,7 @@ class Program
     {
         try
         {
-            Database.Connect("database.db");
-            Database.OpenConnection();
+            Database.ConnectionString = "database.db";
             Database.CreateUsersTable();
             Database.CreateDishesTable();
             Database.CreateLocationsTable();

@@ -1,5 +1,3 @@
-using System.Data.Entity;
-
 namespace Restaurant_Manager_UnitTests
 {
     [TestClass]
@@ -10,8 +8,7 @@ namespace Restaurant_Manager_UnitTests
         {
             // Align
             File.Delete("db1.db");
-            Database.Connect("db1.db");
-            Database.OpenConnection();
+            Database.ConnectionString = "db1.db";
             Database.CreateUsersTable();
             Database.CreateDishesTable();
             Database.CreateLocationsTable();
@@ -25,18 +22,13 @@ namespace Restaurant_Manager_UnitTests
             Assert.AreEqual(Database.GetUserByUsername("johndoe")?.FirstName, "John");
             Assert.AreEqual(Database.GetUserByUsername("johndoe")?.LastName, "Doe");
             Assert.AreEqual(Database.GetUserByUsername("johndoe")?.Role, "USER");
-
-            // Finalize
-            Database.CloseConnection();
-            Database.DisposeConnection();
         }
 
         [TestMethod]
         public void TestPasswordValidation() {
             // Align
             File.Delete("db2.db");
-            Database.Connect("db2.db");
-            Database.OpenConnection();
+            Database.ConnectionString = "db2.db";
             Database.CreateUsersTable();
             Database.CreateDishesTable();
             Database.CreateLocationsTable();
@@ -48,10 +40,6 @@ namespace Restaurant_Manager_UnitTests
             // Assert
             Assert.IsFalse(LoginLogic.VerifyPassword("johndoe", "password"));
             Assert.IsTrue(LoginLogic.VerifyPassword("johndoe", "password123"));
-
-            // Finalize
-            Database.CloseConnection();
-            Database.DisposeConnection();
         }
     }
 }
