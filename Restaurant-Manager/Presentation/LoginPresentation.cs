@@ -4,24 +4,35 @@ static class LoginPresentation
 {
     public static void Present()
     {
-        // display login header
-        AnsiConsole.Clear();
-        AnsiConsole.Write(
-            new Rule("[bold yellow]Login[/]")
-        );
+        bool loginSuccessful = false;
 
-        AnsiConsole.WriteLine();
+        while (!loginSuccessful)
+        {
+            // Display login header
+            AnsiConsole.Clear();
+            AnsiConsole.Write(new Rule("[bold yellow]Login[/]"));
+            AnsiConsole.WriteLine();
 
-        // dsk for a username
-        string Username = PromptUsername();
+            // Ask for a username
+            AnsiConsole.MarkupLine("[blue]Please enter your username:[/]");
+            string username = PromptUsername();
 
-        // ask for a password kan ook prompt password zijn
-        string Password = PromptPassword(Username);
+            // Ask for a password
+            AnsiConsole.MarkupLine("[blue]Please enter your password:[/]");
+            string password = PromptPassword();
 
-        // Check if user input correct password
-        if (LoginLogic.VerifyPassword(Username, Password)) {
-            State.LoggedInUser = Database.GetUserByUsername(Username);
-            Console.WriteLine("Successful login");
+            // Check if user input correct password
+            if (LoginLogic.VerifyPassword(username, password))
+            {
+                State.LoggedInUser = Database.GetUserByUsername(username);
+                Console.WriteLine("Successful login");
+                loginSuccessful = true;
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[red]Invalid username or password. Please try again.[/]");
+                Thread.Sleep(1500);
+            }
         }
     }
 
@@ -35,25 +46,14 @@ static class LoginPresentation
         );
     }
 
-    private static string PromptPassword(string Username)
+    private static string PromptPassword()
     {
         return AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Password[/]:")
                 .PromptStyle("yellow")
                 .Secret('*')
                 .ValidationErrorMessage("[red]Password cannot be empty[/]")
-                .Validate(p => {
-                    if (string.IsNullOrWhiteSpace(p)) {
-                        return ValidationResult.Error("[red]Invalid password[/]");
-                    }
-
-                    if (!LoginLogic.VerifyPassword(Username, p)) {
-                        return ValidationResult.Error("[red]Invalid username or password[/]");
-                    }
-
-                    // If all checks pass
-                    return ValidationResult.Success();
-                }
-        ));
+                .Validate(password => !string.IsNullOrWhiteSpace(password))
+        );
     }
 }
