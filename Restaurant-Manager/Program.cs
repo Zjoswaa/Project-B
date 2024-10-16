@@ -24,7 +24,6 @@ class Program
 
     public static void ShowMainMenu()
     {
-
         bool loggedIn = false;
         while (true)
         {
