@@ -3,16 +3,16 @@ using System;
 
 class MenuCard
 {
-    private List<Dishes> DishList;
+    private List<Dish> Dishes;
     
     public MenuCard()
     {
-        DishList = new List<Dishes>();
+        Dishes = new List<Dish>();
     }
 
-    public void AddDish(Dishes dish)
+    public void AddDish(Dish dish)
     {
-        DishList.Add(dish);
+        Dishes.Add(dish);
     }
 
     public void DisplayMenuCard()
