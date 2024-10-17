@@ -1,9 +1,9 @@
-class Locations
+class Location
 {
     public int ID { get; }
     public string Name { get; }
 
-    public Locations(int id, string name)
+    public Location(int id, string name)
     {
         ID = id;
         Name = name;

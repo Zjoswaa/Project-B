@@ -1,4 +1,4 @@
-class Dishes
+class Dish
 {
     public long ID { get; }
     public string Name { get; }
@@ -8,7 +8,7 @@ class Dishes
     public bool IsHalal { get; }
     public bool IsGlutenFree { get; }
 
-    public Dishes(long id, string name, double price, bool isvegan, bool isvegetarian, bool ishalal, bool isglutenfree)
+    public Dish(long id, string name, double price, bool isvegan, bool isvegetarian, bool ishalal, bool isglutenfree)
     {
         ID = id;
         Name = name;

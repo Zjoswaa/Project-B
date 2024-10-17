@@ -1,11 +1,9 @@
 ﻿using System.Data.SQLite;
 
-public static class Database
-{
+public static class Database {
     public static string ConnectionString { get; set; } = "database.db";
 
-    public static long GetUsersTableSize()
-    {
+    public static long GetUsersTableSize() {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
@@ -15,8 +13,7 @@ public static class Database
         return (long)result;
     }
 
-    public static void CreateUsersTable()
-    {
+    public static void CreateUsersTable() {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
@@ -24,8 +21,7 @@ public static class Database
         cmd.ExecuteNonQuery();
     }
 
-    public static void CreateLocationsTable()
-    {
+    public static void CreateLocationsTable() {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
@@ -33,8 +29,7 @@ public static class Database
         cmd.ExecuteNonQuery();
     }
 
-    public static void CreateReservationsTable()
-    {
+    public static void CreateReservationsTable() {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
@@ -42,8 +37,7 @@ public static class Database
         cmd.ExecuteNonQuery();
     }
 
-    public static void CreateDishesTable()
-    {
+    public static void CreateDishesTable() {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
@@ -151,8 +145,22 @@ public static class Database
         cmd.ExecuteNonQuery();
     }
 
-    public static bool UsersTableContainsUser(string Username)
-    {
+    public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree) {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = $"INSERT INTO Dishes(ID, Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES(@ID, @Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
+        cmd.Parameters.AddWithValue("@ID", 0);
+        cmd.Parameters.AddWithValue("@Name", Name);
+        cmd.Parameters.AddWithValue("@Price", Price);
+        cmd.Parameters.AddWithValue("@IsVegan", IsVegan ? "TRUE" : "FALSE");
+        cmd.Parameters.AddWithValue("@IsVegetarian", IsVegetarian ? "TRUE" : "FALSE");
+        cmd.Parameters.AddWithValue("@IsHalal", IsHalal ? "TRUE" : "FALSE");
+        cmd.Parameters.AddWithValue("@IsGlutenFree", IsGlutenFree ? "TRUE" : "FALSE");
+        cmd.ExecuteNonQuery();
+    }
+
+    public static bool UsersTableContainsUser(string Username) {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
@@ -163,8 +171,7 @@ public static class Database
         return (long)result > 0;
     }
 
-    public static User? GetUserByUsername(string Username)
-    {
+    public static User? GetUserByUsername(string Username) {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
@@ -179,8 +186,7 @@ public static class Database
         return new User((long)result["ID"], (string)result["Username"], result["FirstName"] == DBNull.Value ? null : (string)result["FirstName"], result["LastName"] == DBNull.Value ? null : (string)result["LastName"], (string)result["Role"]);
     }
 
-    public static string? GetEncryptedPassword(string Username)
-    {
+    public static string? GetEncryptedPassword(string Username) {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);

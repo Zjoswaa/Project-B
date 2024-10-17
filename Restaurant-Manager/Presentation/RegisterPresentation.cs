@@ -4,10 +4,12 @@ static class RegisterPresentation
 {
     public static void Present(bool InsertIntoUsersTable)
     {
-
+        AnsiConsole.Clear();
         AnsiConsole.Write(
-                new Rule("[yellow]Register[/]")
-            );
+            new Rule("[yellow]Register[/]")
+        );
+
+        AnsiConsole.WriteLine();
 
         // Ask for new user username
         string Username = PromptUsername();
@@ -35,12 +37,8 @@ static class RegisterPresentation
     {
         while (true)
         {
-            AnsiConsole.Clear();
-            AnsiConsole.Write(
-                new Rule("[yellow]Register[/]")
-            );
             string Username = AnsiConsole.Prompt(
-            new TextPrompt<string>("[green]Enter your username:[/]")
+            new TextPrompt<string>("[green]Username:[/]")
                 .Validate(n => {
                     // Another user with that username already exists
                     if (Database.UsersTableContainsUser(n))
@@ -100,7 +98,7 @@ static class RegisterPresentation
         );
         AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
         AnsiConsole.MarkupLine($"[green]Password:[/] {new string('*', Password.Length)}");
-        return AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter your first name (Optional):[/]").AllowEmpty());
+        return AnsiConsole.Prompt(new TextPrompt<string>("[blue]First name (Optional):[/]").AllowEmpty());
     }
 
     private static string PromptLastName(string Username, string Password, string FirstName)
@@ -112,7 +110,7 @@ static class RegisterPresentation
         AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
         AnsiConsole.MarkupLine($"[green]Password:[/] {new string('*', Password.Length)}");
         AnsiConsole.MarkupLine($"[blue]First name (Optional):[/] {FirstName}");
-        return AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter your last name (Optional):[/]").AllowEmpty());
+        return AnsiConsole.Prompt(new TextPrompt<string>("[blue]Last name (Optional):[/]").AllowEmpty());
     }
 
     private static void ShowSuccessMessageAndRedirect()

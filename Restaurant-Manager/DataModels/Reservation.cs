@@ -1,4 +1,4 @@
-class Reservations
+class Reservation
 {
     public int ID { get; }
     public int User { get; }
@@ -6,7 +6,7 @@ class Reservations
     public DateTime ReservationTime { get; }
     public int GroupSize { get; }
 
-    public Reservations(int id, int user, int location, DateTime reservationtime, int groupsize)
+    public Reservation(int id, int user, int location, DateTime reservationtime, int groupsize)
     {
         ID = id;
         User = user;
