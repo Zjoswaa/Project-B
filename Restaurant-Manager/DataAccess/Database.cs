@@ -72,6 +72,11 @@ public static class Database {
         // Method to delete a dish from db
     }
 
+    public static List<Dish> GetAllDishes()
+    {
+        // Method that returns a list of all the dishes
+    }
+
     public static void InsertUsersTable(string Username, string Password, string? FirstName, string? LastName, string Role)
     {
         if (Role != "USER" && Role != "ADMIN")
