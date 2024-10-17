@@ -1,4 +1,4 @@
-class Dish
+public class Dish
 {
     public long ID { get; }
     public string Name { get; }
