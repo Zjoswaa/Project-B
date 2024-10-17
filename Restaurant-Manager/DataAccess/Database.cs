@@ -37,7 +37,7 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void CreateDishesTable() {
+    public static void CreateDishTable() {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
@@ -142,21 +142,6 @@ public static class Database {
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(FirstName) ? null : FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(LastName) ? null : LastName);
         cmd.Parameters.AddWithValue("@Role", Role);
-        cmd.ExecuteNonQuery();
-    }
-
-    public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree) {
-        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
-        Connection.Open();
-        using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = $"INSERT INTO Dishes(ID, Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES(@ID, @Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
-        cmd.Parameters.AddWithValue("@ID", 0);
-        cmd.Parameters.AddWithValue("@Name", Name);
-        cmd.Parameters.AddWithValue("@Price", Price);
-        cmd.Parameters.AddWithValue("@IsVegan", IsVegan ? "TRUE" : "FALSE");
-        cmd.Parameters.AddWithValue("@IsVegetarian", IsVegetarian ? "TRUE" : "FALSE");
-        cmd.Parameters.AddWithValue("@IsHalal", IsHalal ? "TRUE" : "FALSE");
-        cmd.Parameters.AddWithValue("@IsGlutenFree", IsGlutenFree ? "TRUE" : "FALSE");
         cmd.ExecuteNonQuery();
     }
 
