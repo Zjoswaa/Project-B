@@ -45,7 +45,7 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void InsertDishTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
+    public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
     {
         using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
         Connection.Open();
