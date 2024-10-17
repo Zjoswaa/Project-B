@@ -14,17 +14,25 @@ static class LoginPresentation
             AnsiConsole.WriteLine();
 
             // Ask for a username
-            AnsiConsole.MarkupLine("[blue]Please enter your username:[/]");
-            string username = PromptUsername();
+            AnsiConsole.MarkupLine("[blue]Please enter your username, or press Enter to return:[/]");
+            string Username = PromptUsername();
+            if (string.IsNullOrEmpty(Username)) {
+                AnsiConsole.Clear();
+                MainMenuPresentation.ShowMainMenu();
+            }
 
             // Ask for a password
-            AnsiConsole.MarkupLine("[blue]Please enter your password:[/]");
-            string password = PromptPassword();
+            AnsiConsole.MarkupLine("[blue]Please enter your password, or press Enter to return:[/]");
+            string Password = PromptPassword();
+            if (string.IsNullOrEmpty(Password)) {
+                AnsiConsole.Clear();
+                MainMenuPresentation.ShowMainMenu();
+            }
 
             // Check if user input correct password
-            if (LoginLogic.VerifyPassword(username, password))
+            if (LoginLogic.VerifyPassword(Username, Password))
             {
-                State.LoggedInUser = Database.GetUserByUsername(username);
+                State.LoggedInUser = Database.GetUserByUsername(Username);
                 Console.WriteLine("Successful login");
                 loginSuccessful = true;
             }
@@ -41,9 +49,8 @@ static class LoginPresentation
         return AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Username[/]:")
                 .PromptStyle("yellow")
-                .ValidationErrorMessage("[red]Username cannot be empty[/]")
-                .Validate(username => !string.IsNullOrWhiteSpace(username))
-        );
+                .AllowEmpty()
+            );
     }
 
     private static string PromptPassword()
@@ -52,8 +59,7 @@ static class LoginPresentation
             new TextPrompt<string>("[green]Password[/]:")
                 .PromptStyle("yellow")
                 .Secret('*')
-                .ValidationErrorMessage("[red]Password cannot be empty[/]")
-                .Validate(password => !string.IsNullOrWhiteSpace(password))
+                .AllowEmpty()
         );
     }
 }

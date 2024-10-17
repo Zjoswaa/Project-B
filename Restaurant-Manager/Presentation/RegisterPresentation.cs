@@ -122,6 +122,6 @@ static class RegisterPresentation
         AnsiConsole.Clear();
 
         // Redirect to the choice page
-        Program.ShowMainMenu();
+        MainMenuPresentation.ShowMainMenu();
     }
 }
