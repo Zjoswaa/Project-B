@@ -47,6 +47,7 @@ namespace Restaurant_Manager.Presentation
                     case "Logout":
                         loggedIn = false;
                         AnsiConsole.MarkupLine("[red]Logging out...[/]");
+                        State.LoggedInUser = null;
                         Thread.Sleep(1000);
                         Console.Clear();
                         Program.ShowMainMenu();
