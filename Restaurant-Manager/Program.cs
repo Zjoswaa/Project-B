@@ -9,7 +9,7 @@ class Program
         {
             Database.ConnectionString = "database.db";
             Database.CreateUsersTable();
-            Database.CreateDishesTable();
+            Database.CreateDishTable();
             Database.CreateLocationsTable();
             Database.CreateReservationsTable();
         }

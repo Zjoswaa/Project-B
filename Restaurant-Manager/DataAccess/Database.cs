@@ -45,8 +45,37 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void InsertUsersTable(string Username, string Password, string? FirstName, string? LastName, string Role) {
-        if (Role != "USER" && Role != "ADMIN") {
+    public static void InsertDishTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
+    {
+        using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "INSERT INTO dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree)" +
+                           "VALUES(@Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
+        cmd.Parameters.AddWithValue("@ID", 0);
+        cmd.Parameters.AddWithValue("@Name", Name);
+        cmd.Parameters.AddWithValue("@Price", Price);
+        cmd.Parameters.AddWithValue("@IsVegan", IsVegan ? "TRUE" : "FALSE");
+        cmd.Parameters.AddWithValue("@IsVegetarian", IsVegetarian ? "TRUE" : "FALSE");
+        cmd.Parameters.AddWithValue("@IsHalal", IsHalal ? "TRUE" : "FALSE");
+        cmd.Parameters.AddWithValue("IsGlutenFree", IsGlutenFree ? "TRUE" : "FALSE");
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void UpdateDishTable()
+    {
+        // Method to update an existing dish in db
+    }
+
+    public static void DeleteDishTable()
+    {
+        // Method to delete a dish from db
+    }
+
+    public static void InsertUsersTable(string Username, string Password, string? FirstName, string? LastName, string Role)
+    {
+        if (Role != "USER" && Role != "ADMIN")
+        {
             throw new InvalidDataException($"Role has to be \"USER\" or \"ADMIN\". Found \"{Role}\"");
         }
 
@@ -65,11 +94,14 @@ public static class Database {
         User.NextID++; // Increase ID of next user
     }
 
-    public static void InsertUsersTable(User User, string Password) {
-        if (User.Role != "USER" && User.Role != "ADMIN") {
+    public static void InsertUsersTable(User User, string Password)
+    {
+        if (User.Role != "USER" && User.Role != "ADMIN")
+        {
             throw new InvalidDataException($"Role has to be \"USER\" or \"ADMIN\". Found \"{User.Role}\"");
         }
-        if (User.ID <= 0) {
+        if (User.ID <= 0)
+        {
             throw new InvalidDataException($"ID has to be a positive non-zero long. Found \"{User.ID}\"");
         }
 
@@ -89,11 +121,14 @@ public static class Database {
     }
 
     // This forces an ID for the user, use only for debugging
-    public static void InsertUsersTable(long ID, string Username, string Password, string? FirstName, string? LastName, string Role) {
-        if (Role != "USER" && Role != "ADMIN") {
+    public static void InsertUsersTable(long ID, string Username, string Password, string? FirstName, string? LastName, string Role)
+    {
+        if (Role != "USER" && Role != "ADMIN")
+        {
             throw new InvalidDataException($"Role has to be \"USER\" or \"ADMIN\". Found \"{Role}\"");
         }
-        if (ID <= 0) {
+        if (ID <= 0)
+        {
             throw new InvalidDataException($"ID has to be a positive non-zero long. Found \"{ID}\"");
         }
 
@@ -143,7 +178,8 @@ public static class Database {
         cmd.CommandText = $"SELECT * FROM Users WHERE Username = @Username LIMIT 1";
         cmd.Parameters.AddWithValue("@Username", Username);
         SQLiteDataReader result = cmd.ExecuteReader();
-        if (!result.HasRows) {
+        if (!result.HasRows)
+        {
             return null;
         }
         result.Read();
@@ -157,7 +193,8 @@ public static class Database {
         cmd.CommandText = $"SELECT Password FROM Users WHERE Username = @Username LIMIT 1";
         cmd.Parameters.AddWithValue("@Username", Username);
         SQLiteDataReader result = cmd.ExecuteReader();
-        if (!result.HasRows) {
+        if (!result.HasRows)
+        {
             return null;
         }
         result.Read();
