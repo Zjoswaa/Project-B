@@ -12,10 +12,20 @@ static class RegisterPresentation
         AnsiConsole.WriteLine();
 
         // Ask for new user username
+        AnsiConsole.MarkupLine("[blue]Please enter your username, or press Enter to return:[/]");
         string Username = PromptUsername();
+        if (string.IsNullOrEmpty(Username)) {
+            AnsiConsole.Clear();
+            MainMenuPresentation.ShowMainMenu();
+        }
 
         // Ask for new user password
+        AnsiConsole.MarkupLine("[blue]Please enter your password, or press Enter to return:[/]");
         string Password = PromptPassword(Username);
+        if (string.IsNullOrEmpty(Password)) {
+            AnsiConsole.Clear();
+            MainMenuPresentation.ShowMainMenu();
+        }
 
         // Ask for user first name
         string FirstName = PromptFirstName(Username, Password);
@@ -55,6 +65,7 @@ static class RegisterPresentation
                     // If all checks pass
                     return ValidationResult.Success();
                 })
+                .AllowEmpty()
             );
 
             return Username;
@@ -69,8 +80,11 @@ static class RegisterPresentation
             AnsiConsole.Write(
                 new Rule("[yellow]Register[/]")
             );
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine("[blue]Please enter your username, or press Enter to return:[/]");
             AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
 
+            AnsiConsole.MarkupLine("[blue]Please enter your password, or press Enter to return:[/]");
             string Password = AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Enter your password:[/]")
                 .Validate(p => {
@@ -84,6 +98,7 @@ static class RegisterPresentation
                     return ValidationResult.Success();
                 })
                 .Secret('*')
+                .AllowEmpty()
             );
 
             return Password;
