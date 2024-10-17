@@ -37,7 +37,7 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void CreateDishTable() {
+    public static void CreateDishesTable() {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
