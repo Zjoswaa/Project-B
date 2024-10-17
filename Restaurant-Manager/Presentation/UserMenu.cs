@@ -16,7 +16,7 @@ class UserMenu
                 .AddChoices(new[] { "Make a Reservation", "View Reservation", "Edit Reservations", "Remove Reservation", "View Menu", "Logout" });
 
             var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
-
+          
             switch (userSelection)
             {
                 case "Make a Reservation":

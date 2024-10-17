@@ -45,7 +45,7 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void InsertDishTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
+    public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
     {
         using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
         Connection.Open();
@@ -70,6 +70,11 @@ public static class Database {
     public static void DeleteDishTable()
     {
         // Method to delete a dish from db
+    }
+
+    public static List<Dish> GetAllDishes()
+    {
+        // Method that returns a list of all the dishes
     }
 
     public static void InsertUsersTable(string Username, string Password, string? FirstName, string? LastName, string Role)
