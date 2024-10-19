@@ -11,7 +11,12 @@ class Program
             Database.CreateUsersTable();
             Database.CreateDishesTable();
             Database.CreateLocationsTable();
+            //Database.InsertLocationsTable("Placeholder_1");
+            //Database.InsertLocationsTable("Placeholder_2");
+            //Database.InsertLocationsTable("Placeholder_3");
+            //Database.InsertLocationsTable("Placeholder_4");
             Database.CreateReservationsTable();
+            Database.CreateAvailableSlots();
         }
         catch (Exception ex)
         {

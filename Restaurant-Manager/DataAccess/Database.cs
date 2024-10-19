@@ -45,6 +45,15 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
+    public static void CreateAvailableSlots()
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS AvailableSlots(ID INTEGER PRIMARY KEY, LocationID INTEGER, DateTime DATETIME NOT NULL, Timeslot TEXT NOT NULL, AvailableSpace INTEGER NOT NULL, FOREIGN KEY(LocationID) REFERENCES Locations(ID))";
+        cmd.ExecuteNonQuery();
+    }
+
     public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
     {
         using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
@@ -75,6 +84,17 @@ public static class Database {
     public static List<Dish> GetAllDishes()
     {
         // Method that returns a list of all the dishes
+    }
+
+    public static void InsertLocationsTable(string name)
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "INSERT INTO Locations(Name) VALUES (@Name)";
+
+        cmd.Parameters.AddWithValue("@Name", name);
+        cmd.ExecuteNonQuery();
     }
 
     public static void InsertUsersTable(string Username, string Password, string? FirstName, string? LastName, string Role)
