@@ -81,10 +81,10 @@ public static class Database {
         // Method to delete a dish from db
     }
 
-    public static List<Dish> GetAllDishes()
-    {
+    //public static List<Dish> GetAllDishes()
+    //{
         // Method that returns a list of all the dishes
-    }
+    //}
 
     public static void InsertLocationsTable(string name)
     {
@@ -94,6 +94,20 @@ public static class Database {
         cmd.CommandText = "INSERT INTO Locations(Name) VALUES (@Name)";
 
         cmd.Parameters.AddWithValue("@Name", name);
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void InsertAvailableSlots(long loc_id, DateTime datetime, string timeslot, int space)
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "INSERT INTO AvailableSlots(LocationID, DateTime, Timeslot, AvailableSpace) VALUES (@LocationID, @DateTime, @Timeslot, @AvailableSpace)";
+
+        cmd.Parameters.AddWithValue("@LocationID", loc_id);
+        cmd.Parameters.AddWithValue("@DateTime", datetime);
+        cmd.Parameters.AddWithValue("@Timeslot", timeslot);
+        cmd.Parameters.AddWithValue("@AvailableSpace", space);
         cmd.ExecuteNonQuery();
     }
 

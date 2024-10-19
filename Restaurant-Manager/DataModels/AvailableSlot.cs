@@ -1,6 +1,6 @@
 public class AvailableSlot
 {
-    public long ID { get; }
+    public long ID { get; } = -1;
     public long LocationID { get; }
     public DateTime Date { get; }
     public string TimeSlot { get; }
@@ -15,12 +15,21 @@ public class AvailableSlot
         AvailableSpace = space;
     }
 
+    public AvailableSlot(long loc_id, DateTime date, string timeslot, int space)
+    {
+        ID++;
+        LocationID = loc_id;
+        Date = date;
+        TimeSlot = timeslot;
+        AvailableSpace = space;
+    }
+
     public override string ToString()
     {
         return $"ID : {ID}\nLocation ID: {LocationID}\nDate: {Date}\nTimeslot: {TimeSlot}\nAvailable space: {AvailableSpace}";
     }
 
-    public List<AvailableSlot> CreateSlots(DateTime startDate, DateTime endDate, int amountOfLocations, List<string> timeslots)
+    public static List<AvailableSlot> CreateSlots(DateTime startDate, DateTime endDate, int amountOfLocations, List<string> timeslots)
     {
         List<AvailableSlot> slots = new();
 
@@ -36,12 +45,26 @@ public class AvailableSlot
         TimeSpan amountOfTime = cutEnd - cutStart;
         int daysBetween = amountOfTime.Days;
 
+        // Fix location ID not incrementing by 1
         for (int i = 0 ; i < amountOfLocations; i++)
         {
             for (int j = 0; j < (daysBetween - 1); j++)
             {
-                AvailableSlot slot = new(j, i, ..., ..., 48);
+                for (int k = 0; k < (timeslots.Count()); k++)
+                {
+                    AvailableSlot slot = new(i, (cutStart.AddDays(j + 1)), timeslots[k], 48);
+                    slots.Add(slot);
+                }
             }
+        }
+        return slots;
+    }
+
+    public static void FillAvailableSlotsTable(List<AvailableSlot> slots)
+    {
+        foreach (AvailableSlot slot in slots)
+        {
+            Database.InsertAvailableSlots(slot.LocationID, slot.Date, slot.TimeSlot, slot.AvailableSpace);
         }
     }
 }
