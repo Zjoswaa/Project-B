@@ -45,7 +45,6 @@ public class AvailableSlot
         TimeSpan amountOfTime = cutEnd - cutStart;
         int daysBetween = amountOfTime.Days;
 
-        // Fix location ID not incrementing by 1
         for (int i = 0 ; i < amountOfLocations; i++)
         {
             for (int j = 0; j < (daysBetween - 1); j++)
@@ -66,5 +65,7 @@ public class AvailableSlot
         {
             Database.InsertAvailableSlots(slot.LocationID, slot.Date, slot.TimeSlot, slot.AvailableSpace);
         }
+
+        Database.DeleteOldSlots();
     }
 }

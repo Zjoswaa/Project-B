@@ -50,7 +50,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS AvailableSlots(ID INTEGER PRIMARY KEY, LocationID INTEGER, DateTime DATETIME NOT NULL, Timeslot TEXT NOT NULL, AvailableSpace INTEGER NOT NULL, FOREIGN KEY(LocationID) REFERENCES Locations(ID))";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS AvailableSlots(ID INTEGER PRIMARY KEY, LocationID INTEGER, DateTime DATETIME NOT NULL, Timeslot TEXT NOT NULL, AvailableSpace INTEGER NOT NULL, FOREIGN KEY(LocationID) REFERENCES Locations(ID), UNIQUE(LocationID, DateTime, Timeslot, AvailableSpace))";
         cmd.ExecuteNonQuery();
     }
 
@@ -102,12 +102,24 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO AvailableSlots(LocationID, DateTime, Timeslot, AvailableSpace) VALUES (@LocationID, @DateTime, @Timeslot, @AvailableSpace)";
+        cmd.CommandText = "INSERT OR IGNORE INTO AvailableSlots(LocationID, DateTime, Timeslot, AvailableSpace) VALUES (@LocationID, @DateTime, @Timeslot, @AvailableSpace)";
 
         cmd.Parameters.AddWithValue("@LocationID", loc_id);
         cmd.Parameters.AddWithValue("@DateTime", datetime);
         cmd.Parameters.AddWithValue("@Timeslot", timeslot);
         cmd.Parameters.AddWithValue("@AvailableSpace", space);
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void DeleteOldSlots()
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+
+        DateTime today = DateTime.Now;
+        cmd.CommandText = "DELETE FROM AvailableSlots WHERE @Today > DateTime";
+        cmd.Parameters.AddWithValue("@Today", today);
         cmd.ExecuteNonQuery();
     }
 
