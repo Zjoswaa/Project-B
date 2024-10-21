@@ -3,13 +3,13 @@
 
 class UserMenu
 {
-    public static void ShowUserMenu(ref bool loggedIn)
+    public static void ShowUserMenu()
     {
-        while (loggedIn)
+        while (State.LoggedInUser is not null)
         {
             Console.Clear();
 
-            AnsiConsole.Write(new Rule("[yellow]Reservation Menu[/]"));
+            AnsiConsole.Write(new Rule($"[yellow]Reservation Menu ({State.LoggedInUser.GetFullName()})[/]"));
 
             var userSelectionPrompt = new SelectionPrompt<string>()
                 .Title("[cyan]Please select an option:[/]")
@@ -44,8 +44,8 @@ class UserMenu
                     Console.Clear();
                     break;
                 case "Logout":
-                    loggedIn = false;
                     AnsiConsole.MarkupLine("[red]Logging out...[/]");
+                    State.LoggedInUser = null;
                     Thread.Sleep(1000);
                     Console.Clear();
                     MainMenuPresentation.ShowMainMenu();

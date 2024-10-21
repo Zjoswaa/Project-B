@@ -5,8 +5,6 @@
     public string? LastName { get; }
     public string Role { get; } // "ADMIN" or "USER"
 
-    public static long NextID { get; set; } = 0;
-
     public User(long ID, string Username, string? FirstName, string? LastName, string Role) {
         this.ID = ID;
         this.Username = Username;

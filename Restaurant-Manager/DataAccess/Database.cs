@@ -17,7 +17,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Users(ID INTEGER PRIMARY KEY, Username TEXT NOT NULL, Password TEXT NOT NULL, FirstName TEXT, LastName TEXT, Role TEXT NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Users(ID INTEGER PRIMARY KEY AUTOINCREMENT, Username TEXT NOT NULL, Password TEXT NOT NULL, FirstName TEXT, LastName TEXT, Role TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -25,7 +25,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY, Name TEXT NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -33,7 +33,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Reservations(ID INTEGER PRIMARY KEY, User INTEGER, Location INTEGER, DateTime DATETIME NOT NULL, GroupSize INTEGER NOT NULL, FOREIGN KEY(User) REFERENCES Users(ID), FOREIGN KEY(Location) REFERENCES Locations(ID))";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Reservations(ID INTEGER PRIMARY KEY AUTOINCREMENT, User INTEGER, Location INTEGER, DateTime DATETIME NOT NULL, GroupSize INTEGER NOT NULL, FOREIGN KEY(User) REFERENCES Users(ID), FOREIGN KEY(Location) REFERENCES Locations(ID))";
         cmd.ExecuteNonQuery();
     }
 
@@ -41,7 +41,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Dishes(ID INTEGER PRIMARY KEY, Name TEXT NOT NULL, Price TEXT NOT NULL, IsVegan INTEGER NOT NULL, IsVegetarian INTEGER NOT NULL, IsHalal INTEGER NOT NULL, IsGlutenFree INTEGER NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Dishes(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Price TEXT NOT NULL, IsVegan INTEGER NOT NULL, IsVegetarian INTEGER NOT NULL, IsHalal INTEGER NOT NULL, IsGlutenFree INTEGER NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -52,7 +52,6 @@ public static class Database {
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "INSERT INTO dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree)" +
                            "VALUES(@Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
-        cmd.Parameters.AddWithValue("@ID", 0);
         cmd.Parameters.AddWithValue("@Name", Name);
         cmd.Parameters.AddWithValue("@Price", Price);
         cmd.Parameters.AddWithValue("@IsVegan", IsVegan ? "TRUE" : "FALSE");
@@ -119,16 +118,13 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
-        cmd.Parameters.AddWithValue("@ID", User.NextID);
+        cmd.CommandText = "INSERT INTO users(Username, Password, FirstName, LastName, Role) VALUES(@Username, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@Username", Username);
         cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(FirstName) ? null : FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(LastName) ? null : LastName);
         cmd.Parameters.AddWithValue("@Role", Role);
         cmd.ExecuteNonQuery();
-
-        User.NextID++; // Increase ID of next user
     }
 
     public static void InsertUsersTable(User User, string Password)
@@ -145,16 +141,13 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
-        cmd.Parameters.AddWithValue("@ID", User.NextID);
+        cmd.CommandText = "INSERT INTO users(Username, Password, FirstName, LastName, Role) VALUES(@Username, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@Username", User.Username);
         cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(User.FirstName) ? null : User.FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(User.LastName) ? null : User.LastName);
         cmd.Parameters.AddWithValue("@Role", User.Role);
         cmd.ExecuteNonQuery();
-
-        User.NextID++; // Increase ID of next user
     }
 
     // This forces an ID for the user, use only for debugging

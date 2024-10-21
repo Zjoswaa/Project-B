@@ -2,7 +2,6 @@
 
 static class MainMenuPresentation {
     public static void ShowMainMenu() {
-        bool loggedIn = false;
         while (true) {
             // Display welcome message in a box
             AnsiConsole.Write(new Rule("[yellow] Welcome [/]"));
@@ -18,7 +17,6 @@ static class MainMenuPresentation {
             switch (selection) {
                 case "Login":
                     LoginPresentation.Present();
-                    loggedIn = true;
                     break;
                 case "Register":
                     RegisterPresentation.Present(true);
@@ -30,7 +28,11 @@ static class MainMenuPresentation {
                     break;
             }
 
-            UserMenu.ShowUserMenu(ref loggedIn);
+            if (State.LoggedInUser?.Role == "USER") {
+                UserMenu.ShowUserMenu();
+            } else {
+                AdminMenu.ShowAdminMenu();
+            }
         }
     }
 }
