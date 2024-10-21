@@ -4,9 +4,9 @@ static class LoginPresentation
 {
     public static void Present()
     {
-        bool loginSuccessful = false;
+        //bool loginSuccessful = false;
 
-        while (!loginSuccessful)
+        while (State.LoggedInUser is null)
         {
             // Display login header
             AnsiConsole.Clear();
@@ -34,7 +34,7 @@ static class LoginPresentation
             {
                 State.LoggedInUser = Database.GetUserByUsername(Username);
                 Console.WriteLine("Successful login");
-                loginSuccessful = true;
+                //loginSuccessful = true;
             }
             else
             {
