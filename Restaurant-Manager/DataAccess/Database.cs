@@ -45,15 +45,6 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void CreateAvailableSlots()
-    {
-        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
-        Connection.Open();
-        using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS AvailableSlots(ID INTEGER PRIMARY KEY, LocationID INTEGER, DateTime DATETIME NOT NULL, Timeslot TEXT NOT NULL, AvailableSpace INTEGER NOT NULL, FOREIGN KEY(LocationID) REFERENCES Locations(ID), UNIQUE(LocationID, DateTime, Timeslot, AvailableSpace))";
-        cmd.ExecuteNonQuery();
-    }
-
     public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
     {
         using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
@@ -120,18 +111,47 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void InsertAvailableSlots(long loc_id, DateTime datetime, string timeslot, int space)
+    public static Dictionary<int, string> GetAllLocations()
     {
+        Dictionary<int, string> locations = new();
+
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT OR IGNORE INTO AvailableSlots(LocationID, DateTime, Timeslot, AvailableSpace) VALUES (@LocationID, @DateTime, @Timeslot, @AvailableSpace)";
 
-        cmd.Parameters.AddWithValue("@LocationID", loc_id);
-        cmd.Parameters.AddWithValue("@DateTime", datetime);
-        cmd.Parameters.AddWithValue("@Timeslot", timeslot);
-        cmd.Parameters.AddWithValue("@AvailableSpace", space);
-        cmd.ExecuteNonQuery();
+        cmd.CommandText = "SELECT * FROM Locations";
+        var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            int id = reader.GetInt32(0);
+            string name = reader.GetString(1);
+            locations.Add(id, name);
+        }
+
+        return locations;
+    }
+
+    public static Dictionary<List<object>, int> GetAllReservations()
+    {
+        Dictionary<List<object>, int> reservations = new();
+
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+
+        cmd.CommandText = "SELECT * FROM Reservations";
+        var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            int locId = reader.GetInt32(2);
+            string timeslot = reader.GetString(3);
+            DateTime date = reader.GetDateTime(4);
+            int groupsize = reader.GetInt32(5);
+
+            reservations.Add(new List<object>(){locId, date, timeslot}, groupsize);
+        }
+
+        return reservations;
     }
 
     public static void DeleteOldSlots()
