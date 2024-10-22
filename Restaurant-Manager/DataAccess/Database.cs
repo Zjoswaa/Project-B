@@ -17,7 +17,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Users(ID INTEGER PRIMARY KEY, Username TEXT NOT NULL, Password TEXT NOT NULL, FirstName TEXT, LastName TEXT, Role TEXT NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Users(ID INTEGER PRIMARY KEY AUTOINCREMENT, Username TEXT NOT NULL, Password TEXT NOT NULL, FirstName TEXT, LastName TEXT, Role TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -25,7 +25,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY, Name TEXT NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -33,7 +33,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Reservations(ID INTEGER PRIMARY KEY, User INTEGER, Location INTEGER, Timeslot TEXT NOT NULL, DateTime DATETIME NOT NULL, GroupSize INTEGER NOT NULL, FOREIGN KEY(User) REFERENCES Users(ID), FOREIGN KEY(Location) REFERENCES Locations(ID))";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Reservations(ID INTEGER PRIMARY KEY AUTOINCREMENT, User INTEGER, Location INTEGER, Timeslot TEXT NOT NULL, DateTime DATETIME NOT NULL, GroupSize INTEGER NOT NULL, FOREIGN KEY(User) REFERENCES Users(ID), FOREIGN KEY(Location) REFERENCES Locations(ID))";
         cmd.ExecuteNonQuery();
     }
 
@@ -41,7 +41,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Dishes(ID INTEGER PRIMARY KEY, Name TEXT NOT NULL, Price TEXT NOT NULL, IsVegan INTEGER NOT NULL, IsVegetarian INTEGER NOT NULL, IsHalal INTEGER NOT NULL, IsGlutenFree INTEGER NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Dishes(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Price TEXT NOT NULL, IsVegan INTEGER NOT NULL, IsVegetarian INTEGER NOT NULL, IsHalal INTEGER NOT NULL, IsGlutenFree INTEGER NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -61,7 +61,6 @@ public static class Database {
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "INSERT INTO dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree)" +
                            "VALUES(@Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
-        cmd.Parameters.AddWithValue("@ID", 0);
         cmd.Parameters.AddWithValue("@Name", Name);
         cmd.Parameters.AddWithValue("@Price", Price);
         cmd.Parameters.AddWithValue("@IsVegan", IsVegan ? "TRUE" : "FALSE");
@@ -71,20 +70,30 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void UpdateDishTable()
+    public static void UpdateDishesTable(long ID, string Name, double Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
     {
-        // Method to update an existing dish in db
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "UPDATE Dishes SET Name = @Name, Price = @Price, IsVegan = @IsVegan, IsVegetarian = @IsVegetarian, IsHalal = @IsHalal, IsGlutenFree = @IsGlutenFree WHERE ID = @ID";
+        cmd.Parameters.AddWithValue("@ID", ID);
+        cmd.Parameters.AddWithValue("@Name", Name);
+        cmd.Parameters.AddWithValue("@Price", Price);
+        cmd.Parameters.AddWithValue("@IsVegan", IsVegan);
+        cmd.Parameters.AddWithValue("@IsVegetarian", IsVegetarian);
+        cmd.Parameters.AddWithValue("@IsHalal", IsHalal);
+        cmd.Parameters.AddWithValue("@IsGlutenFree", IsGlutenFree);
+        cmd.ExecuteNonQuery();
     }
 
-    public static void DeleteDishTable()
+    public static void DeleteDishesTable(long ID)
     {
-        // Method to delete a dish from db
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand("DELETE FROM Dishes WHERE ID = @ID", Connection);
+        cmd.Parameters.AddWithValue("@ID", ID);
+        cmd.ExecuteNonQuery();
     }
-
-    //public static List<Dish> GetAllDishes()
-    //{
-        // Method that returns a list of all the dishes
-    //}
 
     public static void InsertLocationsTable(string name)
     {
@@ -135,6 +144,27 @@ public static class Database {
         cmd.CommandText = "DELETE FROM AvailableSlots WHERE @Today > DateTime";
         cmd.Parameters.AddWithValue("@Today", today);
         cmd.ExecuteNonQuery();
+   
+    public static List<Dish> GetAllDishes()
+    {
+        List<Dish> dishes = new List<Dish>();
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Dishes", Connection);
+        using SQLiteDataReader reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            dishes.Add(new Dish(
+                (long)reader["ID"],
+                (string)reader["Name"],
+                (double)reader["Price"],
+                (bool)reader["IsVegan"],
+                (bool)reader["IsVegetarian"],
+                (bool)reader["IsHalal"],
+                (bool)reader["IsGlutenFree"]
+                ));
+        }
+        return dishes;
     }
 
     public static void InsertUsersTable(string Username, string Password, string? FirstName, string? LastName, string Role)
@@ -147,16 +177,13 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
-        cmd.Parameters.AddWithValue("@ID", User.NextID);
+        cmd.CommandText = "INSERT INTO users(Username, Password, FirstName, LastName, Role) VALUES(@Username, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@Username", Username);
         cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(FirstName) ? null : FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(LastName) ? null : LastName);
         cmd.Parameters.AddWithValue("@Role", Role);
         cmd.ExecuteNonQuery();
-
-        User.NextID++; // Increase ID of next user
     }
 
     public static void InsertUsersTable(User User, string Password)
@@ -173,16 +200,13 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
-        cmd.Parameters.AddWithValue("@ID", User.NextID);
+        cmd.CommandText = "INSERT INTO users(Username, Password, FirstName, LastName, Role) VALUES(@Username, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@Username", User.Username);
         cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(User.FirstName) ? null : User.FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(User.LastName) ? null : User.LastName);
         cmd.Parameters.AddWithValue("@Role", User.Role);
         cmd.ExecuteNonQuery();
-
-        User.NextID++; // Increase ID of next user
     }
 
     // This forces an ID for the user, use only for debugging

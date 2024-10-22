@@ -18,8 +18,14 @@ class Authenticator
             if (Input.Key == ConsoleKey.Enter)
             { // If key was Enter, break the loop
                 break;
+            } else if (Input.Key == ConsoleKey.Backspace) {
+                if (!string.IsNullOrEmpty(Buffer)) {
+                    Buffer = Buffer.Substring(1);
+                }
+            } else {
+                Buffer += Input.KeyChar; // Append the character of pressed key to the buffer
             }
-            Buffer += Input.KeyChar; // Append the character of pressed key to the buffer
+            
             Panel = new(new Text($"Please enter your authentication code:\n{Buffer}\n").Centered()); // Update the panel and the text in it with the updated buffer
             Panel.Header = new PanelHeader("[blue] Welcome to GertSoft Authenticator [/]").Centered(); // Set the header again
             Panel.Expand = true; // Set expand again
