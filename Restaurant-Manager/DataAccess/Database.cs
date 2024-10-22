@@ -111,14 +111,7 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static Dictionary<int, string> LocationsToDict()
-    {
-        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
-        Connection.Open();
-        using SQLiteCommand cmd = new SQLiteCommand(Connection);
-    }
-
-    public static void InsertAvailableSlots(long loc_id, DateTime datetime, string timeslot, int space)
+    public static Dictionary<int, string> GetAllLocations()
     {
         Dictionary<int, string> locations = new();
 
@@ -159,6 +152,18 @@ public static class Database {
         }
 
         return reservations;
+    }
+
+    public static void DeleteOldSlots()
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+
+        DateTime today = DateTime.Now;
+        cmd.CommandText = "DELETE FROM AvailableSlots WHERE @Today > DateTime";
+        cmd.Parameters.AddWithValue("@Today", today);
+        cmd.ExecuteNonQuery();
     }
    
     public static List<Dish> GetAllDishes()
