@@ -144,6 +144,7 @@ public static class Database {
         cmd.CommandText = "DELETE FROM AvailableSlots WHERE @Today > DateTime";
         cmd.Parameters.AddWithValue("@Today", today);
         cmd.ExecuteNonQuery();
+    }
    
     public static List<Dish> GetAllDishes()
     {
