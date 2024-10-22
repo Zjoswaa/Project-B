@@ -111,12 +111,32 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    // public static Dictionary<int, string> LocationsToDict()
-    // {
-    //     using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
-    //     Connection.Open();
-    //     using SQLiteCommand cmd = new SQLiteCommand(Connection);
-    // }
+    public static Dictionary<int, string> LocationsToDict()
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+    }
+
+    public static void InsertAvailableSlots(long loc_id, DateTime datetime, string timeslot, int space)
+    {
+        Dictionary<int, string> locations = new();
+
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+
+        cmd.CommandText = "SELECT * FROM Locations";
+        var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            int id = reader.GetInt32(0);
+            string name = reader.GetString(1);
+            locations.Add(id, name);
+        }
+
+        return locations;
+    }
 
     public static Dictionary<List<object>, int> GetAllReservations()
     {
