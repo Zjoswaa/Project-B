@@ -33,7 +33,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Reservations(ID INTEGER PRIMARY KEY, User INTEGER, Location INTEGER, DateTime DATETIME NOT NULL, GroupSize INTEGER NOT NULL, FOREIGN KEY(User) REFERENCES Users(ID), FOREIGN KEY(Location) REFERENCES Locations(ID))";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Reservations(ID INTEGER PRIMARY KEY, User INTEGER, Location INTEGER, Timeslot TEXT NOT NULL, DateTime DATETIME NOT NULL, GroupSize INTEGER NOT NULL, FOREIGN KEY(User) REFERENCES Users(ID), FOREIGN KEY(Location) REFERENCES Locations(ID))";
         cmd.ExecuteNonQuery();
     }
 
@@ -94,6 +94,20 @@ public static class Database {
         cmd.CommandText = "INSERT INTO Locations(Name) VALUES (@Name)";
 
         cmd.Parameters.AddWithValue("@Name", name);
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void InsertReservationsTable(string user, long loc_id, DateTime datetime, int groupsize)
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "INSERT INTO Reservations(User, Location, DateTime, GroupSize) VALUES (@User, @Location, @DateTime, @GroupSize)";
+
+        cmd.Parameters.AddWithValue("@User", user);
+        cmd.Parameters.AddWithValue("@Location", loc_id);
+        cmd.Parameters.AddWithValue("@DateTime", datetime);
+        cmd.Parameters.AddWithValue("@GroupSize", groupsize);
         cmd.ExecuteNonQuery();
     }
 

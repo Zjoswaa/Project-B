@@ -1,4 +1,3 @@
-class ReservationManager
+class ReservationManager //: IReservation
 {
-
 }
