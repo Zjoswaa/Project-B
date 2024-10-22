@@ -17,7 +17,12 @@ class Program
             AnsiConsole.MarkupLine($"[red]Error initializing the database: {ex.Message}[/]");
             Environment.Exit(1);
         }
+
         while (!Authenticator.Authenticate()) { }
+        
+        // Call the SendEmail method
+        EmailService.SendEmail("1092072@hr.nl");
+
         MainMenuPresentation.ShowMainMenu();
     }
 }
