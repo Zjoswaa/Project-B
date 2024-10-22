@@ -12,7 +12,7 @@ class Program
             Database.CreateLocationsTable();
             Database.CreateReservationsTable();
     
-// In future move to different location
+            // In future move to different location
             DateTime startDate = DateTime.Now;
             DateTime endDate = DateTime.Now.AddDays(180);
             List<string> timeslots = new(){"12:00", "15:00", "18:00", "21:00"};
