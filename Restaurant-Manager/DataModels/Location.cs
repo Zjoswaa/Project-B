@@ -1,7 +1,8 @@
-class Location
+public class Location
 {
-    public int ID { get; }
+    public long ID { get; }
     public string Name { get; }
+    public static long NextID { get; set; } = 0;
 
     public Location(int id, string name)
     {
