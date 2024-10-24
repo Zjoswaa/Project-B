@@ -26,8 +26,8 @@ class Program
 
         while (!Authenticator.Authenticate()) { }
         
-        // Call the SendEmail method
-        // EmailService.SendReservationEmail("Tom van Genderen", "Rotterdam", "23/10/2024", "21:00", 4, "1092072@hr.nl");
+        //Call the SendEmail method
+        //EmailService.SendReservationEmail("Joshua van der Jagt", "Rotterdam", "24/10/2024", "21:00", 4, "1092067@hr.nl");
 
         MainMenuPresentation.ShowMainMenu();
     }
