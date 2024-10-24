@@ -6,6 +6,7 @@ class Authenticator
 
     public static bool Authenticate()
     {
+        Console.CursorVisible = false;
         string Buffer = ""; // Define an empty string as buffer
         Panel Panel = new(new Text($"Please enter your authentication code:\n{Buffer}\n").Centered()); // Define the Panel and Text within it
         Panel.Header = new PanelHeader("[blue] Welcome to GertSoft Authenticator [/]").Centered(); // Set the panel header
@@ -39,12 +40,14 @@ class Authenticator
             Console.ReadKey();
             Console.Clear();
             // Real application will start
+            Console.CursorVisible = false;
             return true;
         }
         else
         {
             Console.ReadKey();
             Console.Clear();
+            Console.CursorVisible = false;
             return false;
         }
     }
