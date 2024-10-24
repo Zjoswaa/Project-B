@@ -1,6 +1,6 @@
 class Reservation
 {
-    public int ID { get; }
+    public long ID { get; }
     public int User { get; }
     public int Location { get; }
     public DateTime ReservationTime { get; }

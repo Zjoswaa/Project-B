@@ -97,15 +97,16 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void InsertReservationsTable(string user, long loc_id, DateTime datetime, int groupsize)
+    public static void InsertReservationsTable(long user_id, long loc_id, string timeslot, DateTime datetime, int groupsize)
     {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO Reservations(User, Location, DateTime, GroupSize) VALUES (@User, @Location, @DateTime, @GroupSize)";
+        cmd.CommandText = "INSERT INTO Reservations(User, Location, Timeslot, DateTime, GroupSize) VALUES (@User, @Location, @Timeslot, @DateTime, @GroupSize)";
 
-        cmd.Parameters.AddWithValue("@User", user);
+        cmd.Parameters.AddWithValue("@User", user_id);
         cmd.Parameters.AddWithValue("@Location", loc_id);
+        cmd.Parameters.AddWithValue("@Timeslot", timeslot);
         cmd.Parameters.AddWithValue("@DateTime", datetime);
         cmd.Parameters.AddWithValue("@GroupSize", groupsize);
         cmd.ExecuteNonQuery();
@@ -143,6 +144,7 @@ public static class Database {
         var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
+            int userID = reader.GetInt32(1);
             int locId = reader.GetInt32(2);
             string timeslot = reader.GetString(3);
             DateTime date = reader.GetDateTime(4);
@@ -154,18 +156,6 @@ public static class Database {
         return reservations;
     }
 
-    public static void DeleteOldSlots()
-    {
-        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
-        Connection.Open();
-        using SQLiteCommand cmd = new SQLiteCommand(Connection);
-
-        DateTime today = DateTime.Now;
-        cmd.CommandText = "DELETE FROM AvailableSlots WHERE @Today > DateTime";
-        cmd.Parameters.AddWithValue("@Today", today);
-        cmd.ExecuteNonQuery();
-    }
-   
     public static List<Dish> GetAllDishes()
     {
         List<Dish> dishes = new List<Dish>();
