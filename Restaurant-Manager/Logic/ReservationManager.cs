@@ -13,6 +13,19 @@ class ReservationManager
         return locationNames;
     }
 
+    public List<string> TimeslotsToList()
+    {
+        List<string> timeslotStrings = new(){};
+        List<Timeslot> timeslots = Database.GetAllTimeslots();
+
+        foreach (Timeslot slot in timeslots)
+        {
+            timeslotStrings.Add(slot.Slot);
+        }
+
+        return timeslotStrings;
+    }
+
     public int GetSelectedLocationID(string locName)
     {
         Dictionary<int, string> locations = Database.GetAllLocations();

@@ -45,6 +45,15 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
+    public static void CreateTimeslotsTable()
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Timeslots(ID INTEGER PRIMARY KEY AUTOINCREMENT, Timeslot TEXT NOT NULL)";
+        cmd.ExecuteNonQuery();
+    }
+
     public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
     {
         using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
@@ -58,6 +67,16 @@ public static class Database {
         cmd.Parameters.AddWithValue("@IsVegetarian", IsVegetarian ? "TRUE" : "FALSE");
         cmd.Parameters.AddWithValue("@IsHalal", IsHalal ? "TRUE" : "FALSE");
         cmd.Parameters.AddWithValue("IsGlutenFree", IsGlutenFree ? "TRUE" : "FALSE");
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void InsertTimeslotsTable(string timeslot)
+    {
+        using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "INSERT INTO Timeslots(Timeslot) VALUES (@Timeslot)";
+        cmd.Parameters.AddWithValue("@Timeslot", timeslot);
         cmd.ExecuteNonQuery();
     }
 
@@ -176,6 +195,27 @@ public static class Database {
                 ));
         }
         return dishes;
+    }
+
+    public static List<Timeslot> GetAllTimeslots()
+    {
+        List<Timeslot> timeslots = new(){};
+
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+
+        cmd.CommandText = "SELECT * FROM Timeslots";
+        var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            long id = reader.GetInt32(0);
+            string timeslot = reader.GetString(1);
+
+            timeslots.Add(new Timeslot(id, timeslot));
+        }
+
+        return timeslots;
     }
 
     public static void InsertUsersTable(string Username, string Password, string? FirstName, string? LastName, string Role)
