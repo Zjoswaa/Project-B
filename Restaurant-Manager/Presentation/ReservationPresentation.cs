@@ -1,5 +1,8 @@
 using Spectre.Console;
 
+
+// TO FIX: weird string formatting before giving input for group size
+// TO FIX: garbage if statements
 public static class ReservationPresentation
 {
     public static void Present()
@@ -28,6 +31,8 @@ public static class ReservationPresentation
         string Buffer = "Reservation for ^\n1\nv people"; // Define an empty string as buffer
         Panel Panel = new(new Text($"Enter the amount of people for the reservation using the arrow keys:\n{Buffer}\n").Centered()); // Define the Panel and Text within it
         Panel.Expand = true; // Panel takes full width
+
+        AnsiConsole.Clear();
         AnsiConsole.Write(Panel); // Render it
 
         bool isSelected = false;
@@ -52,7 +57,7 @@ public static class ReservationPresentation
             if (currentOption == 7 && keyInfo.Key == ConsoleKey.UpArrow)
             {
                 currentOption = 1;
-                Buffer = $"         ^ \nReservation for {currentOption} people\n         v";
+                Buffer = $"         ^ \nReservation for {currentOption} person\n         v";
             }
             if (currentOption == 0 && keyInfo.Key == ConsoleKey.DownArrow)
             {
