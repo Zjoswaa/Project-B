@@ -20,9 +20,8 @@ class UserMenu
             switch (userSelection)
             {
                 case "Make a Reservation":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
                     Console.Clear();
+                    ReservationPresentation.Present();
                     break;
                 case "View Reservation":
                     Console.WriteLine("TBA...");
