@@ -25,7 +25,7 @@ public static class ReservationPresentation
 
         // Creates a Spectre panel in which the user can pick the amount of people for a reservation
         Console.CursorVisible = false;
-        string Buffer = "^\n1\nv"; // Define an empty string as buffer
+        string Buffer = "Reservation for ^\n1\nv people"; // Define an empty string as buffer
         Panel Panel = new(new Text($"Enter the amount of people for the reservation using the arrow keys:\n{Buffer}\n").Centered()); // Define the Panel and Text within it
         Panel.Expand = true; // Panel takes full width
         AnsiConsole.Write(Panel); // Render it
@@ -41,23 +41,23 @@ public static class ReservationPresentation
             if (currentOption != 7 && keyInfo.Key == ConsoleKey.UpArrow)
             {
                 currentOption += 1;
-                Buffer = $"^\n{currentOption}\nv";
+                Buffer = $"         ^ \nReservation for {currentOption} people\n         v";
             }
             if (currentOption != 0 && keyInfo.Key == ConsoleKey.DownArrow)
             {
                 currentOption -= 1;
-                Buffer = $"^\n{currentOption}\nv";
+                Buffer = $"         ^ \nReservation for {currentOption} people\n         v";
             }
 
             if (currentOption == 7 && keyInfo.Key == ConsoleKey.UpArrow)
             {
                 currentOption = 1;
-                Buffer = $"^\n{currentOption}\nv";
+                Buffer = $"         ^ \nReservation for {currentOption} people\n         v";
             }
             if (currentOption == 0 && keyInfo.Key == ConsoleKey.DownArrow)
             {
                 currentOption = 6;
-                Buffer = $"^\n{currentOption}\nv";
+                Buffer = $"         ^ \nReservation for {currentOption} people\n         v";
             }
 
             if (keyInfo.Key == ConsoleKey.Enter)
@@ -72,6 +72,6 @@ public static class ReservationPresentation
                 AnsiConsole.Write(Panel); // Re-render the panel with the updated text
         }
 
-        resManager.CreateReservation(userID, locID, timeslot, date, groupsize);
+        ///resManager.CreateReservation(userID, locID, timeslot, date, groupsize);
     }
 }
