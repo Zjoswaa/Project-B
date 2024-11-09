@@ -1,3 +1,4 @@
+using System.Globalization;
 using Spectre.Console;
 
 public static class ReservationPresentation
@@ -9,9 +10,10 @@ public static class ReservationPresentation
         long userID = State.LoggedInUser.ID;
         long locID = UserLocation(resManager);
         string timeslot = UserTimeslot(resManager);
+        DateTime date = UserDate();
         int groupsize = UserGroupSize();
 
-        //resManager.CreateReservation(userID, locID, timeslot, date, groupsize);
+        resManager.CreateReservation(userID, locID, timeslot, date, groupsize);
     }
 
     static long UserLocation(ReservationManager resManager)
@@ -38,6 +40,16 @@ public static class ReservationPresentation
             .AddChoices(resManager.TimeslotsToList()));
         
         return timeslotChoice;
+    }
+
+    //TO BE CHANGED
+    static DateTime UserDate()
+    {
+        Console.WriteLine("Enter a date (DD-MM-YYYY):");
+        string dateInput = Console.ReadLine();
+        DateTime date = DateTime.ParseExact(dateInput, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+        return date;
     }
 
     static int UserGroupSize()
