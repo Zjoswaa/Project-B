@@ -60,7 +60,7 @@ public static class ReservationPresentation
         int groupsize = 0;
 
         // Creates a Spectre panel in which the user can pick the amount of people for a reservation
-        string Buffer = $"\n         ^ \nReservation for {currentOption} person\n";
+        string Buffer = $"\n          ^ \nReservation for {currentOption} person\n";
         Panel Panel = new(new Text($"Enter the amount of people for the reservation using the arrow keys:\n{Buffer}\n").Centered()); // Define the Panel and Text within it
         Panel.Expand = true; // Panel takes full width
 
@@ -71,18 +71,18 @@ public static class ReservationPresentation
         {
             ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
 
-            Buffer = (currentOption != 6) ? $"\n         ^ \nReservation for {currentOption} person\n" : $"\n         \nReservation for {currentOption} people\n         v";
+            Buffer = (currentOption != 6) ? $"\n          ^ \nReservation for {currentOption} person\n" : $"\n         \nReservation for {currentOption} people\n         v";
 
             if (currentOption != 6 && keyInfo.Key == ConsoleKey.UpArrow)
             {
                 currentOption += 1;
-                Buffer = (currentOption != 6) ? $"\n         ^ \nReservation for {currentOption} people\n         v" : $"\n         \nReservation for {currentOption} people\n         v";
+                Buffer = (currentOption != 6) ? $"\n          ^ \nReservation for {currentOption} people\n         v" : $"\n         \nReservation for {currentOption} people\n         v";
             }
 
             if (currentOption != 1 && keyInfo.Key == ConsoleKey.DownArrow)
             {
                 currentOption -= 1;
-                Buffer = (currentOption != 1) ? $"\n         ^ \nReservation for {currentOption} people\n         v" : $"\n         ^ \nReservation for {currentOption} person\n";
+                Buffer = (currentOption != 1) ? $"\n          ^ \nReservation for {currentOption} people\n         v" : $"\n          ^ \nReservation for {currentOption} person\n";
             }
 
             if (keyInfo.Key == ConsoleKey.Enter)
