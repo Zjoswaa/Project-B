@@ -177,11 +177,11 @@ public static class Database {
             dishes.Add(new Dish(
                 (long)reader["ID"],
                 (string)reader["Name"],
-                (double)reader["Price"],
-                (bool)reader["IsVegan"],
-                (bool)reader["IsVegetarian"],
-                (bool)reader["IsHalal"],
-                (bool)reader["IsGlutenFree"]
+                Convert.ToDouble(reader["Price"]),
+                Convert.ToBoolean(reader["IsVegan"]),
+                Convert.ToBoolean(reader["IsVegetarian"]),
+                Convert.ToBoolean(reader["IsHalal"]),
+                Convert.ToBoolean(reader["IsGlutenFree"])
                 ));
         }
         return dishes;
