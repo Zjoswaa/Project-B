@@ -1,12 +1,15 @@
-﻿static class RegisterLogic {
-    public static bool UsernameValid(string Username) {
-        if (string.IsNullOrEmpty(Username)) {
+﻿using System.Text.RegularExpressions;
+
+static class RegisterLogic {
+    public static bool EmailValid(string Email) {
+        if (string.IsNullOrEmpty(Email)) {
             return true;
         }
-        if (string.IsNullOrWhiteSpace(Username)) {
+        if (string.IsNullOrWhiteSpace(Email)) {
             return false;
         }
-        return Username.Length > 3;
+
+        return new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").IsMatch(Email);
     }
 
     public static bool PasswordValid(string Password) {
@@ -16,6 +19,7 @@
         if (string.IsNullOrWhiteSpace(Password)) {
             return false;
         }
-        return Password.Length > 7;
+        
+        return new Regex(@".{8,}").IsMatch(Password);
     }
 }

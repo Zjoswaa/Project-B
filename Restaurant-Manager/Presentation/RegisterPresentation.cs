@@ -11,55 +11,55 @@ static class RegisterPresentation
 
         AnsiConsole.WriteLine();
 
-        // Ask for new user username
-        AnsiConsole.MarkupLine("[blue]Please enter your username, or press Enter to return:[/]");
-        string Username = PromptUsername();
-        if (string.IsNullOrEmpty(Username)) {
+        // Ask for new user email
+        AnsiConsole.MarkupLine("[blue]Please enter your email, or press Enter to return:[/]");
+        string email = PromptEmail();
+        if (string.IsNullOrEmpty(email)) {
             AnsiConsole.Clear();
             MainMenuPresentation.ShowMainMenu();
         }
 
         // Ask for new user password
         AnsiConsole.MarkupLine("[blue]Please enter your password, or press Enter to return:[/]");
-        string Password = PromptPassword(Username);
+        string Password = PromptPassword(email);
         if (string.IsNullOrEmpty(Password)) {
             AnsiConsole.Clear();
             MainMenuPresentation.ShowMainMenu();
         }
 
         // Ask for user first name
-        string FirstName = PromptFirstName(Username, Password);
+        string FirstName = PromptFirstName(email, Password);
 
         // Ask for user last name
-        string LastName = PromptLastName(Username, Password, FirstName);
+        string LastName = PromptLastName(email, Password, FirstName);
 
         // Optionally insert a new user into the table
         if (InsertIntoUsersTable)
         {
-            Database.InsertUsersTable(Username, Password, FirstName, LastName, "USER");
+            Database.InsertUsersTable(email, Password, FirstName, LastName, "USER");
         }
 
         // Display registration success message and redirect to choice page
         ShowSuccessMessageAndRedirect();
     }
 
-    private static string PromptUsername()
+    private static string PromptEmail()
     {
         while (true)
         {
-            string Username = AnsiConsole.Prompt(
-            new TextPrompt<string>("[green]Username:[/]")
+            string Email = AnsiConsole.Prompt(
+            new TextPrompt<string>("[green]Email:[/]")
                 .Validate(n => {
-                    // Another user with that username already exists
+                    // Another user with that Email already exists
                     if (Database.UsersTableContainsUser(n))
                     {
-                        return ValidationResult.Error("[red]This username is already taken[/]");
+                        return ValidationResult.Error("[red]This email is already registered to another account[/]");
                     }
 
-                    // Invalid username length, null or only whitespace
-                    if (!RegisterLogic.UsernameValid(n))
+                    // Invalid Email length, null or only whitespace
+                    if (!RegisterLogic.EmailValid(n))
                     {
-                        return ValidationResult.Error("[red]Username must be at least 4 characters long[/]");
+                        return ValidationResult.Error("[red]Invalid email[/]");
                     }
 
                     // If all checks pass
@@ -68,11 +68,11 @@ static class RegisterPresentation
                 .AllowEmpty()
             );
 
-            return Username;
+            return Email;
         }
     }
 
-    private static string PromptPassword(string Username)
+    private static string PromptPassword(string Email)
     {
         while (true)
         {
@@ -81,8 +81,8 @@ static class RegisterPresentation
                 new Rule("[yellow]Register[/]")
             );
             AnsiConsole.WriteLine();
-            AnsiConsole.MarkupLine("[blue]Please enter your username, or press Enter to return:[/]");
-            AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
+            AnsiConsole.MarkupLine("[blue]Please enter your email, or press Enter to return:[/]");
+            AnsiConsole.MarkupLine($"[green]Email:[/] {Email}");
 
             AnsiConsole.MarkupLine("[blue]Please enter your password, or press Enter to return:[/]");
             string Password = AnsiConsole.Prompt(
@@ -105,24 +105,24 @@ static class RegisterPresentation
         }
     }
 
-    private static string PromptFirstName(string Username, string Password)
+    private static string PromptFirstName(string Email, string Password)
     {
         AnsiConsole.Clear();
         AnsiConsole.Write(
             new Rule("[yellow]Register[/]")
         );
-        AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
+        AnsiConsole.MarkupLine($"[green]Email:[/] {Email}");
         AnsiConsole.MarkupLine($"[green]Password:[/] {new string('*', Password.Length)}");
         return AnsiConsole.Prompt(new TextPrompt<string>("[blue]First name (Optional):[/]").AllowEmpty());
     }
 
-    private static string PromptLastName(string Username, string Password, string FirstName)
+    private static string PromptLastName(string Email, string Password, string FirstName)
     {
         AnsiConsole.Clear();
         AnsiConsole.Write(
             new Rule("[yellow]Register[/]")
         );
-        AnsiConsole.MarkupLine($"[green]Username:[/] {Username}");
+        AnsiConsole.MarkupLine($"[green]Email:[/] {Email}");
         AnsiConsole.MarkupLine($"[green]Password:[/] {new string('*', Password.Length)}");
         AnsiConsole.MarkupLine($"[blue]First name (Optional):[/] {FirstName}");
         return AnsiConsole.Prompt(new TextPrompt<string>("[blue]Last name (Optional):[/]").AllowEmpty());

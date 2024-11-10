@@ -17,7 +17,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Users(ID INTEGER PRIMARY KEY AUTOINCREMENT, Username TEXT NOT NULL, Password TEXT NOT NULL, FirstName TEXT, LastName TEXT, Role TEXT NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Users(ID INTEGER PRIMARY KEY AUTOINCREMENT, Email TEXT NOT NULL, Password TEXT NOT NULL, FirstName TEXT, LastName TEXT, Role TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -45,13 +45,22 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
+    public static void SetUserPassword(string Email, string NewPassword) {
+        using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "UPDATE Users SET Password = @NewPassword WHERE Email = @Email";
+        cmd.Parameters.AddWithValue("@NewPassword", Encryptor.Encrypt(NewPassword));
+        cmd.Parameters.AddWithValue("@Email", Email);
+        cmd.ExecuteNonQuery();
+    }
+
     public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
     {
         using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree)" +
-                           "VALUES(@Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
+        cmd.CommandText = "INSERT INTO dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES(@Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
         cmd.Parameters.AddWithValue("@Name", Name);
         cmd.Parameters.AddWithValue("@Price", Price);
         cmd.Parameters.AddWithValue("@IsVegan", IsVegan ? "TRUE" : "FALSE");
@@ -178,7 +187,7 @@ public static class Database {
         return dishes;
     }
 
-    public static void InsertUsersTable(string Username, string Password, string? FirstName, string? LastName, string Role)
+    public static void InsertUsersTable(string Email, string Password, string? FirstName, string? LastName, string Role)
     {
         if (Role != "USER" && Role != "ADMIN")
         {
@@ -188,8 +197,8 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO users(Username, Password, FirstName, LastName, Role) VALUES(@Username, @Password, @FirstName, @LastName, @Role)";
-        cmd.Parameters.AddWithValue("@Username", Username);
+        cmd.CommandText = "INSERT INTO users(Email, Password, FirstName, LastName, Role) VALUES(@Email, @Password, @FirstName, @LastName, @Role)";
+        cmd.Parameters.AddWithValue("@Email", Email);
         cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(FirstName) ? null : FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(LastName) ? null : LastName);
@@ -211,8 +220,8 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO users(Username, Password, FirstName, LastName, Role) VALUES(@Username, @Password, @FirstName, @LastName, @Role)";
-        cmd.Parameters.AddWithValue("@Username", User.Username);
+        cmd.CommandText = "INSERT INTO users(Email, Password, FirstName, LastName, Role) VALUES(@Email, @Password, @FirstName, @LastName, @Role)";
+        cmd.Parameters.AddWithValue("@Email", User.Email);
         cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(User.FirstName) ? null : User.FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(User.LastName) ? null : User.LastName);
@@ -221,7 +230,7 @@ public static class Database {
     }
 
     // This forces an ID for the user, use only for debugging
-    public static void InsertUsersTable(long ID, string Username, string Password, string? FirstName, string? LastName, string Role)
+    public static void InsertUsersTable(long ID, string Email, string Password, string? FirstName, string? LastName, string Role)
     {
         if (Role != "USER" && Role != "ADMIN")
         {
@@ -235,9 +244,9 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = $"INSERT INTO Users(ID, Username, Password, FirstName, LastName, Role) VALUES(@ID, @Username, @Password, @FirstName, @LastName, @Role)";
+        cmd.CommandText = $"INSERT INTO Users(ID, Email, Password, FirstName, LastName, Role) VALUES(@ID, @Email, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@ID", ID);
-        cmd.Parameters.AddWithValue("@Username", Username);
+        cmd.Parameters.AddWithValue("@Email", Email);
         cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(FirstName) ? null : FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(LastName) ? null : LastName);
@@ -245,38 +254,38 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static bool UsersTableContainsUser(string Username) {
+    public static bool UsersTableContainsUser(string Email) {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = $"SELECT COUNT(*) FROM Users WHERE Username = @Username";
-        cmd.Parameters.AddWithValue("@Username", Username);
+        cmd.CommandText = $"SELECT COUNT(*) FROM Users WHERE Email = @Email";
+        cmd.Parameters.AddWithValue("@Email", Email);
         Object result = cmd.ExecuteScalar();
 
         return (long)result > 0;
     }
 
-    public static User? GetUserByUsername(string Username) {
+    public static User? GetUserByEmail(string Email) {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = $"SELECT * FROM Users WHERE Username = @Username LIMIT 1";
-        cmd.Parameters.AddWithValue("@Username", Username);
+        cmd.CommandText = $"SELECT * FROM Users WHERE Email = @Email LIMIT 1";
+        cmd.Parameters.AddWithValue("@Email", Email);
         SQLiteDataReader result = cmd.ExecuteReader();
         if (!result.HasRows)
         {
             return null;
         }
         result.Read();
-        return new User((long)result["ID"], (string)result["Username"], result["FirstName"] == DBNull.Value ? null : (string)result["FirstName"], result["LastName"] == DBNull.Value ? null : (string)result["LastName"], (string)result["Role"]);
+        return new User((long)result["ID"], (string)result["Email"], result["FirstName"] == DBNull.Value ? null : (string)result["FirstName"], result["LastName"] == DBNull.Value ? null : (string)result["LastName"], (string)result["Role"]);
     }
 
-    public static string? GetEncryptedPassword(string Username) {
+    public static string? GetEncryptedPassword(string Email) {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = $"SELECT Password FROM Users WHERE Username = @Username LIMIT 1";
-        cmd.Parameters.AddWithValue("@Username", Username);
+        cmd.CommandText = $"SELECT Password FROM Users WHERE Email = @Email LIMIT 1";
+        cmd.Parameters.AddWithValue("@Email", Email);
         SQLiteDataReader result = cmd.ExecuteReader();
         if (!result.HasRows)
         {
