@@ -19,17 +19,8 @@ public class Dish
         IsGlutenFree = isglutenfree;
     }
 
-    public string BoolToText(bool status)
-    {
-        if (status)
-        {
-            return "Yes";
-        }
-        return "No";
-    }
-
     public override string ToString()
     {
-        return $"ID: {ID}\nDish Name: {Name}\nDish Price: {Price}\nVegan: {BoolToText(IsVegan)}\nVegetarian: {BoolToText(IsVegetarian)}\nHalal: {BoolToText(IsHalal)}\nGluten free: {BoolToText(IsGlutenFree)}";
+        return $"ID: {ID}\nDish Name: {Name}\nDish Price: {Price}\nVegan: {(IsVegan ? "Yes" : "No")}\nVegetarian: {(IsVegetarian ? "Yes" : "No")}\nHalal: {(IsHalal ? "Yes" : "No")}\nGluten free: {(IsGlutenFree ? "Yes" : "No")}";
     }
 }

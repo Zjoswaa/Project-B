@@ -1,38 +1,80 @@
-﻿// MENU LOGIC
+﻿using Spectre.Console;
 
 class MenuLogic
 {
     public static void AddDish()
     {
-        Console.WriteLine("Enter the dish name:");
-        string dishname = Console.ReadLine();
+        string dishname = AnsiConsole.Prompt(
+            new TextPrompt<string>("What is the dish name? ")
+                .Validate(n => {
+                    // TO DO valid dishname checker
 
-        double price;
-        while (true)
-        {
-            Console.WriteLine("Enter the dish price:");
-            string dishprice = Console.ReadLine();
+                    // If all checks pass
+                    return ValidationResult.Success();
+                })
+            );
 
-            if (double.TryParse(dishprice, out price))
-            {
-                break; // if price is valid, break out the loop
-            }
-            else
-            {
-                Console.WriteLine("Invalid price. Please enter a valid number.");
-            }
-        }
+        string price = AnsiConsole.Prompt(
+            new TextPrompt<string>("What is the dish price? ")
+                .Validate(n => {
+                    // TO DO valid price checker
 
-        Console.WriteLine("Is the dish vegan? (yes/no)");
-        string input = Console.ReadLine().Trim().ToLower();
+                    // If all checks pass
+                    return ValidationResult.Success();
+                })
+            );
+
+        var userSelectionPrompt = new SelectionPrompt<string>()
+            .Title("[cyan]Is the dish vegan?:[/]")
+            .AddChoices(new[] { "Yes", "No"});
+        var input = AnsiConsole.Prompt(userSelectionPrompt);
         bool isVegan = false;
-        if (input == "yes")
+        if (input == "Yes")
         {
             isVegan = true;
         }
-        else if (input != "no")
+
+        userSelectionPrompt = new SelectionPrompt<string>()
+            .Title("[cyan]Is the dish Vegetarian?:[/]")
+            .AddChoices(new[] { "Yes", "No" });
+        input = AnsiConsole.Prompt(userSelectionPrompt);
+        bool isVegetarian = false;
+        if (input == "Yes")
         {
-            Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+            isVegetarian = true;
         }
+
+        userSelectionPrompt = new SelectionPrompt<string>()
+            .Title("[cyan]Is the dish Halal?:[/]")
+            .AddChoices(new[] { "Yes", "No" });
+        input = AnsiConsole.Prompt(userSelectionPrompt);
+        bool isHalal = false;
+        if (input == "Yes")
+        {
+            isHalal = true;
+        }
+
+        userSelectionPrompt = new SelectionPrompt<string>()
+            .Title("[cyan]Is the dish Gluten Free?:[/]")
+            .AddChoices(new[] { "Yes", "No" });
+        input = AnsiConsole.Prompt(userSelectionPrompt);
+        bool isGlutenFree = false;
+        if (input == "Yes")
+        {
+            isGlutenFree = true;
+        }
+        
+        // Add the dish to database
+        
+        try
+        {
+            Database.InsertDishesTable(dishname, price, isVegan, isVegetarian, isHalal, isGlutenFree);
+            Console.WriteLine($"{dishname} added successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error adding dish: {ex.Message}");
+        }
+        Console.ReadKey();
     }
 }

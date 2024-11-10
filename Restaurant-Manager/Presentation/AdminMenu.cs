@@ -20,9 +20,10 @@ class AdminMenu {
                     Console.Clear();
                     break;
                 case "Manage menu":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
-                    Console.Clear();
+                    //Console.WriteLine("TBA...");
+                    //Thread.Sleep(1000);
+                    //Console.Clear();
+                    MenuLogic.AddDish();
                     break;
                 case "Logout":
                     AnsiConsole.MarkupLine("[red]Logging out...[/]");
