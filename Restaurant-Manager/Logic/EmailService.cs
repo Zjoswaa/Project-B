@@ -30,4 +30,27 @@ public static class EmailService
             Console.WriteLine("Failed to send email. Error: " + ex.Message);
         }
     }
+
+    public static void SendPasswordForgorEmail(string RecipientEmail, string Code) {
+        // Define the email message
+        MailMessage mail = new MailMessage();
+        mail.From = new MailAddress("mail.escapedine@gmail.com");
+        mail.To.Add(RecipientEmail);
+        mail.Subject = "Your Escape &amp; Dine reservation";
+        mail.Body = $"<p><strong>Dear user,</strong></p><hr/><p>We have received a request to reset the password for the account registered to this email. To continue, please enter the code down below into the verification box:</p><p><strong>{Code}</strong></p><p>If you didn&rsquo;t request a password reset, please ignore this email, and your password will remain unchanged. If you have any concerns, you can contact us at mail.escapedine@gmail.com.</p><hr/><p>Thank you,<br />Escape &amp; Dine Support Team</p>";
+        mail.IsBodyHtml = true;
+
+        // Define the SMTP client
+        SmtpClient smtpClient = new SmtpClient("smtp.gmail.com");
+        smtpClient.Port = 587; // SMTP port for TLS
+        smtpClient.Credentials = new NetworkCredential("mail.escapedine@gmail.com", "czzw ygug utxw fpwv");
+        smtpClient.EnableSsl = true; // Enable SSL for secure connection
+
+        try {
+            // Send the email
+            smtpClient.Send(mail);
+        } catch (Exception ex) {
+            Console.WriteLine("Failed to send email. Error: " + ex.Message);
+        }
+    }
 }
