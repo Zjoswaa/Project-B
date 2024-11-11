@@ -7,13 +7,29 @@ public static class ReservationPresentation
     {
         ReservationManager resManager = new();
 
+        Console.Clear();
         long userID = State.LoggedInUser.ID;
+
         long locID = UserLocation(resManager);
+        if (locID == -1) return;
+
         string timeslot = UserTimeslot(resManager);
-        DateTime date = UserDate();
+        if (timeslot == "NULL") return;
+
+        string dateString = UserDate(resManager);
+        if (dateString == "NULL") return;
+        DateTime date = resManager.ParseDate(dateString);
+
         int groupsize = UserGroupSize();
+        if (groupsize == -1) return;
 
         resManager.CreateReservation(userID, locID, timeslot, date, groupsize);
+        string text = "[green]Your reservation has been made.[/]\n\nPress any key to continue.";
+        Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
+        panel.Expand = true; // Set expand again
+        Console.Clear();
+        AnsiConsole.Write(panel);
+        Console.ReadKey();
     }
 
     static long UserLocation(ReservationManager resManager)
@@ -25,6 +41,11 @@ public static class ReservationPresentation
             new SelectionPrompt<string>()
             .Title("[cyan]Select a location:[/]")
             .AddChoices(resManager.LocationNamesToList()));
+
+        if (locationChoice == "Exit Reservation")
+        {
+            return -1;
+        }
 
         return resManager.GetSelectedLocationID(locationChoice);
     }
@@ -39,17 +60,37 @@ public static class ReservationPresentation
             .Title("[cyan]Select a timeslot:[/]")
             .AddChoices(resManager.TimeslotsToList()));
         
+        if (timeslotChoice == "Exit Reservation")
+        {
+            return "NULL";
+        }
+
         return timeslotChoice;
     }
 
-    //TO BE CHANGED
-    static DateTime UserDate()
+    static string UserDate(ReservationManager resManager) //Add spectre calendar with unavailable dates maybe
     {
-        Console.WriteLine("Enter a date (DD-MM-YYYY):");
+        Console.WriteLine("Enter a date (DD-MM-YYYY) or type 'Exit' to cancel reservation:");
         string dateInput = Console.ReadLine();
-        DateTime date = DateTime.ParseExact(dateInput, "dd-MM-yyyy", CultureInfo.InvariantCulture);
 
-        return date;
+        if (dateInput == "Exit")
+        {
+            return "NULL";
+        }
+
+        DateTime date = resManager.ParseDate(dateInput);
+
+        (bool success, string message) = resManager.VerifyDate(date);
+
+        if (!success)
+        {
+            Console.WriteLine(message);
+            Console.WriteLine("Press any key to continue.");
+            Console.ReadKey();
+            return "NULL";
+        }
+
+        return dateInput;
     }
 
     static int UserGroupSize()
@@ -61,7 +102,7 @@ public static class ReservationPresentation
 
         // Creates a Spectre panel in which the user can pick the amount of people for a reservation
         string Buffer = $"\n          ^ \nReservation for {currentOption} person\n";
-        Panel Panel = new(new Text($"Enter the amount of people for the reservation using the arrow keys:\n{Buffer}\n").Centered()); // Define the Panel and Text within it
+        Panel Panel = new(new Text($"Enter the amount of people for the reservation using the arrow keys:\n{Buffer}\n\n\nPress ESC to exit.").Centered()); // Define the Panel and Text within it
         Panel.Expand = true; // Panel takes full width
 
         AnsiConsole.Clear();
@@ -91,12 +132,12 @@ public static class ReservationPresentation
                 isSelected = true;
             }
 
-            if (keyInfo.Key == ConsoleKey.Backspace)
+            if (keyInfo.Key == ConsoleKey.Escape)
             {
-                break;
+                return -1;
             }
 
-                Panel = new(new Text($"Enter the amount of people for the reservation using the arrow keys:\n{Buffer}\n").Centered()); // Update the panel and the text in it with the updated buffer
+                Panel = new(new Text($"Enter the amount of people for the reservation using the arrow keys:\n{Buffer}\n\n\nPress ESC to exit.").Centered()); // Update the panel and the text in it with the updated buffer
                 Panel.Expand = true; // Set expand again
                 AnsiConsole.Clear(); // Clear the previous print of the panel
                 AnsiConsole.Write(Panel); // Re-render the panel with the updated text

@@ -302,7 +302,7 @@ public static class Database {
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = $"SELECT * FROM Users WHERE Username = @Username LIMIT 1";
         cmd.Parameters.AddWithValue("@Username", Username);
-        SQLiteDataReader result = cmd.ExecuteReader();
+        using SQLiteDataReader result = cmd.ExecuteReader();
         if (!result.HasRows)
         {
             return null;
@@ -317,7 +317,7 @@ public static class Database {
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = $"SELECT Password FROM Users WHERE Username = @Username LIMIT 1";
         cmd.Parameters.AddWithValue("@Username", Username);
-        SQLiteDataReader result = cmd.ExecuteReader();
+        using SQLiteDataReader result = cmd.ExecuteReader();
         if (!result.HasRows)
         {
             return null;
