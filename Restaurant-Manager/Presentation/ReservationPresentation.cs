@@ -73,7 +73,7 @@ public static class ReservationPresentation
         Console.WriteLine("Enter a date (DD-MM-YYYY) or type 'Exit' to cancel reservation:");
         string dateInput = Console.ReadLine();
 
-        if (dateInput == "Exit")
+        if (dateInput.ToLower() == "exit")
         {
             return "NULL";
         }
