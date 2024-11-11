@@ -12,7 +12,7 @@ static class RegisterPresentation
         AnsiConsole.WriteLine();
 
         // Ask for new user email
-        AnsiConsole.MarkupLine("[blue]Please enter your email, or press Enter to return:[/]");
+        AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
         string email = PromptEmail();
         if (string.IsNullOrEmpty(email)) {
             AnsiConsole.Clear();
@@ -20,7 +20,7 @@ static class RegisterPresentation
         }
 
         // Ask for new user password
-        AnsiConsole.MarkupLine("[blue]Please enter your password, or press Enter to return:[/]");
+        AnsiConsole.MarkupLine("[blue]Please enter your password, or leave empty to cancel:[/]");
         string Password = PromptPassword(email);
         if (string.IsNullOrEmpty(Password)) {
             AnsiConsole.Clear();
@@ -54,6 +54,7 @@ static class RegisterPresentation
         {
             string Email = AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Email:[/]")
+                .PromptStyle("yellow")
                 .Validate(n => {
                     // Another user with that Email already exists
                     if (Database.UsersTableContainsUser(n))
@@ -86,12 +87,13 @@ static class RegisterPresentation
                 new Rule("[yellow]Register[/]")
             );
             AnsiConsole.WriteLine();
-            AnsiConsole.MarkupLine("[blue]Please enter your email, or press Enter to return:[/]");
+            AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
             AnsiConsole.MarkupLine($"[green]Email:[/] {Email}");
 
-            AnsiConsole.MarkupLine("[blue]Please enter your password, or press Enter to return:[/]");
+            AnsiConsole.MarkupLine("[blue]Please enter your password, or leave empty to cancel:[/]");
             string Password = AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Enter your password:[/]")
+                .PromptStyle("yellow")
                 .Validate(p => {
                     // Invalid password length, null or only whitespace
                     if (!RegisterLogic.PasswordValid(p))

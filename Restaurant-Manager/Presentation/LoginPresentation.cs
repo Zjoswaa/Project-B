@@ -14,7 +14,7 @@ static class LoginPresentation
             AnsiConsole.WriteLine();
 
             // Ask for a Email
-            AnsiConsole.MarkupLine("[blue]Please enter your Email, or press Enter to return:[/]");
+            AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
             string Email = PromptEmail();
             if (string.IsNullOrEmpty(Email)) {
                 AnsiConsole.Clear();
@@ -22,7 +22,7 @@ static class LoginPresentation
             }
 
             // Ask for a password
-            AnsiConsole.MarkupLine("[blue]Please enter your password, or press Enter to return:[/]");
+            AnsiConsole.MarkupLine("[blue]Please enter your password, or leave empty to cancel:[/]");
             string Password = PromptPassword();
             if (string.IsNullOrEmpty(Password)) {
                 AnsiConsole.Clear();

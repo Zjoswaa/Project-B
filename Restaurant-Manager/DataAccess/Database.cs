@@ -41,7 +41,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Dishes(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Price TEXT NOT NULL, IsVegan TEXT NOT NULL, IsVegetarian TEXT NOT NULL, IsHalal TEXT NOT NULL, IsGlutenFree TEXT NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Dishes(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Price TEXT NOT NULL, IsVegan INTEGER NOT NULL, IsVegetarian INTEGER NOT NULL, IsHalal INTEGER NOT NULL, IsGlutenFree INTEGER NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -57,39 +57,28 @@ public static class Database {
 
     public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
     {
-        //using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
-        //Connection.Open();
-        //using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        //cmd.CommandText = "INSERT INTO Dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES(@Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
-        //cmd.Parameters.Add(new SQLiteParameter("@Name", System.Data.DbType.String) { Value = Name });
-        //cmd.Parameters.Add(new SQLiteParameter("@Price", System.Data.DbType.String) { Value = Price });
-        //cmd.Parameters.Add(new SQLiteParameter("@IsVegan", System.Data.DbType.String) { Value = IsVegan ? "TRUE" : "FALSE" });
-        //cmd.Parameters.Add(new SQLiteParameter("@IsVegetarian", System.Data.DbType.String) { Value = IsVegetarian ? "TRUE" : "FALSE" });
-        //cmd.Parameters.Add(new SQLiteParameter("@IsHalal", System.Data.DbType.String) { Value = IsHalal ? "TRUE" : "FALSE" });
-        //cmd.Parameters.Add(new SQLiteParameter("@IsGlutenFree", System.Data.DbType.String) { Value = IsGlutenFree ? "TRUE" : "FALSE" });
-        //using (SQLiteTransaction transaction = Connection.BeginTransaction())
-        //using (SQLiteCommand cmd = new SQLiteCommand(Connection)) {
-        //    cmd.CommandText = "INSERT INTO Dishes (Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES ('TestName', '10.99', 'TRUE', 'FALSE', 'TRUE', 'FALSE')";
-        //    try {
-        //        cmd.ExecuteNonQuery();
-        //        transaction.Commit(); // Ensure changes are saved
-        //    } catch {
-        //        transaction.Rollback(); // Rollback if there's an error
-        //        throw;
-        //    }
-        //}
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        //cmd.CommandText = "INSERT INTO Dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES(@Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
-        cmd.CommandText = "INSERT INTO Dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES('Test', '12.99', 'TRUE', 'TRUE', 'TRUE', 'TRUE')";
-        //cmd.Parameters.AddWithValue("@Name", "Test");
-        //cmd.Parameters.AddWithValue("@Price", "15.99");
-        //cmd.Parameters.AddWithValue("@IsVegan", "TRUE");
-        //cmd.Parameters.AddWithValue("@IsVegetarian", "TRUE");
-        //cmd.Parameters.AddWithValue("@IsHalal", "TRUE");
-        //cmd.Parameters.AddWithValue("@IsGlutenFree", "TRUE");
+        cmd.CommandText = "INSERT INTO Dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES(@Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
+        cmd.Parameters.AddWithValue("@Name", Name);
+        cmd.Parameters.AddWithValue("@Price", Price);
+        cmd.Parameters.AddWithValue("@IsVegan", IsVegan ? 1 : 0);
+        cmd.Parameters.AddWithValue("@IsVegetarian", IsVegetarian ? 1 : 0);
+        cmd.Parameters.AddWithValue("@IsHalal", IsHalal ? 1 : 0);
+        cmd.Parameters.AddWithValue("@IsGlutenFree", IsGlutenFree ? 1 : 0);
         cmd.ExecuteNonQuery();
+    }
+
+    public static bool DishesTableContainsDish(string Name) {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = $"SELECT COUNT(*) FROM Dishes WHERE Name = @Name";
+        cmd.Parameters.AddWithValue("@Name", Name);
+        Object result = cmd.ExecuteScalar();
+
+        return (long)result > 0;
     }
 
     public static void UpdateDishesTable(long ID, string Name, double Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
@@ -101,19 +90,18 @@ public static class Database {
         cmd.Parameters.AddWithValue("@ID", ID);
         cmd.Parameters.AddWithValue("@Name", Name);
         cmd.Parameters.AddWithValue("@Price", Price);
-        cmd.Parameters.AddWithValue("@IsVegan", IsVegan);
-        cmd.Parameters.AddWithValue("@IsVegetarian", IsVegetarian);
-        cmd.Parameters.AddWithValue("@IsHalal", IsHalal);
-        cmd.Parameters.AddWithValue("@IsGlutenFree", IsGlutenFree);
+        cmd.Parameters.AddWithValue("@IsVegan", IsVegan ? 1 : 0);
+        cmd.Parameters.AddWithValue("@IsVegetarian", IsVegetarian ? 1 : 0);
+        cmd.Parameters.AddWithValue("@IsHalal", IsHalal ? 1 : 0);
+        cmd.Parameters.AddWithValue("@IsGlutenFree", IsGlutenFree ? 1 : 0);
         cmd.ExecuteNonQuery();
     }
 
-    public static void DeleteDishesTable(long ID)
-    {
+    public static void DeleteDishesTable(string Name) {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
-        using SQLiteCommand cmd = new SQLiteCommand("DELETE FROM Dishes WHERE ID = @ID", Connection);
-        cmd.Parameters.AddWithValue("@ID", ID);
+        using SQLiteCommand cmd = new SQLiteCommand("DELETE FROM Dishes WHERE Name = @Name", Connection);
+        cmd.Parameters.AddWithValue("@Name", Name);
         cmd.ExecuteNonQuery();
     }
 
