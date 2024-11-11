@@ -41,7 +41,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Dishes(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Price TEXT NOT NULL, IsVegan INTEGER NOT NULL, IsVegetarian INTEGER NOT NULL, IsHalal INTEGER NOT NULL, IsGlutenFree INTEGER NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Dishes(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Price TEXT NOT NULL, IsVegan TEXT NOT NULL, IsVegetarian TEXT NOT NULL, IsHalal TEXT NOT NULL, IsGlutenFree TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -57,16 +57,38 @@ public static class Database {
 
     public static void InsertDishesTable(string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
     {
-        using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
+        //using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
+        //Connection.Open();
+        //using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        //cmd.CommandText = "INSERT INTO Dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES(@Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
+        //cmd.Parameters.Add(new SQLiteParameter("@Name", System.Data.DbType.String) { Value = Name });
+        //cmd.Parameters.Add(new SQLiteParameter("@Price", System.Data.DbType.String) { Value = Price });
+        //cmd.Parameters.Add(new SQLiteParameter("@IsVegan", System.Data.DbType.String) { Value = IsVegan ? "TRUE" : "FALSE" });
+        //cmd.Parameters.Add(new SQLiteParameter("@IsVegetarian", System.Data.DbType.String) { Value = IsVegetarian ? "TRUE" : "FALSE" });
+        //cmd.Parameters.Add(new SQLiteParameter("@IsHalal", System.Data.DbType.String) { Value = IsHalal ? "TRUE" : "FALSE" });
+        //cmd.Parameters.Add(new SQLiteParameter("@IsGlutenFree", System.Data.DbType.String) { Value = IsGlutenFree ? "TRUE" : "FALSE" });
+        //using (SQLiteTransaction transaction = Connection.BeginTransaction())
+        //using (SQLiteCommand cmd = new SQLiteCommand(Connection)) {
+        //    cmd.CommandText = "INSERT INTO Dishes (Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES ('TestName', '10.99', 'TRUE', 'FALSE', 'TRUE', 'FALSE')";
+        //    try {
+        //        cmd.ExecuteNonQuery();
+        //        transaction.Commit(); // Ensure changes are saved
+        //    } catch {
+        //        transaction.Rollback(); // Rollback if there's an error
+        //        throw;
+        //    }
+        //}
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES(@Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
-        cmd.Parameters.AddWithValue("@Name", Name);
-        cmd.Parameters.AddWithValue("@Price", Price);
-        cmd.Parameters.AddWithValue("@IsVegan", IsVegan ? "TRUE" : "FALSE");
-        cmd.Parameters.AddWithValue("@IsVegetarian", IsVegetarian ? "TRUE" : "FALSE");
-        cmd.Parameters.AddWithValue("@IsHalal", IsHalal ? "TRUE" : "FALSE");
-        cmd.Parameters.AddWithValue("IsGlutenFree", IsGlutenFree ? "TRUE" : "FALSE");
+        //cmd.CommandText = "INSERT INTO Dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES(@Name, @Price, @IsVegan, @IsVegetarian, @IsHalal, @IsGlutenFree)";
+        cmd.CommandText = "INSERT INTO Dishes(Name, Price, IsVegan, IsVegetarian, IsHalal, IsGlutenFree) VALUES('Test', '12.99', 'TRUE', 'TRUE', 'TRUE', 'TRUE')";
+        //cmd.Parameters.AddWithValue("@Name", "Test");
+        //cmd.Parameters.AddWithValue("@Price", "15.99");
+        //cmd.Parameters.AddWithValue("@IsVegan", "TRUE");
+        //cmd.Parameters.AddWithValue("@IsVegetarian", "TRUE");
+        //cmd.Parameters.AddWithValue("@IsHalal", "TRUE");
+        //cmd.Parameters.AddWithValue("@IsGlutenFree", "TRUE");
         cmd.ExecuteNonQuery();
     }
 
@@ -165,15 +187,13 @@ public static class Database {
         return reservations;
     }
 
-    public static List<Dish> GetAllDishes()
-    {
+    public static List<Dish> GetAllDishes() {
         List<Dish> dishes = new List<Dish>();
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Dishes", Connection);
         using SQLiteDataReader reader = cmd.ExecuteReader();
-        while (reader.Read())
-        {
+        while (reader.Read()) {
             dishes.Add(new Dish(
                 (long)reader["ID"],
                 (string)reader["Name"],
@@ -197,7 +217,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO users(Email, Password, FirstName, LastName, Role) VALUES(@Email, @Password, @FirstName, @LastName, @Role)";
+        cmd.CommandText = "INSERT INTO Users(Email, Password, FirstName, LastName, Role) VALUES(@Email, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@Email", Email);
         cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(FirstName) ? null : FirstName);
@@ -220,7 +240,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO users(Email, Password, FirstName, LastName, Role) VALUES(@Email, @Password, @FirstName, @LastName, @Role)";
+        cmd.CommandText = "INSERT INTO Users(Email, Password, FirstName, LastName, Role) VALUES(@Email, @Password, @FirstName, @LastName, @Role)";
         cmd.Parameters.AddWithValue("@Email", User.Email);
         cmd.Parameters.AddWithValue("@Password", Encryptor.Encrypt(Password));
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(User.FirstName) ? null : User.FirstName);
@@ -271,7 +291,7 @@ public static class Database {
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = $"SELECT * FROM Users WHERE Email = @Email LIMIT 1";
         cmd.Parameters.AddWithValue("@Email", Email);
-        SQLiteDataReader result = cmd.ExecuteReader();
+        using SQLiteDataReader result = cmd.ExecuteReader();
         if (!result.HasRows)
         {
             return null;
@@ -286,7 +306,7 @@ public static class Database {
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = $"SELECT Password FROM Users WHERE Email = @Email LIMIT 1";
         cmd.Parameters.AddWithValue("@Email", Email);
-        SQLiteDataReader result = cmd.ExecuteReader();
+        using SQLiteDataReader result = cmd.ExecuteReader();
         if (!result.HasRows)
         {
             return null;

@@ -40,7 +40,12 @@ static class RegisterPresentation
         }
 
         // Display registration success message and redirect to choice page
-        ShowSuccessMessageAndRedirect();
+        //ShowSuccessMessageAndRedirect();
+        AnsiConsole.Clear();
+        AnsiConsole.MarkupLine("[bold green]Registration Successful![/]");
+        AnsiConsole.MarkupLine("[bold yellow]Please log in.[/]");
+        Console.Read();
+        AnsiConsole.Clear();
     }
 
     private static string PromptEmail()

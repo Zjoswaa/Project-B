@@ -63,11 +63,11 @@ class MenuLogic
         {
             isGlutenFree = true;
         }
-        
+
         // Add the dish to database
-        
-        try
-        {
+
+        try {
+            //Database.InsertUsersTable("test", "a", "first", "last", "USER");
             Database.InsertDishesTable(dishname, price, isVegan, isVegetarian, isHalal, isGlutenFree);
             Console.WriteLine($"{dishname} added successfully.");
         }
