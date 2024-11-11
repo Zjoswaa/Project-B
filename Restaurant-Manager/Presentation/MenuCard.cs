@@ -22,17 +22,17 @@ static class MenuCard
                 }
 
                 // Columns
-                Update(230, () => table.AddColumn("Name"));
-                Update(230, () => table.AddColumn("Price"));
-                Update(230, () => table.AddColumn("Vegan"));
-                Update(230, () => table.AddColumn("Vegetarian"));
-                Update(230, () => table.AddColumn("Halal"));
-                Update(230, () => table.AddColumn("Gluten Free"));
+                Update(200, () => table.AddColumn("Name"));
+                Update(200, () => table.AddColumn("Price"));
+                Update(200, () => table.AddColumn("Vegan"));
+                Update(200, () => table.AddColumn("Vegetarian"));
+                Update(200, () => table.AddColumn("Halal"));
+                Update(200, () => table.AddColumn("Gluten Free"));
 
                 // Rows
                 foreach (Dish dish in dishes)
                 {
-                    Update(70, () => table.AddRow(dish.Name, $"{dish.Price:F2}", dish.IsVegan ? "[green]Yes[/]" : "[red]No[/]", dish.IsVegetarian ? "[green]Yes[/]" : "[red]No[/]", dish.IsHalal ? "[green]Yes[/]" : "[red]No[/]", dish.IsGlutenFree ? "[green]Yes[/]" : "[red]No[/]"));
+                    Update(100, () => table.AddRow(dish.Name, $"{dish.Price:F2}", dish.IsVegan ? "[green]Yes[/]" : "[red]No[/]", dish.IsVegetarian ? "[green]Yes[/]" : "[red]No[/]", dish.IsHalal ? "[green]Yes[/]" : "[red]No[/]", dish.IsGlutenFree ? "[green]Yes[/]" : "[red]No[/]"));
                 }
 
                 // Column footer

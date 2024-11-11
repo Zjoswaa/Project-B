@@ -8,8 +8,12 @@ static class PasswordRecoveryPresentation {
         );
 
         AnsiConsole.WriteLine();
-        AnsiConsole.MarkupLine("[blue]Enter the email for which you forgot the password.[/]");
+        AnsiConsole.MarkupLine("[blue]Enter the email for which you forgot the password, or leave empty to cancel.[/]");
         string Email = PromptEmail();
+        if (string.IsNullOrEmpty(Email)) {
+            AnsiConsole.Clear();
+            return;
+        }
 
         string Code = Util.RandomString(5);
         AnsiConsole.MarkupLine($"[blue]Sending a recovery email to {Email}, this may take a moment.[/]");
@@ -21,7 +25,7 @@ static class PasswordRecoveryPresentation {
             AnsiConsole.MarkupLine("[blue]Enter your new password.[/]");
             Database.SetUserPassword(Email, PromptNewPassword());
         } else {
-            AnsiConsole.MarkupLine("[red]Incorrect code[/]");
+            AnsiConsole.MarkupLine("[red]Incorrect code.[/]");
         }
 
         AnsiConsole.MarkupLine("[bold yellow]Press any key to continue to the main menu.[/]");
@@ -29,37 +33,25 @@ static class PasswordRecoveryPresentation {
         AnsiConsole.Clear();
     }
 
-    private static string PromptEmail()
-    {
-        while (true)
-        {
-            string Email = AnsiConsole.Prompt(
-                new TextPrompt<string>("[green]Email:[/]")
+    private static string PromptEmail() {
+        return AnsiConsole.Prompt(
+            new TextPrompt<string>("[green]Email:[/]")
+                .PromptStyle("yellow")
+                .AllowEmpty()
             );
-
-            return Email;
-        }
     }
 
     private static string PromptCode() {
-        while (true) {
-            string Code = AnsiConsole.Prompt(
-                new TextPrompt<string>("[green]Code:[/]")
-            );
-
-            return Code;
-        }
+        return AnsiConsole.Prompt(
+            new TextPrompt<string>("[green]Code:[/]")
+        );
     }
 
     private static string PromptNewPassword() {
-        while (true) {
-            string NewPassword = AnsiConsole.Prompt(
-                new TextPrompt<string>("[green]Password[/]:")
-                .PromptStyle("yellow")
-                .Secret('*')
-            );
-
-            return NewPassword;
-        }
+        return AnsiConsole.Prompt(
+            new TextPrompt<string>("[green]Password[/]:")
+            .PromptStyle("yellow")
+            .Secret('*')
+        );
     }
 }
