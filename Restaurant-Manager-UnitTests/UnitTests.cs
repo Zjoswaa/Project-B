@@ -41,5 +41,55 @@ namespace Restaurant_Manager_UnitTests
             Assert.IsFalse(LoginLogic.VerifyPassword("johndoe@gmail.com", "password"));
             Assert.IsTrue(LoginLogic.VerifyPassword("johndoe@gmail.com", "password123"));
         }
+
+        [TestMethod]
+        public void TestInsertDish()
+        {
+            // Align
+            File.Delete("db3.db");
+            Database.ConnectionString = "db3.db";
+            Database.CreateUsersTable();
+            Database.CreateDishesTable();
+            Database.CreateLocationsTable();
+            Database.CreateReservationsTable();
+
+            // Act
+            Database.InsertDishesTable("Spaghetti Bolognese", "12,99", false, true, false, false);
+
+            // Assert
+            List<Dish> dishes = Database.GetAllDishes();
+            Assert.IsNotNull(dishes);
+            Assert.IsTrue(dishes.Count() == 1);
+            Assert.AreEqual(dishes[0].Name, "Spaghetti Bolognese");
+
+            // Act
+            Database.InsertDishesTable("Pizza Margherita", "9.95", false, true, true, false);
+
+            // Assert
+            dishes = Database.GetAllDishes();
+            Assert.IsTrue(dishes.Count() == 2);
+            Assert.IsTrue(dishes[1].IsVegan == false);
+        }
+
+        [TestMethod]
+
+        public void TestDeleteDish()
+        {
+            // Align
+            File.Delete("db4.db");
+            Database.ConnectionString = "db4.db";
+            Database.CreateUsersTable();
+            Database.CreateDishesTable();
+            Database.CreateLocationsTable();
+            Database.CreateReservationsTable();
+
+            // Act
+            Database.InsertDishesTable("Pizza Margherita", "9.95", false, true, true, false);
+            List<Dish> dishes = Database.GetAllDishes();
+            Assert.IsTrue(dishes.Count() == 1);
+            Database.DeleteDishesTable("Pizza Margherita");
+            dishes = Database.GetAllDishes();
+            Assert.IsTrue(dishes.Count() == 0);
+        }
     }
 }
