@@ -2,7 +2,7 @@ using System.Globalization;
 
 class ReservationManager
 {
-    public (bool success, string message) CreateReservation(long userID, long locID, string timeslot, DateTime date, int groupsize)
+    public (bool success, string message) CreateReservation(long userID, long locID, string timeslot, DateTime date, int groupsize, int table)
     {
         List<Reservation> reservations = Database.GetAllReservations();
         int totalPeople = 0;
@@ -19,7 +19,7 @@ class ReservationManager
                 return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
             }
         }
-        Database.InsertReservationsTable(userID, locID, timeslot, date, groupsize);
+        Database.InsertReservationsTable(userID, locID, timeslot, date, groupsize, table);
         return (true, "Your reservation has been made.");
     }
 
@@ -41,6 +41,22 @@ class ReservationManager
             return false;
         }
         return true;
+    }
+
+    public int AssignedTable(long locID, string timeslot, DateTime date)
+    {
+        List<Reservation> reservations = Database.GetAllReservations();
+        int tableCount = 1;
+
+        foreach (Reservation reservation in reservations)
+        {
+            if (reservation.LocationID == locID && reservation.Timeslot == timeslot && reservation.ReservationTime == date)
+            {
+                tableCount += 1;
+            }
+        }
+
+        return tableCount;
     }
 
     public DateTime ParseDate(string dateString)
