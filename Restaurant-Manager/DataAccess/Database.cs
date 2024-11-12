@@ -50,8 +50,10 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Timeslots(ID INTEGER PRIMARY KEY AUTOINCREMENT, Timeslot TEXT NOT NULL)";
+        cmd.CommandText =
+            "CREATE TABLE IF NOT EXISTS Timeslots(ID INTEGER PRIMARY KEY AUTOINCREMENT, Timeslot TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
+    }
 
     public static void SetUserPassword(string Email, string NewPassword) {
         using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
@@ -88,8 +90,10 @@ public static class Database {
                             WHERE NOT EXISTS (SELECT 1 FROM Timeslots WHERE Timeslot = @Timeslot)";
         cmd.Parameters.AddWithValue("@Timeslot", timeslot);
         cmd.ExecuteNonQuery();
+    }
 
-    public static bool DishesTableContainsDish(string Name) {
+    public static bool DishesTableContainsDish(string Name)
+    {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
