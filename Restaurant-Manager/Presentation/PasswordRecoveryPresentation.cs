@@ -20,10 +20,32 @@ static class PasswordRecoveryPresentation {
         EmailService.SendPasswordForgorEmail(Email, Code);
         AnsiConsole.MarkupLine("[blue]Email sent, please enter the code provided in the recovery email.[/]");
         string EnteredCode = PromptCode();
+        AnsiConsole.Clear();
 
         if (EnteredCode == Code) {
-            AnsiConsole.MarkupLine("[blue]Enter your new password.[/]");
-            Database.SetUserPassword(Email, PromptNewPassword());
+            while (true) {
+                AnsiConsole.MarkupLine("[blue]Enter your new password.[/]");
+                string NewPassword = PromptNewPassword();
+                if (string.IsNullOrEmpty(NewPassword)) {
+                    AnsiConsole.Clear();
+                    return;
+                }
+
+                AnsiConsole.MarkupLine("[blue]Confirm your new password.[/]");
+                string ConfirmPassword = PromptNewPassword();
+                if (string.IsNullOrEmpty(ConfirmPassword)) {
+                    AnsiConsole.Clear();
+                    return;
+                }
+
+                if (NewPassword == ConfirmPassword) {
+                    Database.SetUserPassword(Email, NewPassword);
+                    AnsiConsole.MarkupLine("[green]Password updated successfully.[/]");
+                    break;
+                } else {
+                    AnsiConsole.MarkupLine("[red]Passwords do not match. Please try again or press enter to cancel.[/]");
+                }
+            }
         } else {
             AnsiConsole.MarkupLine("[red]Incorrect code.[/]");
         }
@@ -52,6 +74,7 @@ static class PasswordRecoveryPresentation {
             new TextPrompt<string>("[green]Password[/]:")
             .PromptStyle("yellow")
             .Secret('*')
+            .AllowEmpty()
         );
     }
 }
