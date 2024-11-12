@@ -2,26 +2,45 @@ using System.Globalization;
 
 class ReservationManager
 {
-
-    //Refactor so that GetAllReservations returns a list of Reservation objects
     public (bool success, string message) CreateReservation(long userID, long locID, string timeslot, DateTime date, int groupsize)
     {
-        Dictionary<List<object>, int> reservations = Database.GetAllReservations();
+        List<Reservation> reservations = Database.GetAllReservations();
+        int totalPeople = 0;
 
-        foreach (KeyValuePair<List<object>, int> kvp in reservations)
+        foreach (Reservation reservation in reservations)
         {
-            if (kvp.Key.Contains(locID) && kvp.Key.Contains(timeslot) && kvp.Key.Contains(date) && kvp.Key.Contains(userID))
+            if (reservation.UserID == userID && reservation.LocationID == locID && reservation.Timeslot == timeslot && reservation.ReservationTime == date)
             {
                 return (false, "You already have a reservation for this timeslot. Edit your reservation instead.");
             }
 
-            if (kvp.Key.Contains(locID) && kvp.Key.Contains(timeslot) && kvp.Key.Contains(date) && kvp.Value < groupsize)
+            if (!CheckMaxReservations(locID, timeslot, date, groupsize))
             {
                 return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
             }
         }
         Database.InsertReservationsTable(userID, locID, timeslot, date, groupsize);
         return (true, "Your reservation has been made.");
+    }
+
+    public bool CheckMaxReservations(long locID, string timeslot, DateTime date, int groupsize)
+    {
+        List<Reservation> reservations = Database.GetAllReservations();
+        int totalPeople = 0;
+
+        foreach (Reservation reservation in reservations)
+        {
+            if (reservation.LocationID == locID && reservation.Timeslot == timeslot && reservation.ReservationTime == date)
+            {
+                totalPeople += reservation.GroupSize;
+            }
+        }
+
+        if ((totalPeople + groupsize) > 48)
+        {
+            return false;
+        }
+        return true;
     }
 
     public DateTime ParseDate(string dateString)

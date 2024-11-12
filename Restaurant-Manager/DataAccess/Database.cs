@@ -151,9 +151,9 @@ public static class Database {
         return locations;
     }
 
-    public static Dictionary<List<object>, int> GetAllReservations()
+    public static List<Reservation> GetAllReservations()
     {
-        Dictionary<List<object>, int> reservations = new();
+        List<Reservation> reservations = new(){};
 
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
@@ -163,13 +163,14 @@ public static class Database {
         var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
-            int userID = reader.GetInt32(1);
-            int locId = reader.GetInt32(2);
+            long ID = reader.GetInt32(0);
+            long userID = reader.GetInt32(1);
+            long locId = reader.GetInt32(2);
             string timeslot = reader.GetString(3);
             DateTime date = reader.GetDateTime(4);
             int groupsize = reader.GetInt32(5);
 
-            reservations.Add(new List<object>(){locId, date, timeslot}, groupsize);
+            reservations.Add(new Reservation(ID, userID, locId, timeslot, date, groupsize));
         }
 
         return reservations;

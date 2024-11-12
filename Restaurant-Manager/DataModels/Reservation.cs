@@ -1,22 +1,24 @@
-class Reservation
+public class Reservation
 {
     public long ID { get; }
-    public int User { get; }
-    public int Location { get; }
+    public long UserID { get; }
+    public long LocationID { get; }
+    public string Timeslot { get; }
     public DateTime ReservationTime { get; }
     public int GroupSize { get; }
 
-    public Reservation(int id, int user, int location, DateTime reservationtime, int groupsize)
+    public Reservation(long id, long user, long location, string timeslot, DateTime reservationtime, int groupsize)
     {
         ID = id;
-        User = user;
-        Location = location;
+        UserID= user;
+        LocationID = location;
+        Timeslot = timeslot;
         ReservationTime = reservationtime;
         GroupSize = groupsize;
     }
 
     public override string ToString()
     {
-        return $"Reservation {ID} by User {User}\nLocation ID: {Location}\nTimeslot of reservation: {ReservationTime}\nAmount of people: {GroupSize}";
+        return $"Reservation {ID} by User {UserID}\nLocation ID: {LocationID}\nTimeslot of reservation: {ReservationTime}\nAmount of people: {GroupSize}";
     }
 }
