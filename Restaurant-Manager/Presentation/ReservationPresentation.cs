@@ -23,13 +23,23 @@ public static class ReservationPresentation
         int groupsize = UserGroupSize();
         if (groupsize == -1) return;
 
-        resManager.CreateReservation(userID, locID, timeslot, date, groupsize);
-        string text = "[green]Your reservation has been made.[/]\n\nPress any key to continue.";
-        Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
-        panel.Expand = true; // Set expand again
-        Console.Clear();
-        AnsiConsole.Write(panel);
-        Console.ReadKey();
+        (bool success, string message) = resManager.CreateReservation(userID, locID, timeslot, date, groupsize);
+        if (!success)
+        {
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("Press any key to continue.");
+            Console.ReadKey();
+        }
+        else
+        {
+            string text = "[green]Your reservation has been made.[/]\n\nPress any key to continue.";
+            Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
+            panel.Expand = true; // Set expand again
+            Console.Clear();
+            AnsiConsole.Write(panel);
+            Console.ReadKey();
+        }
     }
 
     static long UserLocation(ReservationManager resManager)
