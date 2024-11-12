@@ -13,15 +13,15 @@ static class RegisterPresentation
 
         // Ask for new user email
         AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
-        string email = PromptEmail();
-        if (string.IsNullOrEmpty(email)) {
+        string Email = PromptEmail();
+        if (string.IsNullOrEmpty(Email)) {
             AnsiConsole.Clear();
             MainMenuPresentation.ShowMainMenu();
         }
 
         // Ask for new user password
         AnsiConsole.MarkupLine("[blue]Please enter your password, or leave empty to cancel:[/]");
-        string Password = PromptPassword(email);
+        string Password = PromptPassword(Email);
         if (string.IsNullOrEmpty(Password)) {
             AnsiConsole.Clear();
             MainMenuPresentation.ShowMainMenu();
@@ -29,7 +29,7 @@ static class RegisterPresentation
 
         // Confirm password
         AnsiConsole.MarkupLine("[blue]Please enter the same password again, or leave empty to cancel:[/]");
-        string ConfirmPassword = PromptPasswordConfirmation(email, Password);
+        string ConfirmPassword = PromptPasswordConfirmation(Email, Password);
         if (string.IsNullOrEmpty(ConfirmPassword)) {
             AnsiConsole.Clear();
             MainMenuPresentation.ShowMainMenu();
@@ -42,15 +42,15 @@ static class RegisterPresentation
         }
 
         // Ask for user first name
-        string FirstName = PromptFirstName(email, Password);
+        string FirstName = PromptFirstName(Email, Password);
 
         // Ask for user last name
-        string LastName = PromptLastName(email, Password, FirstName);
+        string LastName = PromptLastName(Email, Password, FirstName);
 
         // Optionally insert a new user into the table
         if (InsertIntoUsersTable)
         {
-            Database.InsertUsersTable(email, Password, FirstName, LastName, "USER");
+            Database.InsertUsersTable(Email, Password, FirstName, LastName, "USER");
         }
 
         // Display registration success message and redirect to choice page
