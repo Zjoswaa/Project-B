@@ -6,8 +6,9 @@ public class Reservation
     public string Timeslot { get; }
     public DateTime ReservationTime { get; }
     public int GroupSize { get; }
+    public int Table { get; }
 
-    public Reservation(long id, long user, long location, string timeslot, DateTime reservationtime, int groupsize)
+    public Reservation(long id, long user, long location, string timeslot, DateTime reservationtime, int groupsize, int table)
     {
         ID = id;
         UserID= user;
@@ -15,10 +16,11 @@ public class Reservation
         Timeslot = timeslot;
         ReservationTime = reservationtime;
         GroupSize = groupsize;
+        Table = table;
     }
 
     public override string ToString()
     {
-        return $"Reservation {ID} by User {UserID}\nLocation ID: {LocationID}\nTimeslot of reservation: {ReservationTime}\nAmount of people: {GroupSize}";
+        return $"Reservation {ID} by User {UserID}\nLocation ID: {LocationID}\nTimeslot of reservation: {ReservationTime}\nAmount of people: {GroupSize}\nTable: {Table}";
     }
 }

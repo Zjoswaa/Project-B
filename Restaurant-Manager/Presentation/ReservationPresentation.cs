@@ -24,7 +24,9 @@ public static class ReservationPresentation
         int groupsize = UserGroupSize();
         if (groupsize == -1) return;
 
-        (bool success, string message) = resManager.CreateReservation(userID, locID, timeslot, date, groupsize);
+        int table = resManager.AssignedTable(locID, timeslot, date);
+
+        (bool success, string message) = resManager.CreateReservation(userID, locID, timeslot, date, groupsize, table);
         if (!success)
         {
             Console.Clear();
@@ -34,7 +36,7 @@ public static class ReservationPresentation
         }
         else
         {
-            string text = $"[green]Your reservation has been made.[/]\n\n{locMessage}\nPress any key to continue.";
+            string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {table}\n\n{locMessage}\n\nPress any key to continue.";
             Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
             panel.Expand = true; // Set expand again
             Console.Clear();
