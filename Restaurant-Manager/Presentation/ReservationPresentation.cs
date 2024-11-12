@@ -18,23 +18,7 @@ public static class ReservationPresentation
 
         string dateString = UserDate(resManager);
         if (dateString == "NULL") return;
-
-        DateTime date = DateTime.MinValue;
-        while (true)
-        {
-            try
-            {
-                date = resManager.ParseDate(dateString);
-                break;
-            }
-            catch (FormatException ex)
-            {
-                Console.Clear();
-                Console.WriteLine("The date you have entered is not in a valid format.");
-                Console.ReadKey();
-                Console.WriteLine("Press any key to continue.");
-            }
-        }
+        DateTime date = resManager.ParseDate(dateString);
 
         int groupsize = UserGroupSize();
         if (groupsize == -1) return;
