@@ -25,7 +25,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Message TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -44,6 +44,14 @@ public static class Database {
         cmd.CommandText = "CREATE TABLE IF NOT EXISTS Dishes(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Price TEXT NOT NULL, IsVegan INTEGER NOT NULL, IsVegetarian INTEGER NOT NULL, IsHalal INTEGER NOT NULL, IsGlutenFree INTEGER NOT NULL)";
         cmd.ExecuteNonQuery();
     }
+
+    public static void CreateTimeslotsTable()
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Timeslots(ID INTEGER PRIMARY KEY AUTOINCREMENT, Timeslot TEXT NOT NULL)";
+        cmd.ExecuteNonQuery();
 
     public static void SetUserPassword(string Email, string NewPassword) {
         using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
@@ -69,6 +77,17 @@ public static class Database {
         cmd.Parameters.AddWithValue("@IsGlutenFree", IsGlutenFree ? 1 : 0);
         cmd.ExecuteNonQuery();
     }
+
+    public static void InsertTimeslotsTable(string timeslot)
+    {
+        using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = @"INSERT INTO Timeslots(Timeslot)
+                            SELECT @Timeslot
+                            WHERE NOT EXISTS (SELECT 1 FROM Timeslots WHERE Timeslot = @Timeslot)";
+        cmd.Parameters.AddWithValue("@Timeslot", timeslot);
+        cmd.ExecuteNonQuery();
 
     public static bool DishesTableContainsDish(string Name) {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
@@ -105,14 +124,17 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void InsertLocationsTable(string name)
+    public static void InsertLocationsTable(string name, string message)
     {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO Locations(Name) VALUES (@Name)";
+        cmd.CommandText = @"INSERT INTO Locations(Name, Message)
+                            SELECT @Name, @Message
+                            WHERE NOT EXISTS (SELECT 1 FROM Locations WHERE Name = @Name)";
 
         cmd.Parameters.AddWithValue("@Name", name);
+        cmd.Parameters.AddWithValue("@Message", message);
         cmd.ExecuteNonQuery();
     }
 
@@ -131,9 +153,9 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static Dictionary<int, string> GetAllLocations()
+    public static List<Location> GetAllLocations()
     {
-        Dictionary<int, string> locations = new();
+        List<Location> locations = new();
 
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
@@ -145,15 +167,16 @@ public static class Database {
         {
             int id = reader.GetInt32(0);
             string name = reader.GetString(1);
-            locations.Add(id, name);
+            string message = reader.GetString(2);
+            locations.Add(new Location(id, name, message));
         }
 
         return locations;
     }
 
-    public static Dictionary<List<object>, int> GetAllReservations()
+    public static List<Reservation> GetAllReservations()
     {
-        Dictionary<List<object>, int> reservations = new();
+        List<Reservation> reservations = new(){};
 
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
@@ -163,13 +186,14 @@ public static class Database {
         var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
-            int userID = reader.GetInt32(1);
-            int locId = reader.GetInt32(2);
+            long ID = reader.GetInt32(0);
+            long userID = reader.GetInt32(1);
+            long locId = reader.GetInt32(2);
             string timeslot = reader.GetString(3);
             DateTime date = reader.GetDateTime(4);
             int groupsize = reader.GetInt32(5);
 
-            reservations.Add(new List<object>(){locId, date, timeslot}, groupsize);
+            reservations.Add(new Reservation(ID, userID, locId, timeslot, date, groupsize));
         }
 
         return reservations;
@@ -193,6 +217,27 @@ public static class Database {
                 ));
         }
         return dishes;
+    }
+
+    public static List<Timeslot> GetAllTimeslots()
+    {
+        List<Timeslot> timeslots = new(){};
+
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+
+        cmd.CommandText = "SELECT * FROM Timeslots";
+        var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            long id = reader.GetInt32(0);
+            string timeslot = reader.GetString(1);
+
+            timeslots.Add(new Timeslot(id, timeslot));
+        }
+
+        return timeslots;
     }
 
     public static void InsertUsersTable(string Email, string Password, string? FirstName, string? LastName, string Role)
