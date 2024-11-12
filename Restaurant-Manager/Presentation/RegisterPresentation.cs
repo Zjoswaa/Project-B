@@ -27,6 +27,20 @@ static class RegisterPresentation
             MainMenuPresentation.ShowMainMenu();
         }
 
+        // Confirm password
+        AnsiConsole.MarkupLine("[blue]Please enter the same password again, or leave empty to cancel:[/]");
+        string ConfirmPassword = PromptPasswordConfirmation(email, Password);
+        if (string.IsNullOrEmpty(ConfirmPassword)) {
+            AnsiConsole.Clear();
+            MainMenuPresentation.ShowMainMenu();
+        }
+
+        if (Password != ConfirmPassword) {
+            AnsiConsole.MarkupLine("[red]Passwords do not match. Please try registering again.[/]");
+            Console.ReadKey();
+            return;
+        }
+
         // Ask for user first name
         string FirstName = PromptFirstName(email, Password);
 
@@ -87,7 +101,7 @@ static class RegisterPresentation
                 new Rule("[yellow]Register[/]")
             );
             AnsiConsole.WriteLine();
-            AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
+            //AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
             AnsiConsole.MarkupLine($"[green]Email:[/] {Email}");
 
             AnsiConsole.MarkupLine("[blue]Please enter your password, or leave empty to cancel:[/]");
@@ -109,6 +123,34 @@ static class RegisterPresentation
             );
 
             return Password;
+        }
+    }
+
+    private static string PromptPasswordConfirmation(string Email, string Password) {
+        while (true) {
+            AnsiConsole.Clear();
+            AnsiConsole.Write(
+                new Rule("[yellow]Register[/]")
+            );
+            AnsiConsole.WriteLine();
+            //AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
+            AnsiConsole.MarkupLine($"[green]Email:[/] {Email}");
+            //AnsiConsole.MarkupLine("[blue]Please enter your password, or leave empty to cancel:[/]");
+            AnsiConsole.MarkupLine($"[green]Password:[/] {new string('*', Password.Length)}");
+
+            AnsiConsole.MarkupLine("[blue]Please enter your password again, or leave empty to cancel:[/]");
+            string ConfirmPassword = AnsiConsole.Prompt(
+            new TextPrompt<string>("[green]Enter your password:[/]")
+                .PromptStyle("yellow")
+                //.Validate(p => {
+                //    // If all checks pass
+                //    return ValidationResult.Success();
+                //})
+                .Secret('*')
+                .AllowEmpty()
+            );
+
+            return ConfirmPassword;
         }
     }
 
