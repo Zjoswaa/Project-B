@@ -15,13 +15,13 @@ namespace Restaurant_Manager_UnitTests
             Database.CreateReservationsTable();
 
             // Act
-            Database.InsertUsersTable(1, "johndoe", "password123", "John", "Doe", "USER");
+            Database.InsertUsersTable(1, "johndoe@gmail.com", "password123", "John", "Doe", "USER");
 
             // Assert
-            Assert.AreEqual(Database.GetUserByUsername("johndoe")?.Username, "johndoe");
-            Assert.AreEqual(Database.GetUserByUsername("johndoe")?.FirstName, "John");
-            Assert.AreEqual(Database.GetUserByUsername("johndoe")?.LastName, "Doe");
-            Assert.AreEqual(Database.GetUserByUsername("johndoe")?.Role, "USER");
+            Assert.AreEqual(Database.GetUserByEmail("johndoe@gmail.com")?.Email, "johndoe@gmail.com");
+            Assert.AreEqual(Database.GetUserByEmail("johndoe@gmail.com")?.FirstName, "John");
+            Assert.AreEqual(Database.GetUserByEmail("johndoe@gmail.com")?.LastName, "Doe");
+            Assert.AreEqual(Database.GetUserByEmail("johndoe@gmail.com")?.Role, "USER");
         }
 
         [TestMethod]
@@ -35,11 +35,11 @@ namespace Restaurant_Manager_UnitTests
             Database.CreateReservationsTable();
 
             // Act
-            Database.InsertUsersTable(1, "johndoe", "password123", "John", "Doe", "USER");
+            Database.InsertUsersTable(1, "johndoe@gmail.com", "password123", "John", "Doe", "USER");
 
             // Assert
-            Assert.IsFalse(LoginLogic.VerifyPassword("johndoe", "password"));
-            Assert.IsTrue(LoginLogic.VerifyPassword("johndoe", "password123"));
+            Assert.IsFalse(LoginLogic.VerifyPassword("johndoe@gmail.com", "password"));
+            Assert.IsTrue(LoginLogic.VerifyPassword("johndoe@gmail.com", "password123"));
         }
     }
 }

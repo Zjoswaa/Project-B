@@ -6,7 +6,7 @@ public static class Encryptor {
         string EncryptionKey = "WELOVEGERT";
         byte[] ClearBytes = Encoding.Unicode.GetBytes(ToEncrypt);
         using (Aes Encryptor = Aes.Create()) {
-            Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+            Rfc2898DeriveBytes pdb = new(EncryptionKey, [0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76]);
             Encryptor.Key = pdb.GetBytes(32);
             Encryptor.IV = pdb.GetBytes(16);
             using (MemoryStream ms = new MemoryStream()) {
@@ -25,7 +25,7 @@ public static class Encryptor {
         ToDecrypt = ToDecrypt.Replace(" ", "+");
         byte[] CipherBytes = Convert.FromBase64String(ToDecrypt);
         using (Aes encryptor = Aes.Create()) {
-            Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+            Rfc2898DeriveBytes pdb = new(EncryptionKey, [0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76]);
             encryptor.Key = pdb.GetBytes(32);
             encryptor.IV = pdb.GetBytes(16);
             using (MemoryStream ms = new MemoryStream()) {

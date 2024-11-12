@@ -38,9 +38,12 @@ class UserMenu
                     Thread.Sleep(1000);
                     break;
                 case "View Menu":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
-                    Console.Clear();
+                    //Console.WriteLine("TBA...");
+                    //Thread.Sleep(1000);
+                    //Console.Clear();
+                    MenuCard.DisplayMenuCard();
+                    AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
+                    Console.ReadKey();
                     break;
                 case "Logout":
                     AnsiConsole.MarkupLine("[red]Logging out...[/]");

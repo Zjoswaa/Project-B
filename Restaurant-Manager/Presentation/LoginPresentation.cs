@@ -13,16 +13,16 @@ static class LoginPresentation
             AnsiConsole.Write(new Rule("[bold yellow]Login[/]"));
             AnsiConsole.WriteLine();
 
-            // Ask for a username
-            AnsiConsole.MarkupLine("[blue]Please enter your username, or press Enter to return:[/]");
-            string Username = PromptUsername();
-            if (string.IsNullOrEmpty(Username)) {
+            // Ask for a Email
+            AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
+            string Email = PromptEmail();
+            if (string.IsNullOrEmpty(Email)) {
                 AnsiConsole.Clear();
                 MainMenuPresentation.ShowMainMenu();
             }
 
             // Ask for a password
-            AnsiConsole.MarkupLine("[blue]Please enter your password, or press Enter to return:[/]");
+            AnsiConsole.MarkupLine("[blue]Please enter your password, or leave empty to cancel:[/]");
             string Password = PromptPassword();
             if (string.IsNullOrEmpty(Password)) {
                 AnsiConsole.Clear();
@@ -30,24 +30,24 @@ static class LoginPresentation
             }
 
             // Check if user input correct password
-            if (LoginLogic.VerifyPassword(Username, Password))
+            if (LoginLogic.VerifyPassword(Email, Password))
             {
-                State.LoggedInUser = Database.GetUserByUsername(Username);
+                State.LoggedInUser = Database.GetUserByEmail(Email);
                 Console.WriteLine("Successful login");
                 //loginSuccessful = true;
             }
             else
             {
-                AnsiConsole.MarkupLine("[red]Invalid username or password. Please try again.[/]");
+                AnsiConsole.MarkupLine("[red]Invalid Email or password. Please try again.[/]");
                 Thread.Sleep(1500);
             }
         }
     }
 
-    private static string PromptUsername()
+    private static string PromptEmail()
     {
         return AnsiConsole.Prompt(
-            new TextPrompt<string>("[green]Username[/]:")
+            new TextPrompt<string>("[green]Email[/]:")
                 .PromptStyle("yellow")
                 .AllowEmpty()
             );
