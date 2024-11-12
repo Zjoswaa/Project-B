@@ -12,6 +12,7 @@ public static class ReservationPresentation
 
         long locID = UserLocation(resManager);
         if (locID == -1) return;
+        string locMessage = resManager.GetLocationDescription(locID);
 
         string timeslot = UserTimeslot(resManager);
         if (timeslot == "NULL") return;
@@ -33,7 +34,7 @@ public static class ReservationPresentation
         }
         else
         {
-            string text = "[green]Your reservation has been made.[/]\n\nPress any key to continue.";
+            string text = $"[green]Your reservation has been made.[/]\n\n{locMessage}\nPress any key to continue.";
             Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
             panel.Expand = true; // Set expand again
             Console.Clear();

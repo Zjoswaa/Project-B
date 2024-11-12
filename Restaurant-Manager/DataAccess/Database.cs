@@ -25,7 +25,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Message TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -75,7 +75,9 @@ public static class Database {
         using SQLiteConnection Connection = new SQLiteConnection($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO Timeslots(Timeslot) VALUES (@Timeslot)";
+        cmd.CommandText = @"INSERT INTO Timeslots(Timeslot)
+                            SELECT @Timeslot
+                            WHERE NOT EXISTS (SELECT 1 FROM Timeslots WHERE Timeslot = @Timeslot)";
         cmd.Parameters.AddWithValue("@Timeslot", timeslot);
         cmd.ExecuteNonQuery();
     }
@@ -105,14 +107,17 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void InsertLocationsTable(string name)
+    public static void InsertLocationsTable(string name, string message)
     {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO Locations(Name) VALUES (@Name)";
+        cmd.CommandText = @"INSERT INTO Locations(Name, Message)
+                            SELECT @Name, @Message
+                            WHERE NOT EXISTS (SELECT 1 FROM Locations WHERE Name = @Name)";
 
         cmd.Parameters.AddWithValue("@Name", name);
+        cmd.Parameters.AddWithValue("@Message", message);
         cmd.ExecuteNonQuery();
     }
 
@@ -131,9 +136,9 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static Dictionary<int, string> GetAllLocations()
+    public static List<Location> GetAllLocations()
     {
-        Dictionary<int, string> locations = new();
+        List<Location> locations = new();
 
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
@@ -145,7 +150,8 @@ public static class Database {
         {
             int id = reader.GetInt32(0);
             string name = reader.GetString(1);
-            locations.Add(id, name);
+            string message = reader.GetString(2);
+            locations.Add(new Location(id, name, message));
         }
 
         return locations;

@@ -70,11 +70,11 @@ class ReservationManager
     public List<string> LocationNamesToList()
     {
         List<string> locationNames = new(){};
-        Dictionary<int, string> locations = Database.GetAllLocations();
+        List<Location> locations = Database.GetAllLocations();
         
-        foreach (KeyValuePair<int, string> kvp in locations)
+        foreach (Location location in locations)
         {
-            locationNames.Add(kvp.Value);
+            locationNames.Add(location.Name);
         }
         //Adds another option used for exiting the menu in ReservationPresentation.cs
         locationNames.Add("Exit Reservation");
@@ -97,19 +97,33 @@ class ReservationManager
         return timeslotStrings;
     }
 
-    public int GetSelectedLocationID(string locName)
+    public long GetSelectedLocationID(string locName)
     {
-        Dictionary<int, string> locations = Database.GetAllLocations();
-        int locID = 0;
+        List<Location> locations = Database.GetAllLocations();
+        long locID = 0;
 
-        foreach (KeyValuePair<int, string> kvp in locations)
+        foreach (Location location in locations)
         {
-            if (locName == kvp.Value)
+            if (locName == location.Name)
             {
-                locID = kvp.Key;
+                locID = location.ID;
             }
         }
 
         return locID;
+    }
+
+    public string GetLocationDescription(long ID)
+    {
+        List<Location> locations = Database.GetAllLocations();
+
+        foreach (Location location in locations)
+        {
+            if (location.ID == ID)
+            {
+                return location.Message;
+            }
+        }
+        return "unknown";
     }
 }

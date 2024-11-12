@@ -13,6 +13,12 @@ class Program
             Database.CreateReservationsTable();
             Database.CreateTimeslotsTable();
 
+            Database.InsertLocationsTable("PLACEHOLDER", "PLACEHOLDER DESC");
+            Database.InsertTimeslotsTable("12:00");
+            Database.InsertTimeslotsTable("15:00");
+            Database.InsertTimeslotsTable("18:00");
+            Database.InsertTimeslotsTable("21:00");
+
             // In future move to different location
             DateTime startDate = DateTime.Now;
             DateTime endDate = DateTime.Now.AddDays(180);
