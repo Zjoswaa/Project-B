@@ -18,7 +18,23 @@ public static class ReservationPresentation
 
         string dateString = UserDate(resManager);
         if (dateString == "NULL") return;
-        DateTime date = resManager.ParseDate(dateString);
+
+        DateTime date = DateTime.MinValue;
+        while (true)
+        {
+            try
+            {
+                date = resManager.ParseDate(dateString);
+                break;
+            }
+            catch (FormatException ex)
+            {
+                Console.Clear();
+                Console.WriteLine("The date you have entered is not in a valid format.");
+                Console.ReadKey();
+                Console.WriteLine("Press any key to continue.");
+            }
+        }
 
         int groupsize = UserGroupSize();
         if (groupsize == -1) return;
@@ -70,15 +86,32 @@ public static class ReservationPresentation
 
     static string UserDate(ReservationManager resManager) //Add spectre calendar with unavailable dates maybe
     {
-        Console.WriteLine("Enter a date (DD-MM-YYYY) or type 'Exit' to cancel reservation:");
-        string dateInput = Console.ReadLine();
 
-        if (dateInput.ToLower() == "exit")
+        DateTime date = DateTime.MinValue;
+        string dateInput = "";
+        while (true)
         {
-            return "NULL";
-        }
+            try
+            {
+                Console.WriteLine("Enter a date (DD-MM-YYYY) or type 'Exit' to cancel reservation:");
+                dateInput = Console.ReadLine();
 
-        DateTime date = resManager.ParseDate(dateInput);
+                if (dateInput.ToLower() == "exit")
+                {
+                    return "NULL";
+                }
+                date = resManager.ParseDate(dateInput);
+                break;
+            }
+            catch (FormatException ex)
+            {
+                Console.Clear();
+                Console.WriteLine("The date you have entered is not in a valid format.");
+                Console.WriteLine("Press any key to continue.");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
 
         (bool success, string message) = resManager.VerifyDate(date);
 
