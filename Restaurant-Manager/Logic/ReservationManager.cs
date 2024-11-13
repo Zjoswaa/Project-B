@@ -14,7 +14,7 @@ class ReservationManager
                 return (false, "You already have a reservation for this timeslot. Edit your reservation instead.");
             }
 
-            if (!CheckMaxReservations(locID, timeslot, date, groupsize))
+            if (!CheckReservationLimit(locID, timeslot, date, 8))
             {
                 return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
             }
@@ -23,22 +23,16 @@ class ReservationManager
         return (true, "Your reservation has been made.");
     }
 
-    public bool CheckMaxReservations(long locID, string timeslot, DateTime date, int groupsize)
+    public bool CheckReservationLimit(long locID, string timeslot, DateTime date, int maxTables)
     {
         List<Reservation> reservations = Database.GetAllReservations();
-        int totalPeople = 0;
 
         foreach (Reservation reservation in reservations)
         {
-            if (reservation.LocationID == locID && reservation.Timeslot == timeslot && reservation.ReservationTime == date)
+            if (reservation.LocationID == locID && reservation.Timeslot == timeslot && reservation.ReservationTime == date && maxTables == reservation.Table)
             {
-                totalPeople += reservation.GroupSize;
+                return false;
             }
-        }
-
-        if ((totalPeople + groupsize) > 48)
-        {
-            return false;
         }
         return true;
     }
