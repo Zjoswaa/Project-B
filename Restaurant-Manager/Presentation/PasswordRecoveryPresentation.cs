@@ -73,6 +73,15 @@ static class PasswordRecoveryPresentation {
         return AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Password[/]:")
             .PromptStyle("yellow")
+            .Validate(p => {
+                // Invalid password length, null or only whitespace
+                if (!RegisterLogic.PasswordValidOrEmpty(p)) {
+                    return ValidationResult.Error("[red]Password must be at least 8 characters long[/]");
+                }
+
+                // If all checks pass
+                return ValidationResult.Success();
+            })
             .Secret('*')
             .AllowEmpty()
         );
