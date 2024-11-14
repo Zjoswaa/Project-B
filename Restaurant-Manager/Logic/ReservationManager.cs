@@ -37,7 +37,7 @@ class ReservationManager
         return true;
     }
 
-    public int AssignedTable(long locID, string timeslot, DateTime date)
+    public int GetTableCount(long locID, string timeslot, DateTime date)
     {
         List<Reservation> reservations = Database.GetAllReservations();
         int tableCount = 1;
