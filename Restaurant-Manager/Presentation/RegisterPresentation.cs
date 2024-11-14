@@ -78,7 +78,7 @@ static class RegisterPresentation
                     }
 
                     // Invalid Email length, null or only whitespace
-                    if (!RegisterLogic.EmailValidOrEmpty(n))
+                    if (!Util.EmailValidOrEmpty(n))
                     {
                         return ValidationResult.Error("[red]Invalid email[/]");
                     }
@@ -111,7 +111,7 @@ static class RegisterPresentation
                 .PromptStyle("yellow")
                 .Validate(p => {
                     // Invalid password length, null or only whitespace
-                    if (!RegisterLogic.PasswordValidOrEmpty(p))
+                    if (!Util.PasswordValidOrEmpty(p))
                     {
                         return ValidationResult.Error("[red]Password must be at least 8 characters long[/]");
                     }

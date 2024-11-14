@@ -60,7 +60,7 @@ static class PasswordRecoveryPresentation {
             new TextPrompt<string>("[green]Email:[/]")
             .Validate(e => {
                 // Invalid password length, null or only whitespace
-                if (!RegisterLogic.EmailValidOrEmpty(e)) {
+                if (!Util.EmailValidOrEmpty(e)) {
                     return ValidationResult.Error("[red]Invalid email[/]");
                 }
 
@@ -84,7 +84,7 @@ static class PasswordRecoveryPresentation {
             .PromptStyle("yellow")
             .Validate(p => {
                 // Invalid password length, null or only whitespace
-                if (!RegisterLogic.PasswordValidOrEmpty(p)) {
+                if (!Util.PasswordValidOrEmpty(p)) {
                     return ValidationResult.Error("[red]Password must be at least 8 characters long[/]");
                 }
 
