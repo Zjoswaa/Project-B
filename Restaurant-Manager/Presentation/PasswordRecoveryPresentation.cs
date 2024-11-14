@@ -58,6 +58,15 @@ static class PasswordRecoveryPresentation {
     private static string PromptEmail() {
         return AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Email:[/]")
+            .Validate(e => {
+                // Invalid password length, null or only whitespace
+                if (!RegisterLogic.EmailValidOrEmpty(e)) {
+                    return ValidationResult.Error("[red]Invalid email[/]");
+                }
+
+                // If all checks pass
+                return ValidationResult.Success();
+            })
                 .PromptStyle("yellow")
                 .AllowEmpty()
             );
