@@ -24,7 +24,7 @@ public static class ReservationPresentation
         int groupsize = UserGroupSize();
         if (groupsize == -1) return;
 
-        int table = resManager.AssignedTable(locID, timeslot, date);
+        int table = resManager.GetTableCount(locID, timeslot, date);
 
         (bool success, string message) = resManager.CreateReservation(userID, locID, timeslot, date, groupsize, table);
         if (!success)

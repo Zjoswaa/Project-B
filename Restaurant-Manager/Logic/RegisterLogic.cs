@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 
 static class RegisterLogic {
-    public static bool EmailValid(string Email) {
+    public static bool EmailValidOrEmpty(string Email) {
         if (string.IsNullOrEmpty(Email)) {
             return true;
         }
@@ -12,7 +12,7 @@ static class RegisterLogic {
         return new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").IsMatch(Email);
     }
 
-    public static bool PasswordValid(string Password) {
+    public static bool PasswordValidOrEmpty(string Password) {
         if (string.IsNullOrEmpty(Password)) {
             return true;
         }
