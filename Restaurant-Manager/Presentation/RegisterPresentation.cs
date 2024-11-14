@@ -38,6 +38,7 @@ static class RegisterPresentation
         if (Password != ConfirmPassword) {
             AnsiConsole.MarkupLine("[red]Passwords do not match. Please try registering again.[/]");
             Console.ReadKey();
+            Console.Clear();
             return;
         }
 
