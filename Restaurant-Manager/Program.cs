@@ -13,7 +13,7 @@ class Program
             Database.CreateReservationsTable();
             Database.CreateTimeslotsTable();
 
-            Database.InsertLocationsTable("PLACEHOLDER", "PLACEHOLDER DESC");
+            Database.InsertLocationsTable("Rotterdam", "Enter 'Freddy's Comfort Food, ask for 'Secret Menu #2' and an employee will lead you to your designated starting point.");
             Database.InsertTimeslotsTable("12:00");
             Database.InsertTimeslotsTable("15:00");
             Database.InsertTimeslotsTable("18:00");
