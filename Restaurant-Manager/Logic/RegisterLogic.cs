@@ -1,25 +1,3 @@
-﻿using System.Text.RegularExpressions;
+﻿static class RegisterLogic {
 
-static class RegisterLogic {
-    public static bool EmailValidOrEmpty(string Email) {
-        if (string.IsNullOrEmpty(Email)) {
-            return true;
-        }
-        if (string.IsNullOrWhiteSpace(Email)) {
-            return false;
-        }
-
-        return new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").IsMatch(Email);
-    }
-
-    public static bool PasswordValidOrEmpty(string Password) {
-        if (string.IsNullOrEmpty(Password)) {
-            return true;
-        }
-        if (string.IsNullOrWhiteSpace(Password)) {
-            return false;
-        }
-        
-        return new Regex(@".{8,}").IsMatch(Password);
-    }
 }
