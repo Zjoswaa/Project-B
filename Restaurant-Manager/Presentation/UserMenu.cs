@@ -21,7 +21,7 @@ class UserMenu
             {
                 case "Make a Reservation":
                     Console.Clear();
-                    ReservationPresentation.Present();
+                    ReservationUI.Present();
                     break;
                 case "View Reservation":
                     Console.WriteLine("TBA...");

@@ -1,7 +1,7 @@
 using System.Globalization;
 using Spectre.Console;
 
-public static class ReservationPresentation
+public static class ReservationUI
 {
     public static void Present()
     {
@@ -10,31 +10,24 @@ public static class ReservationPresentation
         Console.Clear();
         long userID = State.LoggedInUser.ID;
 
-        long locID = UserLocation(resManager);
+        long locID = SelectLocation(resManager);
         if (locID == -1) return;
         string locMessage = resManager.GetLocationDescription(locID);
 
-        string timeslot = UserTimeslot(resManager);
+        string timeslot = SelectTimeslot(resManager);
         if (timeslot == "NULL") return;
 
-        string dateString = UserDate(resManager);
+        string dateString = SelectDate(resManager);
         if (dateString == "NULL") return;
         DateTime date = resManager.ParseDate(dateString);
 
-        int groupsize = UserGroupSize();
+        int groupsize = SelectGroupSize();
         if (groupsize == -1) return;
 
         int table = resManager.GetTableCount(locID, timeslot, date);
 
         (bool success, string message) = resManager.CreateReservation(userID, locID, timeslot, date, groupsize, table);
-        if (!success)
-        {
-            Console.Clear();
-            Console.WriteLine(message);
-            Console.WriteLine("Press any key to continue.");
-            Console.ReadKey();
-        }
-        else
+        if (success)
         {
             string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {table}\n\n{locMessage}\n\nPress any key to continue.";
             Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
@@ -43,9 +36,16 @@ public static class ReservationPresentation
             AnsiConsole.Write(panel);
             Console.ReadKey();
         }
+        else
+        {
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.WriteLine("Press any key to continue.");
+            Console.ReadKey();
+        }
     }
 
-    static long UserLocation(ReservationManager resManager)
+    private static long SelectLocation(ReservationManager resManager)
     {
         Console.CursorVisible = false;
 
@@ -60,10 +60,10 @@ public static class ReservationPresentation
             return -1;
         }
 
-        return resManager.GetSelectedLocationID(locationChoice);
+        return resManager.GetLocationIDByName(locationChoice);
     }
 
-    static string UserTimeslot(ReservationManager resManager)
+    private static string SelectTimeslot(ReservationManager resManager)
     {
         Console.CursorVisible = false;
 
@@ -81,26 +81,23 @@ public static class ReservationPresentation
         return timeslotChoice;
     }
 
-    static string UserDate(ReservationManager resManager) //Add spectre calendar with unavailable dates maybe
+    private static string SelectDate(ReservationManager resManager)
     {
 
         DateTime date = DateTime.MinValue;
         string dateInput = "";
         while (true)
         {
+            Console.WriteLine("Enter a date (DD-MM-YYYY) or leave empty to cancel reservation:");
+            dateInput = Console.ReadLine();
+            if (dateInput == "") return "NULL";
+
             try
             {
-                Console.WriteLine("Enter a date (DD-MM-YYYY) or type 'Exit' to cancel reservation:");
-                dateInput = Console.ReadLine();
-
-                if (dateInput.ToLower() == "exit")
-                {
-                    return "NULL";
-                }
                 date = resManager.ParseDate(dateInput);
-                break;
             }
-            catch (FormatException ex)
+
+            catch (FormatException)
             {
                 Console.Clear();
                 Console.WriteLine("The date you have entered is not in a valid format.");
@@ -108,10 +105,11 @@ public static class ReservationPresentation
                 Console.ReadKey();
                 Console.Clear();
             }
+
+            break;
         }
 
         (bool success, string message) = resManager.VerifyDate(date);
-
         if (!success)
         {
             Console.WriteLine(message);
@@ -123,42 +121,26 @@ public static class ReservationPresentation
         return dateInput;
     }
 
-    static int UserGroupSize()
+    private static int SelectGroupSize()
     {
         Console.CursorVisible = false;
         bool isSelected = false;
         int currentOption = 1;
-        int groupsize = 0;
+        const int minGroupSize = 1;
+        const int maxGroupSize = 6;
 
-        // Creates a Spectre panel in which the user can pick the amount of people for a reservation
-        string Buffer = $"\n          ^ \nReservation for {currentOption} person\n";
-        Panel Panel = new(new Text($"Enter the amount of people for the reservation using the arrow keys:\n{Buffer}\n\n\nPress ESC to exit.").Centered()); // Define the Panel and Text within it
-        Panel.Expand = true; // Panel takes full width
-
-        AnsiConsole.Clear();
-        AnsiConsole.Write(Panel); // Render it
+        DisplayGroupSizeSelectionPanel(currentOption, minGroupSize, maxGroupSize);
 
         while (!isSelected)
         {
             ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
 
-            Buffer = (currentOption != 6) ? $"\n          ^ \nReservation for {currentOption} person\n" : $"\n         \nReservation for {currentOption} people\n         v";
+            if (currentOption != maxGroupSize && keyInfo.Key == ConsoleKey.UpArrow) currentOption += 1;
 
-            if (currentOption != 6 && keyInfo.Key == ConsoleKey.UpArrow)
-            {
-                currentOption += 1;
-                Buffer = (currentOption != 6) ? $"\n          ^ \nReservation for {currentOption} people\n         v" : $"\n         \nReservation for {currentOption} people\n         v";
-            }
-
-            if (currentOption != 1 && keyInfo.Key == ConsoleKey.DownArrow)
-            {
-                currentOption -= 1;
-                Buffer = (currentOption != 1) ? $"\n          ^ \nReservation for {currentOption} people\n         v" : $"\n          ^ \nReservation for {currentOption} person\n";
-            }
+            if (currentOption != minGroupSize && keyInfo.Key == ConsoleKey.DownArrow) currentOption -= 1;
 
             if (keyInfo.Key == ConsoleKey.Enter)
             {
-                groupsize = currentOption;
                 isSelected = true;
             }
 
@@ -167,12 +149,24 @@ public static class ReservationPresentation
                 return -1;
             }
 
-                Panel = new(new Text($"Enter the amount of people for the reservation using the arrow keys:\n{Buffer}\n\n\nPress ESC to exit.").Centered()); // Update the panel and the text in it with the updated buffer
-                Panel.Expand = true; // Set expand again
-                AnsiConsole.Clear(); // Clear the previous print of the panel
-                AnsiConsole.Write(Panel); // Re-render the panel with the updated text
+            // Replaces the first panel with one where the changes have been made
+            DisplayGroupSizeSelectionPanel(currentOption, minGroupSize, maxGroupSize);
         }
 
-        return groupsize;
+        return currentOption;
+    }
+
+    private static void DisplayGroupSizeSelectionPanel(int currentOption, int minGroupSize, int maxGroupSize)
+    {
+        string arrowUp = (currentOption < maxGroupSize) ?  "         ^" : "";
+        string arrowDown = (currentOption > minGroupSize) ? "          v " : "";
+        string personOrPeople = (currentOption == minGroupSize) ? "person" : "people";
+
+        string displayText = $"\n{arrowUp}\nReservation for {currentOption} {personOrPeople}\n{arrowDown}";
+        Panel panel = new(new Text($"Enter the amount of people for the reservation using the arrow keys:\n{displayText}\n\n\nPress ESC to exit.").Centered());
+        panel.Expand = true;
+
+        AnsiConsole.Clear();
+        AnsiConsole.Write(panel);
     }
 }

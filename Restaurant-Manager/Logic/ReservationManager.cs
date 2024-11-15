@@ -107,7 +107,7 @@ class ReservationManager
         return timeslotStrings;
     }
 
-    public long GetSelectedLocationID(string locName)
+    public long GetLocationIDByName(string locName)
     {
         List<Location> locations = Database.GetAllLocations();
         long locID = 0;
