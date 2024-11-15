@@ -1,7 +1,7 @@
 using System.Globalization;
 using Spectre.Console;
 
-public static class ReservationUI
+public static class ReservationPresentation
 {
     public static void Present()
     {
