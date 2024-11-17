@@ -167,7 +167,7 @@ public static class Database {
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
 
         cmd.CommandText = "SELECT * FROM Locations";
-        var reader = cmd.ExecuteReader();
+        using SQLiteDataReader reader = cmd.ExecuteReader();
         while (reader.Read())
         {
             int id = reader.GetInt32(0);
@@ -188,7 +188,7 @@ public static class Database {
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
 
         cmd.CommandText = "SELECT * FROM Reservations";
-        var reader = cmd.ExecuteReader();
+        using SQLiteDataReader reader = cmd.ExecuteReader();
         while (reader.Read())
         {
             long ID = reader.GetInt32(0);
