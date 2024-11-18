@@ -52,9 +52,10 @@ static class AdminMenu {
                 MenuLogic.DeleteDish();
                 break;
             case "Edit dish":
-                Console.WriteLine("TBA...");
-                Thread.Sleep(1000);
-                Console.Clear();
+                //Console.WriteLine("TBA...");
+                //Thread.Sleep(1000);
+                //Console.Clear();
+                MenuLogic.EditDish();
                 break;
             case "Exit":
                 break;

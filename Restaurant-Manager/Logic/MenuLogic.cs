@@ -85,7 +85,8 @@ class MenuLogic
         Console.ReadKey();
     }
 
-    public static void DeleteDish() {
+    public static void DeleteDish() // NEEDS A LITTLE CHANGING SO IT HAS THE SELECTION MENU LIKE EditDish();
+    {
         string DishName = AnsiConsole.Prompt(
             new TextPrompt<string>("Enter the name of the dish to remove, or leave empty to cancel: ")
                 .PromptStyle("yellow")
@@ -112,6 +113,70 @@ class MenuLogic
             AnsiConsole.WriteLine($"{DishName} was deleted successfully.");
         } catch (Exception ex) {
             AnsiConsole.WriteLine($"Error deleting dish: {ex.Message}");
+        }
+        Console.ReadKey();
+    }
+
+    public static void EditDish()
+    {
+        // First get all the dishes from the database
+        var dishes = Database.GetAllDishes();
+        if (dishes == null || dishes.Count == 0)
+        {
+            AnsiConsole.MarkupLine("[red]No Dishes available to edit.[/]");
+            Console.ReadKey();
+            return;
+        }
+
+        // Prompt the user to select a dish
+        var DishToEdit = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Select a dish to [yellow]edit[/]")
+            .PageSize(10)
+            .MoreChoicesText("[grey]Move up or down to see more dishes[/]")
+            .AddChoices(dishes.Select(d => d.Name))
+            );
+
+        // Get the selected dish's details and prompt for new details after
+        var dish = dishes.First(d => d.Name == DishToEdit);
+
+        string NewDishName = AnsiConsole.Prompt(
+            new TextPrompt<string>($"New dish name (leave empty to keep '{dish.Name}'): ")
+            .PromptStyle("yellow")
+            .AllowEmpty()
+            );
+
+        string NewPrice = AnsiConsole.Prompt(
+            new TextPrompt<string>($"New price (leave empty to keep {dish.Price:C}): ")
+            .PromptStyle("yellow")
+            .AllowEmpty()
+            .Validate(n =>
+            {
+                if (string.IsNullOrEmpty(n)) return ValidationResult.Success();
+                if (!double.TryParse(n, out _)) return ValidationResult.Error("[red]Invalid price format.[/]");
+                return ValidationResult.Success();
+            })
+        );
+
+        bool isVegan = AnsiConsole.Confirm($"Is the dish vegan? (current: {(dish.IsVegan ? "Yes" : "No")})");
+        bool isVegetarian = AnsiConsole.Confirm($"Is the dish vegetarian? (current: {(dish.IsVegetarian ? "Yes" : "No")})");
+        bool isHalal = AnsiConsole.Confirm($"Is the dish halal? (current: {(dish.IsHalal ? "Yes" : "No")})");
+        bool isGlutenFree = AnsiConsole.Confirm($"Is the dish gluten-free? (current: {(dish.IsGlutenFree ? "Yes" : "No")})");
+
+        // If strings left empty, keep the old values
+        string FinalDishName = string.IsNullOrEmpty(NewDishName) ? dish.Name : NewDishName;
+        double FinalPrice = string.IsNullOrEmpty(NewPrice) ? dish.Price : double.Parse(NewPrice);
+
+        // Lastly, update the dish in the database
+        try
+        {
+            Database.UpdateDishesTable(dish.ID, FinalDishName, FinalPrice, isVegan, isVegetarian, isHalal, isGlutenFree);
+            AnsiConsole.MarkupLine($"[green]{FinalDishName} was updated successfully.[/]");
+            Console.ReadKey();
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Error updating dish: {ex.Message}[/]");
         }
         Console.ReadKey();
     }
