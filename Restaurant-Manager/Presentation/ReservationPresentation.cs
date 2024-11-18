@@ -14,12 +14,12 @@ public static class ReservationPresentation
         if (locID == -1) return;
         string locMessage = resManager.GetLocationDescription(locID);
 
-        string timeslot = SelectTimeslot(resManager);
-        if (timeslot == "NULL") return;
-
         string dateString = SelectDate(resManager);
         if (dateString == "NULL") return;
         DateTime date = resManager.ParseDate(dateString);
+
+        string timeslot = SelectTimeslot(resManager);
+        if (timeslot == "NULL") return;
 
         int groupsize = SelectGroupSize();
         if (groupsize == -1) return;
@@ -66,6 +66,7 @@ public static class ReservationPresentation
     private static string SelectTimeslot(ReservationManager resManager)
     {
         Console.CursorVisible = false;
+        Console.Clear();
 
         // Timeslot object gets converted into a list of times in string format, user can pick one
         var timeslotChoice = AnsiConsole.Prompt(
@@ -83,11 +84,11 @@ public static class ReservationPresentation
 
     private static string SelectDate(ReservationManager resManager)
     {
-
         DateTime date = DateTime.MinValue;
         string dateInput = "";
         while (true)
         {
+            Console.Clear();
             Console.WriteLine("Enter a date (DD-MM-YYYY) or leave empty to cancel reservation:");
             dateInput = Console.ReadLine();
             if (dateInput == "") return "NULL";
@@ -103,7 +104,6 @@ public static class ReservationPresentation
                 Console.WriteLine("The date you have entered is not in a valid format.");
                 Console.WriteLine("Press any key to continue.");
                 Console.ReadKey();
-                Console.Clear();
             }
 
             break;
@@ -112,6 +112,7 @@ public static class ReservationPresentation
         (bool success, string message) = resManager.VerifyDate(date);
         if (!success)
         {
+            Console.Clear();
             Console.WriteLine(message);
             Console.WriteLine("Press any key to continue.");
             Console.ReadKey();
@@ -158,6 +159,8 @@ public static class ReservationPresentation
 
     private static void DisplayGroupSizeSelectionPanel(int currentOption, int minGroupSize, int maxGroupSize)
     {
+        Console.Clear();
+
         string arrowUp = (currentOption < maxGroupSize) ?  "         ^" : "";
         string arrowDown = (currentOption > minGroupSize) ? "          v " : "";
         string personOrPeople = (currentOption == minGroupSize) ? "person" : "people";
