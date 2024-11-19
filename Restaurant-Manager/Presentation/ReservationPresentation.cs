@@ -5,7 +5,7 @@ public static class ReservationPresentation
 {
     public static void Present()
     {
-        ReservationManager resManager = new();
+        ReservationLogic resManager = new();
 
         Console.Clear();
         long userID = State.LoggedInUser.ID;
@@ -14,9 +14,10 @@ public static class ReservationPresentation
         if (locID == -1) return;
         string locMessage = resManager.GetLocationDescription(locID);
 
-        string dateString = SelectDate(resManager);
-        if (dateString == "NULL") return;
-        DateTime date = resManager.ParseDate(dateString);
+        (int Day, int Month, int Year) Date = SelectDate(resManager);
+        if (Date is (0, 0, 0)) return;
+        string dateString = $"{Date.Day}-{Date.Month}-{Date.Year}";
+        DateOnly date = resManager.ParseDate(dateString);
 
         string timeslot = SelectTimeslot(resManager);
         if (timeslot == "NULL") return;
@@ -45,7 +46,7 @@ public static class ReservationPresentation
         }
     }
 
-    private static long SelectLocation(ReservationManager resManager)
+    private static long SelectLocation(ReservationLogic resManager)
     {
         Console.CursorVisible = false;
 
@@ -63,7 +64,7 @@ public static class ReservationPresentation
         return resManager.GetLocationIDByName(locationChoice);
     }
 
-    private static string SelectTimeslot(ReservationManager resManager)
+    private static string SelectTimeslot(ReservationLogic resManager)
     {
         Console.CursorVisible = false;
         Console.Clear();
@@ -82,44 +83,82 @@ public static class ReservationPresentation
         return timeslotChoice;
     }
 
-    private static string SelectDate(ReservationManager resManager)
-    {
+    //private static (int Day, int Month, int Year) SelectDate(ReservationManager resManager)
+    //{
+    //    DateTime date = DateTime.MinValue;
+    //    string dateInput = "";
+    //    while (true)
+    //    {
+    //        Console.Clear();
+    //        Console.WriteLine("Enter a date (DD-MM-YYYY) or leave empty to cancel reservation:");
+    //        dateInput = Console.ReadLine();
+    //        if (dateInput == "") return (0, 0, 0);
+
+    //        try
+    //        {
+    //            date = resManager.ParseDate(dateInput);
+    //        }
+
+    //        catch (FormatException)
+    //        {
+    //            Console.Clear();
+    //            Console.WriteLine("The date you have entered is not in a valid format.");
+    //            Console.WriteLine("Press any key to continue.");
+    //            Console.ReadKey();
+    //        }
+
+    //        break;
+    //    }
+
+    //    (bool success, string message) = resManager.VerifyDate(date);
+    //    if (!success)
+    //    {
+    //        Console.Clear();
+    //        Console.WriteLine(message);
+    //        Console.WriteLine("Press any key to continue.");
+    //        Console.ReadKey();
+    //        return "NULL";
+    //    }
+
+    //    return dateInput;
+    //}
+
+    private static (int Day, int Month, int Year) SelectDate(ReservationLogic resManager) {
         DateTime date = DateTime.MinValue;
-        string dateInput = "";
-        while (true)
-        {
-            Console.Clear();
-            Console.WriteLine("Enter a date (DD-MM-YYYY) or leave empty to cancel reservation:");
-            dateInput = Console.ReadLine();
-            if (dateInput == "") return "NULL";
+        int SelectedDay = DateTime.Now.Day;
+        int SelectedMonth = DateTime.Now.Month;
+        int SelectedYear = DateTime.Now.Year;
+        var Calendar = new Spectre.Console.Calendar(SelectedYear, SelectedMonth);
 
-            try
-            {
-                date = resManager.ParseDate(dateInput);
+        while (true) {
+            AnsiConsole.Clear();
+            Calendar.CalendarEvents.Clear();
+            Calendar.Year = SelectedYear;
+            Calendar.Month = SelectedMonth;
+            Calendar.AddCalendarEvent(SelectedYear, SelectedMonth, SelectedDay);
+            Calendar.HighlightStyle(Style.Parse("yellow bold"));
+            Console.CursorVisible = false;
+            AnsiConsole.Write(Calendar);
+            AnsiConsole.Markup("[gray]Left/Right arrow to change day. Up/Down arrow to change month. Enter to confirm. Escape to cancel.[/]");
+
+            ConsoleKeyInfo KeyInfo = Console.ReadKey(intercept: true);
+
+            if (KeyInfo.Key == ConsoleKey.RightArrow) {
+                resManager.IncreaseDateByDay(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
+            } else if (KeyInfo.Key == ConsoleKey.LeftArrow) {
+                resManager.DecreaseDateByDay(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
+            } else if (KeyInfo.Key == ConsoleKey.UpArrow) {
+                resManager.IncreaseDateByMonth(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
+            } else if (KeyInfo.Key == ConsoleKey.DownArrow) {
+                resManager.DecreaseDateByMonth(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
+            } else if (KeyInfo.Key == ConsoleKey.Enter) {
+                Console.CursorVisible = true;
+                return (SelectedDay, SelectedMonth, SelectedYear);
+            } else if (KeyInfo.Key == ConsoleKey.Escape) {
+                Console.CursorVisible = true;
+                return (0, 0, 0);
             }
-
-            catch (FormatException)
-            {
-                Console.Clear();
-                Console.WriteLine("The date you have entered is not in a valid format.");
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-            }
-
-            break;
         }
-
-        (bool success, string message) = resManager.VerifyDate(date);
-        if (!success)
-        {
-            Console.Clear();
-            Console.WriteLine(message);
-            Console.WriteLine("Press any key to continue.");
-            Console.ReadKey();
-            return "NULL";
-        }
-
-        return dateInput;
     }
 
     private static int SelectGroupSize()

@@ -33,7 +33,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Reservations(ID INTEGER PRIMARY KEY AUTOINCREMENT, User INTEGER, Location INTEGER, Timeslot TEXT NOT NULL, DateTime DATETIME NOT NULL, GroupSize INTEGER NOT NULL, GroupTable INTEGER NOT NULL, FOREIGN KEY(User) REFERENCES Users(ID), FOREIGN KEY(Location) REFERENCES Locations(ID))";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Reservations(ID INTEGER PRIMARY KEY AUTOINCREMENT, User INTEGER, Location INTEGER, Timeslot TEXT NOT NULL, Date DATE NOT NULL, GroupSize INTEGER NOT NULL, GroupTable INTEGER NOT NULL, FOREIGN KEY(User) REFERENCES Users(ID), FOREIGN KEY(Location) REFERENCES Locations(ID))";
         cmd.ExecuteNonQuery();
     }
 
@@ -142,17 +142,17 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void InsertReservationsTable(long user_id, long loc_id, string timeslot, DateTime datetime, int groupsize, int table)
+    public static void InsertReservationsTable(long user_id, long loc_id, string timeslot, DateOnly date, int groupsize, int table)
     {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO Reservations(User, Location, Timeslot, DateTime, GroupSize, GroupTable) VALUES (@User, @Location, @Timeslot, @DateTime, @GroupSize, @GroupTable)";
+        cmd.CommandText = "INSERT INTO Reservations(User, Location, Timeslot, Date, GroupSize, GroupTable) VALUES (@User, @Location, @Timeslot, @Date, @GroupSize, @GroupTable)";
 
         cmd.Parameters.AddWithValue("@User", user_id);
         cmd.Parameters.AddWithValue("@Location", loc_id);
         cmd.Parameters.AddWithValue("@Timeslot", timeslot);
-        cmd.Parameters.AddWithValue("@DateTime", datetime);
+        cmd.Parameters.AddWithValue("@Date", $"{date.Year}-{date.Month}-{date.Day}");
         cmd.Parameters.AddWithValue("@GroupSize", groupsize);
         cmd.Parameters.AddWithValue("@GroupTable", table);
         cmd.ExecuteNonQuery();
@@ -195,11 +195,11 @@ public static class Database {
             long userID = reader.GetInt32(1);
             long locId = reader.GetInt32(2);
             string timeslot = reader.GetString(3);
-            DateTime date = reader.GetDateTime(4);
+            string date = reader.GetString(4);
             int groupsize = reader.GetInt32(5);
             int table = reader.GetInt32(6);
 
-            reservations.Add(new Reservation(ID, userID, locId, timeslot, date, groupsize, table));
+            reservations.Add(new Reservation(ID, userID, locId, timeslot, DateOnly.Parse(date), groupsize, table));
         }
 
         return reservations;
