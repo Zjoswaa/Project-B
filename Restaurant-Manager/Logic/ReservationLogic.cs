@@ -1,8 +1,9 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 
-class ReservationLogic
+static class ReservationLogic
 {
-    public (bool success, string message) CreateReservation(long userID, long locID, string timeslot, DateOnly date, int groupsize, int table)
+    public static (bool success, string message) CreateReservation(long userID, long locID, string timeslot, DateOnly date, int groupsize, int table)
     {
         List<Reservation> reservations = Database.GetAllReservations();
 
@@ -22,7 +23,7 @@ class ReservationLogic
         return (true, "Your reservation has been made.");
     }
 
-    public bool HasAvailableTable(long locID, string timeslot, DateOnly date, int maxTables)
+    public static bool HasAvailableTable(long locID, string timeslot, DateOnly date, int maxTables)
     {
         List<Reservation> reservations = Database.GetAllReservations();
 
@@ -36,7 +37,7 @@ class ReservationLogic
         return true;
     }
 
-    private bool IsSameReservation(Reservation reservation, long userID, long locID, string timeslot, DateOnly date)
+    private static bool IsSameReservation(Reservation reservation, long userID, long locID, string timeslot, DateOnly date)
     {
         return reservation.UserID == userID &&
                reservation.LocationID == locID &&
@@ -44,7 +45,7 @@ class ReservationLogic
                reservation.Date == date;
     }
 
-    private bool IsUnvailableTimeslot(Reservation reservation, long locID, string timeslot, DateOnly date, int maxTables)
+    private static bool IsUnvailableTimeslot(Reservation reservation, long locID, string timeslot, DateOnly date, int maxTables)
     {
         return reservation.LocationID == locID &&
                reservation.Timeslot == timeslot &&
@@ -52,7 +53,7 @@ class ReservationLogic
                maxTables == reservation.Table;
     }
 
-    public int GetTableCount(long locID, string timeslot, DateOnly date)
+    public static int GetTableCount(long locID, string timeslot, DateOnly date)
     {
         List<Reservation> reservations = Database.GetAllReservations();
         int tableCount = 1;
@@ -68,13 +69,13 @@ class ReservationLogic
         return tableCount;
     }
 
-    public DateOnly ParseDate(string dateString)
+    public static DateOnly ParseDate(string dateString)
     {
         DateOnly date = DateOnly.ParseExact(dateString, "dd-MM-yyyy");
         return date;
     }
 
-    public (bool success, string message) VerifyDate(DateTime date)
+    public static (bool success, string message) VerifyDate(DateTime date)
     {
         DateTime startDate = DateTime.Now;
         DateTime endDate = DateTime.Now.AddDays(180);
@@ -92,7 +93,7 @@ class ReservationLogic
         return (true, null);
     }
 
-    public List<string> LocationNamesToList()
+    public static List<string> LocationNamesToList()
     {
         List<string> locationNames = new(){};
         List<Location> locations = Database.GetAllLocations();
@@ -107,7 +108,7 @@ class ReservationLogic
         return locationNames;
     }
 
-    public List<string> TimeslotsToList()
+    public static List<string> TimeslotsToList()
     {
         List<string> timeslotStrings = new(){};
         List<Timeslot> timeslots = Database.GetAllTimeslots();
@@ -122,7 +123,7 @@ class ReservationLogic
         return timeslotStrings;
     }
 
-    public long GetLocationIDByName(string locName)
+    public static long GetLocationIDByName(string locName)
     {
         List<Location> locations = Database.GetAllLocations();
         long locID = 0;
@@ -138,7 +139,7 @@ class ReservationLogic
         return locID;
     }
 
-    public string GetLocationDescription(long ID)
+    public static string GetLocationDescription(long ID)
     {
         List<Location> locations = Database.GetAllLocations();
 
@@ -152,7 +153,61 @@ class ReservationLogic
         return "unknown";
     }
 
-    public void IncreaseDateByDay(ref int Day, ref int Month, ref int Year) {
+    public static List<Reservation> GetReservationsByUserID(long userID)
+    {
+        List<Reservation> userReservations = new(){};
+        List<Reservation> reservations = Database.GetAllReservations();
+
+        foreach (Reservation reservation in reservations)
+        {
+            if (reservation.UserID == userID)
+            {
+                userReservations.Add(reservation);
+            }
+        }
+
+        return userReservations;
+    }
+
+    public static Reservation GetReservationByID(long ID)
+    {
+        List<Reservation> reservations = Database.GetAllReservations();
+        
+        foreach (Reservation reservation in reservations)
+        {
+            if (reservation.ID == ID)
+            {
+                return reservation;
+            }
+        }
+
+        return null;
+    }
+
+    public static List<string> ReservationsToString(List<Reservation> reservations)
+    {
+        List<string> reservationStrings = new(){};
+
+        foreach (Reservation reservation in reservations)
+        {
+            reservationStrings.Add($"ID: {reservation.ID} Date: {reservation.Date}, Timeslot: {reservation.Timeslot}, Group size: {reservation.GroupSize}");
+        }
+
+        return reservationStrings;
+    }
+
+    public static long ParseIDFromString(string reservationInfo)
+    {
+        Match match = Regex.Match(reservationInfo, @"ID:\s*(\d+)");
+        if (match.Success)
+        {
+            long id = int.Parse(match.Groups[1].Value);
+            return id;
+        }
+        else return -1;
+    }
+
+    public static void IncreaseDateByDay(ref int Day, ref int Month, ref int Year) {
         Dictionary<int, int> MonthToDays;
         if (DateTime.IsLeapYear(Year)) {
             MonthToDays = new() { { 1, 31 }, { 2, 29 }, { 3, 31 }, { 4, 30 }, { 5, 31 }, { 6, 30 }, { 7, 31 }, { 8, 31 }, { 9, 30 }, { 10, 31 }, { 11, 30 }, { 12, 31 } };
@@ -174,7 +229,7 @@ class ReservationLogic
         }
     }
 
-    public void DecreaseDateByDay(ref int Day, ref int Month, ref int Year) {
+    public static void DecreaseDateByDay(ref int Day, ref int Month, ref int Year) {
         if (Day == DateTime.Now.Day && Month == DateTime.Now.Month && Year == DateTime.Now.Year) {
             return;
         }
@@ -200,7 +255,7 @@ class ReservationLogic
         }
     }
 
-    public void IncreaseDateByMonth(ref int Day, ref int Month, ref int Year) {
+    public static void IncreaseDateByMonth(ref int Day, ref int Month, ref int Year) {
         Dictionary<int, int> MonthToDays;
         if (DateTime.IsLeapYear(Year)) {
             MonthToDays = new() { { 1, 31 }, { 2, 29 }, { 3, 31 }, { 4, 30 }, { 5, 31 }, { 6, 30 }, { 7, 31 }, { 8, 31 }, { 9, 30 }, { 10, 31 }, { 11, 30 }, { 12, 31 } };
@@ -222,7 +277,7 @@ class ReservationLogic
         }
     }
 
-    public void DecreaseDateByMonth(ref int Day, ref int Month, ref int Year) {
+    public static void DecreaseDateByMonth(ref int Day, ref int Month, ref int Year) {
         Dictionary<int, int> MonthToDays;
         if (DateTime.IsLeapYear(Year)) {
             MonthToDays = new() { { 1, 31 }, { 2, 29 }, { 3, 31 }, { 4, 30 }, { 5, 31 }, { 6, 30 }, { 7, 31 }, { 8, 31 }, { 9, 30 }, { 10, 31 }, { 11, 30 }, { 12, 31 } };

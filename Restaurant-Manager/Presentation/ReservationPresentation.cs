@@ -5,29 +5,27 @@ public static class ReservationPresentation
 {
     public static void Present()
     {
-        ReservationLogic resManager = new();
-
         Console.Clear();
         long userID = State.LoggedInUser.ID;
 
-        long locID = SelectLocation(resManager);
+        long locID = SelectLocation();
         if (locID == -1) return;
-        string locMessage = resManager.GetLocationDescription(locID);
+        string locMessage = ReservationLogic.GetLocationDescription(locID);
 
-        (int Day, int Month, int Year) Date = SelectDate(resManager);
+        (int Day, int Month, int Year) Date = SelectDate();
         if (Date is (0, 0, 0)) return;
         string dateString = $"{Date.Day}-{Date.Month}-{Date.Year}";
-        DateOnly date = resManager.ParseDate(dateString);
+        DateOnly date = ReservationLogic.ParseDate(dateString);
 
-        string timeslot = SelectTimeslot(resManager);
+        string timeslot = SelectTimeslot();
         if (timeslot == "NULL") return;
 
         int groupsize = SelectGroupSize();
         if (groupsize == -1) return;
 
-        int table = resManager.GetTableCount(locID, timeslot, date);
+        int table = ReservationLogic.GetTableCount(locID, timeslot, date);
 
-        (bool success, string message) = resManager.CreateReservation(userID, locID, timeslot, date, groupsize, table);
+        (bool success, string message) = ReservationLogic.CreateReservation(userID, locID, timeslot, date, groupsize, table);
         if (success)
         {
             string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {table}\n\n{locMessage}\n\nPress any key to continue.";
@@ -46,7 +44,7 @@ public static class ReservationPresentation
         }
     }
 
-    private static long SelectLocation(ReservationLogic resManager)
+    private static long SelectLocation()
     {
         Console.CursorVisible = false;
 
@@ -54,17 +52,17 @@ public static class ReservationPresentation
         var locationChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .Title("[cyan]Select a location:[/]")
-            .AddChoices(resManager.LocationNamesToList()));
+            .AddChoices(ReservationLogic.LocationNamesToList()));
 
         if (locationChoice == "Exit Reservation")
         {
             return -1;
         }
 
-        return resManager.GetLocationIDByName(locationChoice);
+        return ReservationLogic.GetLocationIDByName(locationChoice);
     }
 
-    private static string SelectTimeslot(ReservationLogic resManager)
+    private static string SelectTimeslot()
     {
         Console.CursorVisible = false;
         Console.Clear();
@@ -73,7 +71,7 @@ public static class ReservationPresentation
         var timeslotChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .Title("[cyan]Select a timeslot:[/]")
-            .AddChoices(resManager.TimeslotsToList()));
+            .AddChoices(ReservationLogic.TimeslotsToList()));
         
         if (timeslotChoice == "Exit Reservation")
         {
@@ -123,7 +121,7 @@ public static class ReservationPresentation
     //    return dateInput;
     //}
 
-    private static (int Day, int Month, int Year) SelectDate(ReservationLogic resManager) {
+    public static (int Day, int Month, int Year) SelectDate() {
         DateTime date = DateTime.MinValue;
         int SelectedDay = DateTime.Now.Day;
         int SelectedMonth = DateTime.Now.Month;
@@ -144,13 +142,13 @@ public static class ReservationPresentation
             ConsoleKeyInfo KeyInfo = Console.ReadKey(intercept: true);
 
             if (KeyInfo.Key == ConsoleKey.RightArrow) {
-                resManager.IncreaseDateByDay(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
+                ReservationLogic.IncreaseDateByDay(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
             } else if (KeyInfo.Key == ConsoleKey.LeftArrow) {
-                resManager.DecreaseDateByDay(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
+                ReservationLogic.DecreaseDateByDay(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
             } else if (KeyInfo.Key == ConsoleKey.UpArrow) {
-                resManager.IncreaseDateByMonth(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
+                ReservationLogic.IncreaseDateByMonth(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
             } else if (KeyInfo.Key == ConsoleKey.DownArrow) {
-                resManager.DecreaseDateByMonth(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
+                ReservationLogic.DecreaseDateByMonth(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
             } else if (KeyInfo.Key == ConsoleKey.Enter) {
                 Console.CursorVisible = true;
                 return (SelectedDay, SelectedMonth, SelectedYear);
