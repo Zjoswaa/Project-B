@@ -8,6 +8,9 @@ static class EditReservationPresentation
         Reservation reservationToEdit = SelectReservation(currentUserID);
         List<string> dataToChange = InfoToEdit();
 
+        if (!dataToChange.Any()) return;
+
+
         foreach (string variable in dataToChange)
         {
             if (variable == "Date")
