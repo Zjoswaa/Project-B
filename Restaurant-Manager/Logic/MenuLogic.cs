@@ -204,14 +204,13 @@ class MenuLogic
 
         // If strings left empty, keep the old values
         string FinalDishName = string.IsNullOrEmpty(NewDishName) ? dish.Name : NewDishName;
-        double FinalPrice = string.IsNullOrEmpty(NewPrice) ? dish.Price : double.Parse(NewPrice);
+        string FinalPrice = string.IsNullOrEmpty(NewPrice) ? dish.Price : NewPrice;
 
         // Lastly, update the dish in the database
         try
         {
             Database.UpdateDishesTable(dish.ID, FinalDishName, FinalPrice, isVegan, isVegetarian, isHalal, isGlutenFree);
             AnsiConsole.MarkupLine($"[green]{FinalDishName} was updated successfully.[/]");
-            Console.ReadKey();
         }
         catch (Exception ex)
         {
