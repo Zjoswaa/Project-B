@@ -42,7 +42,7 @@ class UserMenu
                     //Thread.Sleep(1000);
                     //Console.Clear();
                     MenuCard.DisplayMenuCard();
-                    AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
+                    AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
                     Console.ReadKey();
                     break;
                 case "Logout":
