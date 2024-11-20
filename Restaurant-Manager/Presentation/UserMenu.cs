@@ -13,10 +13,14 @@ class UserMenu
 
             var userSelectionPrompt = new SelectionPrompt<string>()
                 .Title("[cyan]Please select an option:[/]")
-                .AddChoices(new[] { "Make a Reservation", "View Reservation", "Edit Reservations", "Remove Reservation", "View Menu", "Logout" });
+                .AddChoices(new[]
+                {
+                    "Make a Reservation", "View Reservation", "Edit Reservations", "Remove Reservation", "View Menu",
+                    "Logout"
+                });
 
             var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
-          
+
             switch (userSelection)
             {
                 case "Make a Reservation":
@@ -24,9 +28,8 @@ class UserMenu
                     ReservationPresentation.Present();
                     break;
                 case "View Reservation":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
                     Console.Clear();
+                    ViewReservations.PrintUserReservations();
                     break;
                 case "Edit Reservations":
                     Console.WriteLine("TBA...");

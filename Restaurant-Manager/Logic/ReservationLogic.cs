@@ -70,7 +70,7 @@ class ReservationLogic
 
     public DateOnly ParseDate(string dateString)
     {
-        DateOnly date = DateOnly.ParseExact(dateString, "dd-MM-yyyy");
+        DateOnly date = DateOnly.ParseExact(dateString, "d-M-yyyy");
         return date;
     }
 
