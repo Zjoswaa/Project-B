@@ -16,6 +16,12 @@ static class ReservationLogic
         {
             return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
         }
+        
+        (bool success, string message) = VerifyDate(date);
+        if (!success)
+        {
+            return (false, message);
+        }
 
         Database.InsertReservationsTable(userID, locID, timeslot, date, groupsize, table);
         return (true, "Your reservation has been made.");
@@ -93,11 +99,13 @@ static class ReservationLogic
         return tableCount;
     }
 
-    public static (bool success, string message) VerifyDate(DateTime date)
+    public static (bool success, string message) VerifyDate(DateOnly date)
     {
         const int maxDaysInAdvance = 180;
-        DateTime startDate = DateTime.Now;
-        DateTime endDate = DateTime.Now.AddDays(maxDaysInAdvance);
+        DateTime startDateTime = DateTime.Now;
+        DateTime endDateTime = DateTime.Now.AddDays(maxDaysInAdvance);
+        DateOnly startDate = DateOnly.FromDateTime(startDateTime);
+        DateOnly endDate = DateOnly.FromDateTime(endDateTime);
 
         if (date > endDate)
         {
@@ -107,6 +115,11 @@ static class ReservationLogic
         if (date < startDate)
         {
             return (false, "The date you have selected has already passed. Please pick a different date.");
+        }
+
+        if (startDate == date)
+        {
+            return (false, "Reservations must be made at least 24 hours in advance. Please select a different date.");
         }
 
         return (true, null);
