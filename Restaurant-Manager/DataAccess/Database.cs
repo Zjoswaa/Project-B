@@ -313,6 +313,19 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
+    public static void UpdateReservation(Reservation reservationToEdit)
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "UPDATE reservations SET Timeslot = @Timeslot, Date = @Date, Groupsize = @Groupsize WHERE ID = @ID";
+        cmd.Parameters.AddWithValue("@Timeslot", reservationToEdit.Timeslot);
+        cmd.Parameters.AddWithValue("@Date", reservationToEdit.Date);
+        cmd.Parameters.AddWithValue("@Groupsize", reservationToEdit.GroupSize);
+        cmd.Parameters.AddWithValue("@ID", reservationToEdit.ID);
+        cmd.ExecuteNonQuery();
+    }
+
     public static bool UsersTableContainsUser(string Email) {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();

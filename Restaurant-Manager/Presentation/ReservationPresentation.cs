@@ -62,7 +62,7 @@ public static class ReservationPresentation
         return ReservationLogic.GetLocationIDByName(locationChoice);
     }
 
-    private static string SelectTimeslot()
+    public static string SelectTimeslot()
     {
         Console.CursorVisible = false;
         Console.Clear();
@@ -159,7 +159,7 @@ public static class ReservationPresentation
         }
     }
 
-    private static int SelectGroupSize()
+    public static int SelectGroupSize()
     {
         Console.CursorVisible = false;
         bool isSelected = false;

@@ -5,25 +5,61 @@ static class ReservationLogic
 {
     public static (bool success, string message) CreateReservation(long userID, long locID, string timeslot, DateOnly date, int groupsize, int table)
     {
+        if (IsDuplicateReservation(userID, locID, timeslot, date))
+        {
+            return (false, "You already have a reservation for this timeslot. Edit your reservation instead.");
+        }
+        if (!IsAvailableSlot(locID, timeslot, date))
+        {
+            return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
+        }
+
+        Database.InsertReservationsTable(userID, locID, timeslot, date, groupsize, table);
+        return (true, "Your reservation has been made.");
+    }
+
+    public static (bool success, string message) UpdateReservation(Reservation reservationToEdit)
+    {
+        if (!IsAvailableSlot(reservationToEdit.LocationID, reservationToEdit.Timeslot, reservationToEdit.Date))
+        {
+            return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
+        }
+
+        Database.UpdateReservation(reservationToEdit);
+        return (true, "Your reservation has been made.");
+    }
+
+    private static bool IsAvailableSlot(long locID, string timeslot, DateOnly date)
+    {
+        List<Reservation> reservations = Database.GetAllReservations();
+
+        foreach (Reservation reservation in reservations)
+        {
+            if (!HasAvailableTable(locID, timeslot, date, 8))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool IsDuplicateReservation(long userID, long locID, string timeslot, DateOnly date)
+    {
         List<Reservation> reservations = Database.GetAllReservations();
 
         foreach (Reservation reservation in reservations)
         {
             if (IsSameReservation(reservation, userID, locID, timeslot, date))
             {
-                return (false, "You already have a reservation for this timeslot. Edit your reservation instead.");
-            }
-
-            if (!HasAvailableTable(locID, timeslot, date, 8))
-            {
-                return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
+                return true;
             }
         }
-        Database.InsertReservationsTable(userID, locID, timeslot, date, groupsize, table);
-        return (true, "Your reservation has been made.");
+
+        return false;
     }
 
-    public static bool HasAvailableTable(long locID, string timeslot, DateOnly date, int maxTables)
+    private static bool HasAvailableTable(long locID, string timeslot, DateOnly date, int maxTables)
     {
         List<Reservation> reservations = Database.GetAllReservations();
 

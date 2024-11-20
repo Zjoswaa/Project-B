@@ -6,7 +6,7 @@ public class Reservation
     public string Timeslot { get; set; }
     public DateOnly Date { get; set; }
     public int GroupSize { get; set; }
-    public int Table { get; }
+    public int Table { get; set; }
 
     public Reservation(long id, long user, long location, string timeslot, DateOnly date, int groupsize, int table)
     {
