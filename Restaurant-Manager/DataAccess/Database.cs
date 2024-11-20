@@ -152,7 +152,7 @@ public static class Database {
         cmd.Parameters.AddWithValue("@User", user_id);
         cmd.Parameters.AddWithValue("@Location", loc_id);
         cmd.Parameters.AddWithValue("@Timeslot", timeslot);
-        cmd.Parameters.AddWithValue("@Date", $"{date.Year}-{date.Month}-{date.Day}");
+        cmd.Parameters.AddWithValue("@Date", $"{date.Day}-{date.Month}-{date.Year}");
         cmd.Parameters.AddWithValue("@GroupSize", groupsize);
         cmd.Parameters.AddWithValue("@GroupTable", table);
         cmd.ExecuteNonQuery();
@@ -199,7 +199,7 @@ public static class Database {
             int groupsize = reader.GetInt32(5);
             int table = reader.GetInt32(6);
 
-            reservations.Add(new Reservation(ID, userID, locId, timeslot, DateOnly.ParseExact(date, "yyyy-MM-dd"), groupsize, table));
+            reservations.Add(new Reservation(ID, userID, locId, timeslot, DateOnly.ParseExact(date, "dd-MM-yyyy"), groupsize, table));
         }
 
         return reservations;
