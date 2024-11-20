@@ -81,46 +81,6 @@ public static class ReservationPresentation
         return timeslotChoice;
     }
 
-    //private static (int Day, int Month, int Year) SelectDate(ReservationManager resManager)
-    //{
-    //    DateTime date = DateTime.MinValue;
-    //    string dateInput = "";
-    //    while (true)
-    //    {
-    //        Console.Clear();
-    //        Console.WriteLine("Enter a date (DD-MM-YYYY) or leave empty to cancel reservation:");
-    //        dateInput = Console.ReadLine();
-    //        if (dateInput == "") return (0, 0, 0);
-
-    //        try
-    //        {
-    //            date = resManager.ParseDate(dateInput);
-    //        }
-
-    //        catch (FormatException)
-    //        {
-    //            Console.Clear();
-    //            Console.WriteLine("The date you have entered is not in a valid format.");
-    //            Console.WriteLine("Press any key to continue.");
-    //            Console.ReadKey();
-    //        }
-
-    //        break;
-    //    }
-
-    //    (bool success, string message) = resManager.VerifyDate(date);
-    //    if (!success)
-    //    {
-    //        Console.Clear();
-    //        Console.WriteLine(message);
-    //        Console.WriteLine("Press any key to continue.");
-    //        Console.ReadKey();
-    //        return "NULL";
-    //    }
-
-    //    return dateInput;
-    //}
-
     public static (int Day, int Month, int Year) SelectDate() {
         DateTime date = DateTime.MinValue;
         int SelectedDay = DateTime.Now.Day;

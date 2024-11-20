@@ -3,13 +3,16 @@ using System.Text.RegularExpressions;
 
 static class ReservationLogic
 {
+
+    // Reservation specific methods
+
     public static (bool success, string message) CreateReservation(long userID, long locID, string timeslot, DateOnly date, int groupsize, int table)
     {
         if (IsDuplicateReservation(userID, locID, timeslot, date))
         {
             return (false, "You already have a reservation for this timeslot. Edit your reservation instead.");
         }
-        if (!IsAvailableSlot(locID, timeslot, date))
+        if (!HasAvailableTable(locID, timeslot, date, 8))
         {
             return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
         }
@@ -20,28 +23,13 @@ static class ReservationLogic
 
     public static (bool success, string message) UpdateReservation(Reservation reservationToEdit)
     {
-        if (!IsAvailableSlot(reservationToEdit.LocationID, reservationToEdit.Timeslot, reservationToEdit.Date))
+        if (!HasAvailableTable(reservationToEdit.LocationID, reservationToEdit.Timeslot, reservationToEdit.Date, 8))
         {
             return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
         }
 
         Database.UpdateReservation(reservationToEdit);
         return (true, "Your reservation has been made.");
-    }
-
-    private static bool IsAvailableSlot(long locID, string timeslot, DateOnly date)
-    {
-        List<Reservation> reservations = Database.GetAllReservations();
-
-        foreach (Reservation reservation in reservations)
-        {
-            if (!HasAvailableTable(locID, timeslot, date, 8))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private static bool IsDuplicateReservation(long userID, long locID, string timeslot, DateOnly date)
@@ -105,16 +93,11 @@ static class ReservationLogic
         return tableCount;
     }
 
-    public static DateOnly ParseDate(string dateString)
-    {
-        DateOnly date = DateOnly.ParseExact(dateString, "dd-MM-yyyy");
-        return date;
-    }
-
     public static (bool success, string message) VerifyDate(DateTime date)
     {
+        const int maxDaysInAdvance = 180;
         DateTime startDate = DateTime.Now;
-        DateTime endDate = DateTime.Now.AddDays(180);
+        DateTime endDate = DateTime.Now.AddDays(maxDaysInAdvance);
 
         if (date > endDate)
         {
@@ -127,6 +110,14 @@ static class ReservationLogic
         }
 
         return (true, null);
+    }
+
+    // Utility methods used for reservations
+
+    public static DateOnly ParseDate(string dateString)
+    {
+        DateOnly date = DateOnly.ParseExact(dateString, "d-M-yyyy");
+        return date;
     }
 
     public static List<string> LocationNamesToList()
@@ -242,6 +233,8 @@ static class ReservationLogic
         }
         else return -1;
     }
+
+    // Methods used for calendar UI
 
     public static void IncreaseDateByDay(ref int Day, ref int Month, ref int Year) {
         Dictionary<int, int> MonthToDays;

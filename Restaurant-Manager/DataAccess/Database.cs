@@ -199,7 +199,7 @@ public static class Database {
             int groupsize = reader.GetInt32(5);
             int table = reader.GetInt32(6);
 
-            reservations.Add(new Reservation(ID, userID, locId, timeslot, DateOnly.ParseExact(date, "dd-MM-yyyy"), groupsize, table));
+            reservations.Add(new Reservation(ID, userID, locId, timeslot, DateOnly.ParseExact(date, "d-M-yyyy"), groupsize, table));
         }
 
         return reservations;

@@ -6,6 +6,7 @@ static class EditReservationPresentation
     {
         long currentUserID = State.LoggedInUser.ID;
         Reservation reservationToEdit = SelectReservation(currentUserID);
+        
         List<string> dataToChange = InfoToEdit();
 
         if (!dataToChange.Any()) return;
@@ -16,21 +17,21 @@ static class EditReservationPresentation
             if (variable == "Date")
             {
                 DateOnly date = EditDate();
-                reservationToEdit.Date = date;
+                reservationToEdit.UpdateDate(date);
             }
             if (variable == "Timeslot")
             {
                 string timeslot = EditTimeslot();
-                reservationToEdit.Timeslot = timeslot;
+                reservationToEdit.UpdateTimeslot(timeslot);
             }
             if (variable == "Group size")
             {
                 int groupSize = EditGroupSize();
-                reservationToEdit.GroupSize = groupSize;
+                reservationToEdit.UpdateGroupSize(groupSize);
             }
         }
         int table = ReservationLogic.GetTableCount(reservationToEdit.LocationID, reservationToEdit.Timeslot, reservationToEdit.Date);
-        reservationToEdit.Table = table;
+        reservationToEdit.UpdateTable(table);
         string locMessage = ReservationLogic.GetLocationDescription(reservationToEdit.LocationID);
 
         (bool success, string message) = ReservationLogic.UpdateReservation(reservationToEdit);
@@ -71,7 +72,7 @@ static class EditReservationPresentation
         var dataToChange = AnsiConsole.Prompt(
             new MultiSelectionPrompt<string>()
                 .Title("What data would you like to edit?")
-                .NotRequired() // Not required to have a favorite fruit
+                .NotRequired()
                 .InstructionsText(
                     "[grey](Press [blue]space[/] to select what to edit, " + 
                     "[green]Enter[/] to accept)[/]")
