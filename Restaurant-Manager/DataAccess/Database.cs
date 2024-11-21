@@ -152,7 +152,7 @@ public static class Database {
         cmd.Parameters.AddWithValue("@User", user_id);
         cmd.Parameters.AddWithValue("@Location", loc_id);
         cmd.Parameters.AddWithValue("@Timeslot", timeslot);
-        cmd.Parameters.AddWithValue("@Date", $"{date.Year}-{date.Month}-{date.Day}");
+        cmd.Parameters.AddWithValue("@Date", $"{date.Day}-{date.Month}-{date.Year}");
         cmd.Parameters.AddWithValue("@GroupSize", groupsize);
         cmd.Parameters.AddWithValue("@GroupTable", table);
         cmd.ExecuteNonQuery();
@@ -199,7 +199,7 @@ public static class Database {
             int groupsize = reader.GetInt32(5);
             int table = reader.GetInt32(6);
 
-            reservations.Add(new Reservation(ID, userID, locId, timeslot, DateOnly.ParseExact(date, "yyyy-M-d"), groupsize, table));
+            reservations.Add(new Reservation(ID, userID, locId, timeslot, DateOnly.ParseExact(date, "d-M-yyyy"), groupsize, table));
         }
 
         return reservations;
@@ -310,6 +310,19 @@ public static class Database {
         cmd.Parameters.AddWithValue("@FirstName", string.IsNullOrWhiteSpace(FirstName) ? null : FirstName);
         cmd.Parameters.AddWithValue("@LastName", string.IsNullOrWhiteSpace(LastName) ? null : LastName);
         cmd.Parameters.AddWithValue("@Role", Role);
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void UpdateReservation(Reservation reservationToEdit)
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "UPDATE reservations SET Timeslot = @Timeslot, Date = @Date, Groupsize = @Groupsize WHERE ID = @ID";
+        cmd.Parameters.AddWithValue("@Timeslot", reservationToEdit.Timeslot);
+        cmd.Parameters.AddWithValue("@Date", reservationToEdit.Date);
+        cmd.Parameters.AddWithValue("@Groupsize", reservationToEdit.GroupSize);
+        cmd.Parameters.AddWithValue("@ID", reservationToEdit.ID);
         cmd.ExecuteNonQuery();
     }
 

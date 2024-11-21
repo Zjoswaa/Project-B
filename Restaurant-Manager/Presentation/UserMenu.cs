@@ -32,9 +32,8 @@ class UserMenu
                     ViewReservations.PrintUserReservations();
                     break;
                 case "Edit Reservations":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
                     Console.Clear();
+                    EditReservationPresentation.Present();
                     break;
                 case "Remove Reservation":
                     Console.WriteLine("TBA...");
