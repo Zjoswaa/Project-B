@@ -33,8 +33,8 @@ class MenuLogic
             );
 
         var UserSelectionPrompt = new SelectionPrompt<string>()
-            .Title("[cyan]Is the dish vegan?[/]")
-            .AddChoices(["No", "Yes"]);
+            .Title("[yellow]Is the dish vegan?[/]")
+            .AddChoices(["Yes", "No"]);
         var Input = AnsiConsole.Prompt(UserSelectionPrompt);
         bool IsVegan = false;
         if (Input == "Yes")
@@ -43,8 +43,8 @@ class MenuLogic
         }
 
         UserSelectionPrompt = new SelectionPrompt<string>()
-            .Title("[cyan]Is the dish Vegetarian?[/]")
-            .AddChoices(["No", "Yes"]);
+            .Title("[yellow]Is the dish Vegetarian?[/]")
+            .AddChoices(["Yes", "No"]);
         Input = AnsiConsole.Prompt(UserSelectionPrompt);
         bool IsVegetarian = false;
         if (Input == "Yes")
@@ -53,8 +53,8 @@ class MenuLogic
         }
 
         UserSelectionPrompt = new SelectionPrompt<string>()
-            .Title("[cyan]Is the dish Halal?[/]")
-            .AddChoices(["No", "Yes"]);
+            .Title("[yellow]Is the dish Halal?[/]")
+            .AddChoices(["Yes", "No"]);
         Input = AnsiConsole.Prompt(UserSelectionPrompt);
         bool IsHalal = false;
         if (Input == "Yes")
@@ -63,8 +63,8 @@ class MenuLogic
         }
 
         UserSelectionPrompt = new SelectionPrompt<string>()
-            .Title("[cyan]Is the dish Gluten Free?[/]")
-            .AddChoices(["No", "Yes"]);
+            .Title("[yellow]Is the dish Gluten Free?[/]")
+            .AddChoices(["Yes", "No"]);
         Input = AnsiConsole.Prompt(UserSelectionPrompt);
         bool IsGlutenFree = false;
         if (Input == "Yes")
@@ -158,21 +158,59 @@ class MenuLogic
             })
         );
 
-        bool isVegan = AnsiConsole.Confirm($"Is the dish vegan? (current: {(dish.IsVegan ? "Yes" : "No")})");
-        bool isVegetarian = AnsiConsole.Confirm($"Is the dish vegetarian? (current: {(dish.IsVegetarian ? "Yes" : "No")})");
-        bool isHalal = AnsiConsole.Confirm($"Is the dish halal? (current: {(dish.IsHalal ? "Yes" : "No")})");
-        bool isGlutenFree = AnsiConsole.Confirm($"Is the dish gluten-free? (current: {(dish.IsGlutenFree ? "Yes" : "No")})");
+        //bool isVegan = AnsiConsole.Confirm($"Is the dish vegan? (current: {(dish.IsVegan ? "Yes" : "No")})");
+        //bool isVegetarian = AnsiConsole.Confirm($"Is the dish vegetarian? (current: {(dish.IsVegetarian ? "Yes" : "No")})");
+        //bool isHalal = AnsiConsole.Confirm($"Is the dish halal? (current: {(dish.IsHalal ? "Yes" : "No")})");
+        //bool isGlutenFree = AnsiConsole.Confirm($"Is the dish gluten-free? (current: {(dish.IsGlutenFree ? "Yes" : "No")})");
+        var UserSelectionPrompt = new SelectionPrompt<string>()
+        .Title("[yellow]Is the dish vegan?[/]")
+        .AddChoices(["Yes", "No"]);
+        var Input = AnsiConsole.Prompt(UserSelectionPrompt);
+        bool isVegan = false;
+        if (Input == "Yes")
+        {
+            isVegan = true;
+        }
+
+        UserSelectionPrompt = new SelectionPrompt<string>()
+        .Title("[yellow]Is the dish Vegetarian?[/]")
+        .AddChoices(["Yes", "No"]);
+        Input = AnsiConsole.Prompt(UserSelectionPrompt);
+        bool isVegetarian = false;
+        if (Input == "Yes")
+        {
+            isVegetarian = true;
+        }
+
+        UserSelectionPrompt = new SelectionPrompt<string>()
+        .Title("[yellow]Is the dish Halal?[/]")
+        .AddChoices(["Yes", "No"]);
+        Input = AnsiConsole.Prompt(UserSelectionPrompt);
+        bool isHalal = false;
+        if (Input == "Yes")
+        {
+            isHalal = true;
+        }
+
+        UserSelectionPrompt = new SelectionPrompt<string>()
+        .Title("[yellow]Is the dish Gluten Free?[/]")
+        .AddChoices(["Yes", "No"]);
+        Input = AnsiConsole.Prompt(UserSelectionPrompt);
+        bool isGlutenFree = false;
+        if (Input == "Yes")
+        {
+            isGlutenFree = true;
+        }
 
         // If strings left empty, keep the old values
         string FinalDishName = string.IsNullOrEmpty(NewDishName) ? dish.Name : NewDishName;
-        double FinalPrice = string.IsNullOrEmpty(NewPrice) ? dish.Price : double.Parse(NewPrice);
+        string FinalPrice = string.IsNullOrEmpty(NewPrice) ? dish.Price : NewPrice;
 
         // Lastly, update the dish in the database
         try
         {
             Database.UpdateDishesTable(dish.ID, FinalDishName, FinalPrice, isVegan, isVegetarian, isHalal, isGlutenFree);
             AnsiConsole.MarkupLine($"[green]{FinalDishName} was updated successfully.[/]");
-            Console.ReadKey();
         }
         catch (Exception ex)
         {

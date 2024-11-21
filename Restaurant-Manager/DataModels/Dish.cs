@@ -2,13 +2,13 @@ public class Dish
 {
     public long ID { get; }
     public string Name { get; }
-    public double Price { get; }
+    public string Price { get; }
     public bool IsVegan { get; }
     public bool IsVegetarian { get; }
     public bool IsHalal { get; }
     public bool IsGlutenFree { get; }
 
-    public Dish(long id, string name, double price, bool isvegan, bool isvegetarian, bool ishalal, bool isglutenfree)
+    public Dish(long id, string name, string price, bool isvegan, bool isvegetarian, bool ishalal, bool isglutenfree)
     {
         ID = id;
         Name = name;

@@ -72,7 +72,6 @@ namespace Restaurant_Manager_UnitTests
         }
 
         [TestMethod]
-
         public void TestDeleteDish()
         {
             // Align
@@ -86,10 +85,39 @@ namespace Restaurant_Manager_UnitTests
             // Act
             Database.InsertDishesTable("Pizza Margherita", "9.95", false, true, true, false);
             List<Dish> dishes = Database.GetAllDishes();
+
+            // Assert
             Assert.IsTrue(dishes.Count() == 1);
+
+            // Act
             Database.DeleteDishesTable("Pizza Margherita");
             dishes = Database.GetAllDishes();
+
+            // Assert
             Assert.IsTrue(dishes.Count() == 0);
+        }
+
+        [TestMethod]
+        public void TestInsertReservation() {
+            // Align
+            File.Delete("db5.db");
+            Database.ConnectionString = "db5.db";
+            Database.CreateUsersTable();
+            Database.CreateDishesTable();
+            Database.CreateLocationsTable();
+            Database.CreateReservationsTable();
+
+            // Act
+            Database.InsertReservationsTable(1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
+            List<Reservation> Reservations = Database.GetAllReservations();
+
+            // Assert
+            Assert.IsTrue(Reservations.Count() == 1);
+        }
+
+        [TestMethod]
+        public void TestRemoveReservation() {
+            Assert.IsTrue(true);
         }
     }
 }

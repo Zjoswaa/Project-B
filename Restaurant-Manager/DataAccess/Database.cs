@@ -104,7 +104,7 @@ public static class Database {
         return (long)result > 0;
     }
 
-    public static void UpdateDishesTable(long ID, string Name, double Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
+    public static void UpdateDishesTable(long ID, string Name, string Price, bool IsVegan, bool IsVegetarian, bool IsHalal, bool IsGlutenFree)
     {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
@@ -215,7 +215,7 @@ public static class Database {
             dishes.Add(new Dish(
                 (long)reader["ID"],
                 (string)reader["Name"],
-                Convert.ToDouble(reader["Price"]),
+                (string)(reader["Price"]),
                 Convert.ToBoolean(reader["IsVegan"]),
                 Convert.ToBoolean(reader["IsVegetarian"]),
                 Convert.ToBoolean(reader["IsHalal"]),
