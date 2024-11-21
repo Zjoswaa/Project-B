@@ -43,7 +43,7 @@ static class EditReservationPresentation
         (bool success, string message) = ReservationLogic.UpdateReservation(reservationToEdit);
         if (success)
         {
-            string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {table}\n\n{locMessage}\n\nPress any key to continue.";
+            string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {reservationToEdit.Table}\n\n{locMessage}\n\nPress any key to continue.";
             Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
             panel.Expand = true; // Set expand again
             Console.Clear();
