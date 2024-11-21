@@ -34,6 +34,12 @@ static class ReservationLogic
             return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
         }
 
+        (bool success, string message) = VerifyDate(reservationToEdit.Date);
+        if (!success)
+        {
+            return (false, message);
+        }
+
         Database.UpdateReservation(reservationToEdit);
         return (true, "Your reservation has been made.");
     }
@@ -232,6 +238,7 @@ static class ReservationLogic
         {
             reservationStrings.Add($"ID: {reservation.ID} Date: {reservation.Date}, Timeslot: {reservation.Timeslot}, Group size: {reservation.GroupSize}");
         }
+        reservationStrings.Add("Exit");
 
         return reservationStrings;
     }

@@ -6,6 +6,11 @@ static class EditReservationPresentation
     {
         long currentUserID = State.LoggedInUser.ID;
         Reservation reservationToEdit = SelectReservation(currentUserID);
+
+        if (reservationToEdit is null)
+        {
+            return;
+        }
         
         List<string> dataToChange = InfoToEdit();
 
@@ -61,6 +66,11 @@ static class EditReservationPresentation
             new SelectionPrompt<string>()
             .Title("[cyan]Select a reservation to edit:[/]")
             .AddChoices(ReservationLogic.ReservationsToString(userReservations)));
+
+        if (reservationChoice == "Exit Reservation")
+        {
+            return null;
+        }
         
         long reservationID = ReservationLogic.ParseIDFromString(reservationChoice);
 
