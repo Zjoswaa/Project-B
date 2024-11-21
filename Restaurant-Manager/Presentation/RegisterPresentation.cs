@@ -12,7 +12,6 @@ static class RegisterPresentation
         AnsiConsole.WriteLine();
 
         // Ask for new user email
-        AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
         string Email = PromptEmail();
         if (string.IsNullOrEmpty(Email)) {
             AnsiConsole.Clear();
@@ -20,7 +19,6 @@ static class RegisterPresentation
         }
 
         // Ask for new user password
-        AnsiConsole.MarkupLine("[blue]Please enter your password, or leave empty to cancel:[/]");
         string Password = PromptPassword(Email);
         if (string.IsNullOrEmpty(Password)) {
             AnsiConsole.Clear();
@@ -28,7 +26,6 @@ static class RegisterPresentation
         }
 
         // Confirm password
-        AnsiConsole.MarkupLine("[blue]Please enter the same password again, or leave empty to cancel:[/]");
         string ConfirmPassword = PromptPasswordConfirmation(Email, Password);
         if (string.IsNullOrEmpty(ConfirmPassword)) {
             AnsiConsole.Clear();
@@ -65,6 +62,7 @@ static class RegisterPresentation
 
     private static string PromptEmail()
     {
+        AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
         while (true)
         {
             string Email = AnsiConsole.Prompt(
@@ -105,7 +103,7 @@ static class RegisterPresentation
             //AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
             AnsiConsole.MarkupLine($"[green]Email:[/] {Email}");
 
-            AnsiConsole.MarkupLine("[blue]Please enter your password, or leave empty to cancel:[/]");
+            AnsiConsole.MarkupLine("[blue]Please enter your password, or leave empty to cancel [/][gray](min. 8 characters)[/]:");
             string Password = AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Enter your password:[/]")
                 .PromptStyle("yellow")
