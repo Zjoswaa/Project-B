@@ -24,7 +24,7 @@ static class PasswordRecoveryPresentation {
 
         if (EnteredCode == Code) {
             while (true) {
-                AnsiConsole.MarkupLine("[blue]Enter your new password.[/]");
+                AnsiConsole.MarkupLine("[blue]Please enter your new password [/][gray](min. 8 characters)[/]:");
                 string NewPassword = PromptNewPassword();
                 if (string.IsNullOrEmpty(NewPassword)) {
                     AnsiConsole.Clear();
@@ -74,7 +74,7 @@ static class PasswordRecoveryPresentation {
 
     private static string PromptCode() {
         return AnsiConsole.Prompt(
-            new TextPrompt<string>("[green]Code:[/]")
+            new TextPrompt<string>("[green]Code[/]:")
         );
     }
 
