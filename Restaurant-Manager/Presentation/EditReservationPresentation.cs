@@ -84,7 +84,7 @@ static class EditReservationPresentation
                 .Title("What data would you like to edit?")
                 .NotRequired()
                 .InstructionsText(
-                    "[grey](Press [blue]space[/] to select what to edit, " + 
+                    "[gray](Press [blue]space[/] to select what to edit, " + 
                     "[green]Enter[/] to accept)[/]")
                 .AddChoices(new[] {"Date", "Timeslot", "Group size"}));
         
