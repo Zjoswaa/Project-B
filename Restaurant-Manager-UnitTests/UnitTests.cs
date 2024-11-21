@@ -119,5 +119,25 @@ namespace Restaurant_Manager_UnitTests
         public void TestRemoveReservation() {
             Assert.IsTrue(true);
         }
+
+        [TestMethod]
+        public void TestEditReservation() {
+            File.Delete("db6.db");
+            Database.ConnectionString = "db6.db";
+            Database.CreateUsersTable();
+            Database.CreateDishesTable();
+            Database.CreateLocationsTable();
+            Database.CreateReservationsTable();
+            
+            Database.InsertReservationsTable(1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
+            Reservation oldReservation = Database.GetAllReservations()[0];
+            Reservation newReservation = new(1, 1, 1, "15:00", DateOnly.FromDateTime(DateTime.Now.AddDays(3)), 3, 1);
+            Database.UpdateReservation(newReservation);
+            
+            Reservation updatedReservation = Database.GetAllReservations()[0];
+            Assert.AreEqual(updatedReservation.GroupSize, newReservation.GroupSize);
+            Assert.AreEqual(updatedReservation.Date, newReservation.Date);
+            Assert.AreEqual(updatedReservation.Timeslot, newReservation.Timeslot);
+        }
     }
 }
