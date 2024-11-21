@@ -4,6 +4,7 @@ static class EditReservationPresentation
 {
     public static void Present()
     {
+        AnsiConsole.Write(new Rule($"[yellow]Edit Reservation ({State.LoggedInUser.GetFullName()})[/]"));
         long currentUserID = State.LoggedInUser.ID;
         Reservation reservationToEdit = SelectReservation(currentUserID);
 
@@ -67,7 +68,7 @@ static class EditReservationPresentation
             .Title("[cyan]Select a reservation to edit:[/]")
             .AddChoices(ReservationLogic.ReservationsToString(userReservations)));
 
-        if (reservationChoice == "Exit Reservation")
+        if (reservationChoice == "Exit")
         {
             return null;
         }

@@ -158,6 +158,15 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
+    public static void DeleteReservationsTable(long ID) {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "DELETE FROM Reservations WHERE ID = @ID";
+        cmd.Parameters.AddWithValue("@ID", ID);
+        cmd.ExecuteNonQuery();
+    }
+
     public static List<Location> GetAllLocations()
     {
         List<Location> locations = new();
@@ -177,6 +186,21 @@ public static class Database {
         }
 
         return locations;
+    }
+
+    public static Location? GetLocation(long ID) {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "SELECT * FROM Locations WHERE ID = @ID LIMIT 1";
+        using SQLiteDataReader reader = cmd.ExecuteReader();
+        if (reader.Read()) {
+            int id = reader.GetInt32(0);
+            string name = reader.GetString(1);
+            string message = reader.GetString(2);
+            return new Location(id, name, message);
+        }
+        return null;
     }
 
     public static List<Reservation> GetAllReservations()
