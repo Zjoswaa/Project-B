@@ -149,7 +149,7 @@ static class ReservationLogic
             locationNames.Add(location.Name);
         }
         //Adds another option used for exiting the menu in ReservationPresentation.cs
-        locationNames.Add("Exit Reservation");
+        locationNames.Add("Exit");
 
         return locationNames;
     }

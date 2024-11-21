@@ -15,7 +15,7 @@ class UserMenu
                 .Title("[cyan]Please select an option:[/]")
                 .AddChoices(new[]
                 {
-                    "Make a Reservation", "View Reservation", "Edit Reservations", "Remove Reservation", "View Menu",
+                    "Make a Reservation", "View Reservations", "Edit Reservation", "Remove Reservation", "View Menu",
                     "Logout"
                 });
 
@@ -27,17 +27,19 @@ class UserMenu
                     Console.Clear();
                     ReservationPresentation.Present();
                     break;
-                case "View Reservation":
+                case "View Reservations":
                     Console.Clear();
                     ViewReservations.PrintUserReservations();
                     break;
-                case "Edit Reservations":
+                case "Edit Reservation":
                     Console.Clear();
                     EditReservationPresentation.Present();
                     break;
                 case "Remove Reservation":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
+                    //Console.WriteLine("TBA...");
+                    //Thread.Sleep(1000);
+                    Console.Clear();
+                    RemoveReservationPresentation.Present();
                     break;
                 case "View Menu":
                     //Console.WriteLine("TBA...");

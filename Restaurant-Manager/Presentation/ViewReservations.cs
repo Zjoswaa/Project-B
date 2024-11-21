@@ -1,18 +1,10 @@
 ﻿using Spectre.Console;
 
-public class ViewReservations
+public static class ViewReservations
 {
-    private readonly string _connectionString;
-
-    // Constructor: Initializes the connection string
-    public ViewReservations(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
-
-    // Method to print reservations of the logged-in user
     public static void PrintUserReservations()
     {
+        AnsiConsole.Write(new Rule($"[yellow]View Reservations ({State.LoggedInUser.GetFullName()})[/]"));
         var reservations = Database.GetAllReservations();
         var userId = State.LoggedInUser.ID;
 

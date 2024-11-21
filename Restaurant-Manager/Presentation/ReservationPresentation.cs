@@ -6,6 +6,7 @@ public static class ReservationPresentation
     public static void Present()
     {
         Console.Clear();
+        AnsiConsole.Write(new Rule($"[yellow]Make Reservation ({State.LoggedInUser.GetFullName()})[/]"));
         long userID = State.LoggedInUser.ID;
 
         long locID = SelectLocation();
@@ -54,7 +55,7 @@ public static class ReservationPresentation
             .Title("[cyan]Select a location:[/]")
             .AddChoices(ReservationLogic.LocationNamesToList()));
 
-        if (locationChoice == "Exit Reservation")
+        if (locationChoice == "Exit")
         {
             return -1;
         }
