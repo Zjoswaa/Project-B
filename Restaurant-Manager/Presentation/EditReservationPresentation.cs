@@ -36,8 +36,7 @@ static class EditReservationPresentation
                 reservationToEdit.UpdateGroupSize(groupSize);
             }
         }
-        int table = ReservationLogic.GetTableCount(reservationToEdit.LocationID, reservationToEdit.Timeslot, reservationToEdit.Date);
-        reservationToEdit.UpdateTable(table);
+
         string locMessage = ReservationLogic.GetLocationDescription(reservationToEdit.LocationID);
 
         (bool success, string message) = ReservationLogic.UpdateReservation(reservationToEdit);
