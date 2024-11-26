@@ -188,11 +188,12 @@ public static class Database {
         return locations;
     }
 
-    public static Location? GetLocation(long ID) {
+    public static Location? GetLocationByID(long ID) {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "SELECT * FROM Locations WHERE ID = @ID LIMIT 1";
+        cmd.Parameters.AddWithValue("@ID", ID);
         using SQLiteDataReader reader = cmd.ExecuteReader();
         if (reader.Read()) {
             int id = reader.GetInt32(0);
@@ -215,6 +216,33 @@ public static class Database {
         using SQLiteDataReader reader = cmd.ExecuteReader();
         while (reader.Read())
         {
+            long ID = reader.GetInt32(0);
+            long userID = reader.GetInt32(1);
+            long locId = reader.GetInt32(2);
+            string timeslot = reader.GetString(3);
+            string date = reader.GetString(4);
+            int groupsize = reader.GetInt32(5);
+            int table = reader.GetInt32(6);
+
+            reservations.Add(new Reservation(ID, userID, locId, timeslot, DateOnly.ParseExact(date, "d-M-yyyy"), groupsize, table));
+        }
+
+        return reservations;
+    }
+
+    public static List<Reservation> GetReservationsByEmail(string Email) {
+        List<Reservation> reservations = new() { };
+
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+
+        User? User = GetUserByEmail(Email);
+
+        cmd.CommandText = "SELECT * FROM Reservations WHERE User = @ID";
+        cmd.Parameters.AddWithValue("@ID", User?.ID);
+        using SQLiteDataReader reader = cmd.ExecuteReader();
+        while (reader.Read()) {
             long ID = reader.GetInt32(0);
             long userID = reader.GetInt32(1);
             long locId = reader.GetInt32(2);
@@ -370,6 +398,20 @@ public static class Database {
         using SQLiteDataReader result = cmd.ExecuteReader();
         if (!result.HasRows)
         {
+            return null;
+        }
+        result.Read();
+        return new User((long)result["ID"], (string)result["Email"], result["FirstName"] == DBNull.Value ? null : (string)result["FirstName"], result["LastName"] == DBNull.Value ? null : (string)result["LastName"], (string)result["Role"]);
+    }
+
+    public static User? GetUserByID(long ID) {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = $"SELECT * FROM Users WHERE ID = @ID LIMIT 1";
+        cmd.Parameters.AddWithValue("@ID", ID);
+        using SQLiteDataReader result = cmd.ExecuteReader();
+        if (!result.HasRows) {
             return null;
         }
         result.Read();

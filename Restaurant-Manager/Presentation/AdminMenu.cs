@@ -15,9 +15,7 @@ static class AdminMenu {
 
             switch (userSelection) {
                 case "Manage reservations":
-                    Console.WriteLine("TBA...");
-                    Thread.Sleep(1000);
-                    Console.Clear();
+                    ShowManageReservationsMenu();
                     break;
                 case "Manage dishes":
                     ShowManageDishesMenu();
@@ -40,22 +38,77 @@ static class AdminMenu {
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
-            .AddChoices(new[] { "Add dish", "Delete dish", "Edit dish", "Exit" });
+            .AddChoices(new[] { "Add dish", "Delete dish", "Edit dish", "View dishes", "Exit" });
 
         var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
         switch (userSelection) {
             case "Add dish":
-                MenuLogic.AddDish();
+                MenuManagement.AddDish();
                 break;
             case "Delete dish":
-                MenuLogic.DeleteDish();
+                MenuManagement.DeleteDish();
                 break;
             case "Edit dish":
-                //Console.WriteLine("TBA...");
-                //Thread.Sleep(1000);
-                //Console.Clear();
-                MenuLogic.EditDish();
+                MenuManagement.EditDish();
+                break;
+            case "View dishes":
+                MenuCard.DisplayMenuCard();
+                AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                Console.ReadKey();
+                break;
+            case "Exit":
+                break;
+        }
+    }
+
+    private static void ShowManageReservationsMenu() {
+        Console.Clear();
+
+        AnsiConsole.Write(new Rule($"[blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/]"));
+
+        var userSelectionPrompt = new SelectionPrompt<string>()
+            .Title("[cyan]Please select an option:[/]")
+            .AddChoices(new[] { "Create reservation", "Delete reservation", "Edit reservation", "View reservations", "Exit" });
+
+        var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
+
+        switch (userSelection) {
+            case "Create reservation":
+                break;
+            case "Delete reservation":
+                break;
+            case "Edit reservation":
+                break;
+            case "View reservations":
+                ShowViewReservationsMenu();
+                break;
+            case "Exit":
+                break;
+        }
+    }
+
+    private static void ShowViewReservationsMenu() {
+        Console.Clear();
+
+        AnsiConsole.Write(new Rule($"[blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/]"));
+
+        var userSelectionPrompt = new SelectionPrompt<string>()
+            .Title("[cyan]Please select an option:[/]")
+            .AddChoices(new[] {"View all", "Search by email", "Exit" });
+
+        var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
+
+        switch (userSelection) {
+            case "View all":
+                ReservationManagement.ViewAllReservations();
+                AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                Console.ReadKey();
+                break;
+            case "Search by email":
+                ReservationManagement.ViewReservationsByEmail();
+                AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                Console.ReadKey();
                 break;
             case "Exit":
                 break;

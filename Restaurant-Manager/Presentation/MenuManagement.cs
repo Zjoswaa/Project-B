@@ -1,13 +1,17 @@
 ﻿using Spectre.Console;
 
-class MenuLogic
+static class MenuManagement
 {
     public static void AddDish()
     {
         string DishName = AnsiConsole.Prompt(
-            new TextPrompt<string>("What is the dish name? ")
+            new TextPrompt<string>("Enter dish name, or leave empty to cancel:")
                 .PromptStyle("yellow")
+                .AllowEmpty()
                 .Validate(n => {
+                    if (String.IsNullOrEmpty(n)) {
+                        return ValidationResult.Success();
+                    }
                     // TODO valid dishname checker, check if dish already exists
                     if (Database.DishesTableContainsDish(n)) {
                         return ValidationResult.Error("[red]A dish with this name already exists.[/]");
@@ -18,12 +22,20 @@ class MenuLogic
                 })
             );
 
+        if (String.IsNullOrEmpty(DishName)) {
+            return;
+        }
+
         string Price = AnsiConsole.Prompt(
-            new TextPrompt<string>("What is the dish price? ")
+            new TextPrompt<string>("Enter dish price, or leave empty to cancel: ")
                 .PromptStyle("yellow")
+                .AllowEmpty()
                 .Validate(n => {
+                    if (String.IsNullOrEmpty(n)) {
+                        return ValidationResult.Success();
+                    }
                     // TO DO valid price checker
-                    if (!double.TryParse(n, out double d) || n.Contains('.')) {
+                    if (!double.TryParse(n, out double d) || n.Contains('.') || !n.Contains(',')) {
                         return ValidationResult.Error("[red]That is not a valid price, a valid example: 9,99[/]");
                     }
 
@@ -31,6 +43,10 @@ class MenuLogic
                     return ValidationResult.Success();
                 })
             );
+
+        if (String.IsNullOrEmpty(Price)) {
+            return;
+        }
 
         List<String> Allergens = AnsiConsole.Prompt(
             new MultiSelectionPrompt<string>()
