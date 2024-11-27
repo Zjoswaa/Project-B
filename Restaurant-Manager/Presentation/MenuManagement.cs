@@ -99,7 +99,7 @@ static class MenuManagement
         var dishes = Database.GetAllDishes();
         if (dishes == null || dishes.Count == 0)
         {
-            AnsiConsole.MarkupLine("[red]No Dishes available to edit.[/]");
+            AnsiConsole.MarkupLine("[red]No dishes available to edit.[/]");
             Console.ReadKey();
             return;
         }
