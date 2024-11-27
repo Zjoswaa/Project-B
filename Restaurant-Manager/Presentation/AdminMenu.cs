@@ -65,7 +65,7 @@ static class AdminMenu {
     private static void ShowManageReservationsMenu() {
         Console.Clear();
 
-        AnsiConsole.Write(new Rule($"[blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/]"));
+        AnsiConsole.Write(new Rule($"[blue]Manage reservations ({State.LoggedInUser.GetFullName()})[/]"));
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
@@ -77,6 +77,9 @@ static class AdminMenu {
             case "Create reservation":
                 break;
             case "Delete reservation":
+                ReservationManagement.DeleteReservation();
+                AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                Console.ReadKey();
                 break;
             case "Edit reservation":
                 break;
@@ -91,7 +94,7 @@ static class AdminMenu {
     private static void ShowViewReservationsMenu() {
         Console.Clear();
 
-        AnsiConsole.Write(new Rule($"[blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/]"));
+        AnsiConsole.Write(new Rule($"[blue]View Reservations ({State.LoggedInUser.GetFullName()})[/]"));
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
@@ -107,8 +110,6 @@ static class AdminMenu {
                 break;
             case "Search by email":
                 ReservationManagement.ViewReservationsByEmail();
-                AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
-                Console.ReadKey();
                 break;
             case "Exit":
                 break;
