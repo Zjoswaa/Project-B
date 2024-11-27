@@ -123,7 +123,7 @@ static class ReservationLogic
             return (false, "The date you have selected has already passed. Please pick a different date.");
         }
 
-        if (startDate == date)
+        if (startDate.AddDays(1) == date || startDate == date)
         {
             return (false, "Reservations must be made at least 24 hours in advance. Please select a different date.");
         }
