@@ -7,6 +7,7 @@ class UserMenu
     {
         while (State.LoggedInUser is not null)
         {
+            HiddenDiscount.InsertCodeIntoUI();
             Console.Clear();
 
             AnsiConsole.Write(new Rule($"[yellow]Reservation Menu ({State.LoggedInUser.GetFullName()})[/]"));
@@ -54,6 +55,8 @@ class UserMenu
                     State.LoggedInUser = null;
                     Thread.Sleep(1000);
                     Console.Clear();
+                    HiddenDiscount.RemoveCodeFromMenu();
+                    HiddenDiscount.RemoveCodeFromReservations();
                     MainMenuPresentation.ShowMainMenu();
                     break;
             }
