@@ -3,6 +3,7 @@
 static class MainMenuPresentation {
     public static void ShowMainMenu() {
         while (true) {
+            AnsiConsole.Clear();
             // Display welcome message in a box
             AnsiConsole.Write(new Rule("[yellow] Welcome [/]"));
 
