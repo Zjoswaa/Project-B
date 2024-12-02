@@ -17,7 +17,11 @@ static class PasswordRecoveryPresentation {
 
         string Code = Util.RandomString(5);
         AnsiConsole.MarkupLine($"[blue]Sending a recovery email to {Email}, this may take a moment.[/]");
-        EmailService.SendPasswordForgorEmail(Email, Code);
+        if (!EmailService.SendPasswordForgorEmail(Email, Code)) {
+            AnsiConsole.MarkupLine("[gray]Press any key to continue.[/]");
+            Console.ReadKey();
+            return;
+        }
         AnsiConsole.MarkupLine("[blue]Email sent, please enter the code provided in the recovery email.[/]");
         string EnteredCode = PromptCode();
         AnsiConsole.Clear();

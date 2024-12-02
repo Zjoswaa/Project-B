@@ -29,7 +29,14 @@ public static class ReservationPresentation
         (bool success, string message) = ReservationLogic.CreateReservation(userID, locID, timeslot, date, groupsize, table);
         if (success)
         {
-            string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {table}\n\n{locMessage}\n\nPress any key to continue.";
+            // Send the reservation confirmation email.
+            // TODO: Uncomment
+            // if (!EmailService.SendReservationEmail(State.LoggedInUser.GetFullName(), Database.GetLocationByID(locID)?.Name, dateString, timeslot, groupsize, State.LoggedInUser.Email)) {
+            //     AnsiConsole.MarkupLine("[gray]Press any key to continue.[/]");
+            //     Console.ReadKey();
+            //     return;
+            // }
+            string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {table}\n\n{locMessage}\n\nA confirmation email has been sent to {State.LoggedInUser.Email}\n\nPress any key to continue.";
             Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
             panel.Expand = true; // Set expand again
             Console.Clear();

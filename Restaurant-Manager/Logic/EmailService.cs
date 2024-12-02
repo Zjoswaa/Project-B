@@ -1,10 +1,10 @@
-using System;
 using System.Net;
 using System.Net.Mail;
+using Spectre.Console;
 
 public static class EmailService
 {
-    public static void SendReservationEmail(string RecipientName, string LocationName, string Date, string Time, int PlayerAmount, string RecipientEmail)
+    public static bool SendReservationEmail(string RecipientName, string LocationName, string Date, string Time, int PlayerAmount, string RecipientEmail)
     {
         // Define the email message
         MailMessage mail = new MailMessage();
@@ -20,18 +20,17 @@ public static class EmailService
         smtpClient.Credentials = new NetworkCredential("mail.escapedine@gmail.com", "czzw ygug utxw fpwv");
         smtpClient.EnableSsl = true; // Enable SSL for secure connection
 
-        try
-        {
+        try {
             // Send the email
             smtpClient.Send(mail);
+        } catch (Exception ex) {
+            AnsiConsole.MarkupLine("[red]Error: " + ex.Message + "[/]");
+            return false;
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Failed to send email. Error: " + ex.Message);
-        }
+        return true;
     }
 
-    public static void SendPasswordForgorEmail(string RecipientEmail, string Code) {
+    public static bool SendPasswordForgorEmail(string RecipientEmail, string Code) {
         // Define the email message
         MailMessage mail = new MailMessage();
         mail.From = new MailAddress("mail.escapedine@gmail.com");
@@ -50,7 +49,9 @@ public static class EmailService
             // Send the email
             smtpClient.Send(mail);
         } catch (Exception ex) {
-            Console.WriteLine("Failed to send email. Error: " + ex.Message);
+            AnsiConsole.MarkupLine("[red]Error: " + ex.Message + "[/]");
+            return false;
         }
+        return true;
     }
 }
