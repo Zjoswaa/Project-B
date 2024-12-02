@@ -3,6 +3,8 @@ static class HiddenDiscount
     private static List<string> HiddenCodes = new()
         { "A9fL2", "Xb3Kd", "J7qYp", "L5rCt", "Z1NmW"};
 
+    private const int HiddenCodeID = 999999999;
+
     private static string RandomCodePicker()
     {
         int amountOfCodes = HiddenCodes.Count;
@@ -31,16 +33,15 @@ static class HiddenDiscount
 
     private static void AddCodeToReservations()
     {
-        Reservation hiddenCodeReservation = new(0, State.LoggedInUser.ID, 0, RandomCodePicker(), DateOnly.FromDateTime(DateTime.Now), 0, 0);
-        Database.InsertReservationsTable(State.LoggedInUser.ID, 0, RandomCodePicker(), DateOnly.MinValue, 0, 0);
+        DateOnly date = ReservationLogic.ParseDate("9-9-9999");
+        Database.InsertReservationsTable(HiddenCodeID, State.LoggedInUser.ID, 0, RandomCodePicker(), date, 0, 0);
     }
 
     public static void RemoveCodeFromReservations()
     {
         try
         {
-            
-            Database.DeleteReservationsTable(0);
+            Database.DeleteReservationsTable(HiddenCodeID);
         }
         catch (Exception ex){}
     }

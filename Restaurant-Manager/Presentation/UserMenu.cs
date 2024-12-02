@@ -7,6 +7,8 @@ class UserMenu
     {
         while (State.LoggedInUser is not null)
         {
+            HiddenDiscount.RemoveCodeFromMenu();
+            HiddenDiscount.RemoveCodeFromReservations();
             HiddenDiscount.InsertCodeIntoUI();
             Console.Clear();
 
@@ -21,6 +23,7 @@ class UserMenu
                 });
 
             var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
+            AnsiConsole.Markup("[gray]A discount code is hidden somewhere in the main menu...[/]");
 
             switch (userSelection)
             {
@@ -55,8 +58,6 @@ class UserMenu
                     State.LoggedInUser = null;
                     Thread.Sleep(1000);
                     Console.Clear();
-                    HiddenDiscount.RemoveCodeFromMenu();
-                    HiddenDiscount.RemoveCodeFromReservations();
                     MainMenuPresentation.ShowMainMenu();
                     break;
             }

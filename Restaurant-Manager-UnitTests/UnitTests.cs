@@ -108,7 +108,7 @@ public class UnitTests
         Database.CreateReservationsTable();
 
         // Act
-        Database.InsertReservationsTable(1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
+        Database.InsertReservationsTable(null, 1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
         List<Reservation> Reservations = Database.GetAllReservations();
 
         // Assert
@@ -126,7 +126,7 @@ public class UnitTests
         Database.CreateReservationsTable();
         
         // Act
-        Database.InsertReservationsTable(1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
+        Database.InsertReservationsTable(null, 1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
         Assert.AreEqual(Database.GetAllReservations().Count, 1);
         Database.DeleteReservationsTable(1);
         Assert.AreEqual(Database.GetAllReservations().Count, 0);
@@ -141,7 +141,7 @@ public class UnitTests
         Database.CreateLocationsTable();
         Database.CreateReservationsTable();
             
-        Database.InsertReservationsTable(1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
+        Database.InsertReservationsTable(null, 1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
         Reservation newReservation = new(1, 1, 1, "15:00", DateOnly.FromDateTime(DateTime.Now.AddDays(3)), 3, 1);
         Database.UpdateReservation(newReservation);
             

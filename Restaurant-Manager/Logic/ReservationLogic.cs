@@ -23,7 +23,7 @@ static class ReservationLogic
             return (false, message);
         }
 
-        Database.InsertReservationsTable(userID, locID, timeslot, date, groupsize, table);
+        Database.InsertReservationsTable(null, userID, locID, timeslot, date, groupsize, table);
         return (true, "Your reservation has been made.");
     }
 

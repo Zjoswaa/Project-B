@@ -142,12 +142,21 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void InsertReservationsTable(long user_id, long loc_id, string timeslot, DateOnly date, int groupsize, int table)
+    public static void InsertReservationsTable(long? id, long user_id, long loc_id, string timeslot, DateOnly date, int groupsize, int table)
     {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "INSERT INTO Reservations(User, Location, Timeslot, Date, GroupSize, GroupTable) VALUES (@User, @Location, @Timeslot, @Date, @GroupSize, @GroupTable)";
+
+        if (id.HasValue)
+        {
+            cmd.CommandText = "INSERT INTO Reservations(ID, User, Location, Timeslot, Date, GroupSize, GroupTable) VALUES (@ID, @User, @Location, @Timeslot, @Date, @GroupSize, @GroupTable)";
+            cmd.Parameters.AddWithValue("@ID", id);
+        }
+        else
+        {
+            cmd.CommandText = "INSERT INTO Reservations(User, Location, Timeslot, Date, GroupSize, GroupTable) VALUES (@User, @Location, @Timeslot, @Date, @GroupSize, @GroupTable)";
+        }
 
         cmd.Parameters.AddWithValue("@User", user_id);
         cmd.Parameters.AddWithValue("@Location", loc_id);
@@ -166,6 +175,8 @@ public static class Database {
         cmd.Parameters.AddWithValue("@ID", ID);
         cmd.ExecuteNonQuery();
     }
+    
+    
 
     public static List<Location> GetAllLocations()
     {
