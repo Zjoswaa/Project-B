@@ -3,7 +3,7 @@ public static class HiddenDiscount
     public static List<string> HiddenCodes = new()
         { "A9fL2", "Xb3Kd", "J7qYp", "L5rCt", "Z1NmW"};
 
-    private static string selectedDiscountCode = null;
+    public static string selectedDiscountCode = null;
     public const int HiddenCodeID = 0;
     public static bool ChangeMenuHead { get; set; }
 
