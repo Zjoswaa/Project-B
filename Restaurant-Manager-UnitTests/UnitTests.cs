@@ -108,7 +108,7 @@ public class UnitTests
         Database.CreateReservationsTable();
 
         // Act
-        Database.InsertReservationsTable(1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
+        Database.InsertReservationsTable(null, 1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
         List<Reservation> Reservations = Database.GetAllReservations();
 
         // Assert
@@ -126,7 +126,7 @@ public class UnitTests
         Database.CreateReservationsTable();
         
         // Act
-        Database.InsertReservationsTable(1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
+        Database.InsertReservationsTable(null, 1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
         Assert.AreEqual(Database.GetAllReservations().Count, 1);
         Database.DeleteReservationsTable(1);
         Assert.AreEqual(Database.GetAllReservations().Count, 0);
@@ -141,7 +141,7 @@ public class UnitTests
         Database.CreateLocationsTable();
         Database.CreateReservationsTable();
             
-        Database.InsertReservationsTable(1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
+        Database.InsertReservationsTable(null, 1, 1, "12:00", DateOnly.FromDateTime(DateTime.Now), 6, 1);
         Reservation newReservation = new(1, 1, 1, "15:00", DateOnly.FromDateTime(DateTime.Now.AddDays(3)), 3, 1);
         Database.UpdateReservation(newReservation);
             
@@ -149,5 +149,23 @@ public class UnitTests
         Assert.AreEqual(updatedReservation.GroupSize, newReservation.GroupSize);
         Assert.AreEqual(updatedReservation.Date, newReservation.Date);
         Assert.AreEqual(updatedReservation.Timeslot, newReservation.Timeslot);
+    }
+    
+    [TestMethod]
+    public void TestHiddenCodeReservation()
+    {
+        File.Delete("db9.db");
+        Database.ConnectionString = "db9.db";
+        Database.CreateUsersTable();
+        Database.CreateDishesTable();
+        Database.CreateLocationsTable();
+        Database.CreateReservationsTable();
+            
+        HiddenDiscount.RemoveCodeFromMenu();
+        State.LoggedInUser = new(1, "test@mail.com", "Test", "Test", "User");
+        HiddenDiscount.AddCodeToReservations();
+            
+        Reservation hiddenCodeReservation = Database.GetAllReservations()[0];
+        Assert.IsTrue(HiddenDiscount.HiddenCodes.Contains(hiddenCodeReservation.Timeslot));
     }
 }

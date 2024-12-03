@@ -23,7 +23,7 @@ static class ReservationLogic
             return (false, message);
         }
 
-        Database.InsertReservationsTable(userID, locID, timeslot, date, groupsize, table);
+        Database.InsertReservationsTable(null, userID, locID, timeslot, date, groupsize, table);
         return (true, "Your reservation has been made.");
     }
 
@@ -34,7 +34,13 @@ static class ReservationLogic
             return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
         }
 
-        (bool success, string message) = VerifyDate(reservationToEdit.Date);
+        if (reservationToEdit.ID == HiddenDiscount.HiddenCodeID)
+        {
+            return (false, "This reservation exists only to contain the hidden discount. You cannot edit this.");
+        }
+
+        Reservation oldReservation = GetReservationByID(reservationToEdit.ID);
+        (bool success, string message) = VerifyDate(oldReservation.Date);
         if (!success)
         {
             return (false, message);
@@ -125,7 +131,7 @@ static class ReservationLogic
 
         if (startDate.AddDays(1) == date || startDate == date)
         {
-            return (false, "Reservations must be made at least 24 hours in advance. Please select a different date.");
+            return (false, "Reservations must be made at least 24 hours in advance.");
         }
 
         return (true, null);

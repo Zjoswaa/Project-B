@@ -26,6 +26,8 @@ public static class ReservationPresentation
 
         int table = ReservationLogic.GetTableCount(locID, timeslot, date);
 
+        EnterDiscountCode();
+
         (bool success, string message) = ReservationLogic.CreateReservation(userID, locID, timeslot, date, groupsize, table);
         if (success)
         {
@@ -36,7 +38,17 @@ public static class ReservationPresentation
             //     Console.ReadKey();
             //     return;
             // }
-            string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {table}\n\n{locMessage}\n\nA confirmation email has been sent to {State.LoggedInUser.Email}\n\nPress any key to continue.";
+
+            string text = "";
+            if (HiddenDiscount.selectedDiscountCode != null)
+            {
+                text = $"[green]Your reservation has been made.[/]\nYour Table Number: {table}\n\n{locMessage}\n\nA confirmation email has been sent to {State.LoggedInUser.Email} which also contains the discount code you can show to staff.\n\nPress any key to continue.";
+            }
+            else
+            {
+                text = $"[green]Your reservation has been made.[/]\nYour Table Number: {table}\n\n{locMessage}\n\nA confirmation email has been sent to {State.LoggedInUser.Email}.\n\nPress any key to continue.";
+            }
+            
             Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
             panel.Expand = true; // Set expand again
             Console.Clear();
@@ -176,5 +188,74 @@ public static class ReservationPresentation
 
         AnsiConsole.Clear();
         AnsiConsole.Write(panel);
+    }
+
+    private static void EnterDiscountCode()
+    {
+        Console.Clear();
+        Console.CursorVisible = false;
+        
+        string Buffer = "";
+        Panel Panel = new(new Text($"Please enter a discount code or leave empty to continue:\n{Buffer}\n").Centered());
+        Panel.Header = new PanelHeader("[blue] Discount Voucher [/]").Centered();
+        Panel.Expand = true;
+        AnsiConsole.Write(Panel);
+
+        while (true)
+        {
+            ConsoleKeyInfo Input = Console.ReadKey();
+
+            if (Input.Key == ConsoleKey.Backspace)
+            {
+                if (!string.IsNullOrEmpty(Buffer))
+                {
+                    Buffer = Buffer.Substring(1);
+                }
+            }
+
+            Buffer = Buffer.Trim();
+            if (Input.Key == ConsoleKey.Enter && Buffer.Length == 0) break;
+            
+            else
+            {
+                Buffer += Input.KeyChar;
+            }
+
+            Panel = new(new Text($"Please enter a discount code or leave empty to continue:\n{Buffer}\n").Centered());
+            Panel.Header = new PanelHeader("[blue] Discount Voucher [/]").Centered();
+            Panel.Expand = true;
+            AnsiConsole.Clear();
+            AnsiConsole.Write(Panel);
+            Buffer = Buffer.Trim();
+
+            if (Input.Key == ConsoleKey.Enter && HiddenDiscount.HiddenCodes.Contains(Buffer))
+            {
+                HiddenDiscount.SetDiscountCode(Buffer);
+                Panel = new(new Markup($"[green]Discount code has been added. [/]").Centered());
+                Panel.Header = new PanelHeader("[blue] Discount Voucher [/]").Centered();
+                Panel.Expand = true;
+                AnsiConsole.Clear();
+                AnsiConsole.Write(Panel);
+                Thread.Sleep(1500);
+                break;
+            }
+            
+            if (Input.Key == ConsoleKey.Enter && !(HiddenDiscount.HiddenCodes.Contains(Buffer)))
+            {
+                Panel = new(new Markup($"[red]Discount code does not exist. [/]").Centered());
+                Panel.Header = new PanelHeader("[blue] Discount Voucher [/]").Centered();
+                Panel.Expand = true;
+                AnsiConsole.Clear();
+                AnsiConsole.Write(Panel);
+                Thread.Sleep(1300);
+                Console.Clear();
+                
+                Buffer = "";
+                Panel = new(new Text($"Please enter a discount code or leave empty to continue:\n{Buffer}\n").Centered());
+                Panel.Header = new PanelHeader("[blue] Discount Voucher [/]").Centered();
+                Panel.Expand = true;
+                AnsiConsole.Write(Panel);
+            }
+        }
     }
 }
