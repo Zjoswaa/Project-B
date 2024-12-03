@@ -39,7 +39,8 @@ static class ReservationLogic
             return (false, "This reservation exists only to contain the hidden discount. You cannot edit this.");
         }
 
-        (bool success, string message) = VerifyDate(reservationToEdit.Date);
+        Reservation oldReservation = GetReservationByID(reservationToEdit.ID);
+        (bool success, string message) = VerifyDate(oldReservation.Date);
         if (!success)
         {
             return (false, message);
@@ -130,7 +131,7 @@ static class ReservationLogic
 
         if (startDate.AddDays(1) == date || startDate == date)
         {
-            return (false, "Reservations must be made at least 24 hours in advance. Please select a different date.");
+            return (false, "Reservations must be made at least 24 hours in advance.");
         }
 
         return (true, null);
