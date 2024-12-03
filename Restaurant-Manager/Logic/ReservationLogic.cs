@@ -34,6 +34,11 @@ static class ReservationLogic
             return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
         }
 
+        if (reservationToEdit.ID == HiddenDiscount.HiddenCodeID)
+        {
+            return (false, "This reservation exists only to contain the hidden discount. You cannot edit this.");
+        }
+
         (bool success, string message) = VerifyDate(reservationToEdit.Date);
         if (!success)
         {

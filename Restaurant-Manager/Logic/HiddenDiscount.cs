@@ -1,11 +1,12 @@
 static class HiddenDiscount
 {
-    private static List<string> HiddenCodes = new()
+    public static List<string> HiddenCodes = new()
         { "A9fL2", "Xb3Kd", "J7qYp", "L5rCt", "Z1NmW"};
+    
+    public const int HiddenCodeID = 0;
+    public static bool ChangeMenuHead { get; set; }
 
-    private const int HiddenCodeID = 999999999;
-
-    private static string RandomCodePicker()
+    public static string RandomCodePicker()
     {
         int amountOfCodes = HiddenCodes.Count;
         Random rand = new();
@@ -46,10 +47,20 @@ static class HiddenDiscount
         catch (Exception ex){}
     }
 
+    private static void ChangeMenuHeadToTrue()
+    {
+        ChangeMenuHead = true;
+    }
+
+    public static void ChangeMenuHeadToFalse()
+    {
+        ChangeMenuHead = false;
+    }
+
     public static void InsertCodeIntoUI()
     {
         List<Action> HiddenCodeFunctions = new()
-            { AddCodeToMenu, AddCodeToReservations};
+            { AddCodeToMenu, AddCodeToReservations, ChangeMenuHeadToTrue };
 
         int amountOfFunctions = HiddenCodeFunctions.Count;
         Random rand = new();

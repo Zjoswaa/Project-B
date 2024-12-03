@@ -26,6 +26,8 @@ public static class ReservationPresentation
 
         int table = ReservationLogic.GetTableCount(locID, timeslot, date);
 
+        EnterDiscountCode();
+
         (bool success, string message) = ReservationLogic.CreateReservation(userID, locID, timeslot, date, groupsize, table);
         if (success)
         {
@@ -176,5 +178,38 @@ public static class ReservationPresentation
 
         AnsiConsole.Clear();
         AnsiConsole.Write(panel);
+    }
+
+    private static void EnterDiscountCode()
+    {
+        Console.Clear();
+        Console.CursorVisible = false;
+        
+        string Buffer = "";
+        Panel Panel = new(new Text($"Please enter a discount code or leave empty to continue.:\n{Buffer}\n").Centered());
+        Panel.Header = new PanelHeader("[blue] Discount Voucher [/]").Centered();
+        Panel.Expand = true;
+        AnsiConsole.Write(Panel);
+        Console.ReadKey();
+        
+        while (true)
+        {
+            ConsoleKeyInfo Input = Console.ReadKey();
+            if (Input.Key == ConsoleKey.Enter)
+            {
+                break;
+            } else if (Input.Key == ConsoleKey.Backspace) {
+                if (!string.IsNullOrEmpty(Buffer)) {
+                    Buffer = Buffer.Substring(1);
+                }
+            } else {
+                Buffer += Input.KeyChar;
+            }
+            
+            Panel = new(new Text($"Please enter your authentication code:\n{Buffer}\n").Centered());
+            Panel.Header = new PanelHeader("[blue] Welcome to GertSoft Authenticator [/]").Centered();
+            Panel.Expand = true;
+            AnsiConsole.Clear(); // Clear the previous print of the panel
+            AnsiConsole.Write(Panel); // Re-render the panel with the updated text
     }
 }
