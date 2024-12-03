@@ -1,8 +1,9 @@
-static class HiddenDiscount
+public static class HiddenDiscount
 {
     public static List<string> HiddenCodes = new()
         { "A9fL2", "Xb3Kd", "J7qYp", "L5rCt", "Z1NmW"};
-    
+
+    private static string selectedDiscountCode = null;
     public const int HiddenCodeID = 0;
     public static bool ChangeMenuHead { get; set; }
 
@@ -13,6 +14,11 @@ static class HiddenDiscount
         int randomCodeIndex = rand.Next(0, amountOfCodes);
 
         return HiddenCodes[randomCodeIndex];
+    }
+
+    public static void SetDiscountCode(string code)
+    {
+        selectedDiscountCode = code;
     }
 
     private static void AddCodeToMenu()
@@ -32,7 +38,7 @@ static class HiddenDiscount
         }
     }
 
-    private static void AddCodeToReservations()
+    public static void AddCodeToReservations()
     {
         DateOnly date = ReservationLogic.ParseDate("9-9-9999");
         Database.InsertReservationsTable(HiddenCodeID, State.LoggedInUser.ID, 0, RandomCodePicker(), date, 0, 0);

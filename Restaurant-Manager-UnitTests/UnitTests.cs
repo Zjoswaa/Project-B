@@ -150,4 +150,22 @@ public class UnitTests
         Assert.AreEqual(updatedReservation.Date, newReservation.Date);
         Assert.AreEqual(updatedReservation.Timeslot, newReservation.Timeslot);
     }
+    
+    [TestMethod]
+    public void TestHiddenCodeReservation()
+    {
+        File.Delete("db9.db");
+        Database.ConnectionString = "db9.db";
+        Database.CreateUsersTable();
+        Database.CreateDishesTable();
+        Database.CreateLocationsTable();
+        Database.CreateReservationsTable();
+            
+        HiddenDiscount.RemoveCodeFromMenu();
+        State.LoggedInUser = new(1, "test@mail.com", "Test", "Test", "User");
+        HiddenDiscount.AddCodeToReservations();
+            
+        Reservation hiddenCodeReservation = Database.GetAllReservations()[0];
+        Assert.IsTrue(HiddenDiscount.HiddenCodes.Contains(hiddenCodeReservation.Timeslot));
+    }
 }
