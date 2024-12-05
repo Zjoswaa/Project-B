@@ -13,16 +13,11 @@ class UserMenu
         while (State.LoggedInUser is not null)
         {
             Console.Clear();
-<<<<<<< Updated upstream
             if (HiddenDiscount.ChangeMenuHead)
             {
                 AnsiConsole.Write(new Rule($"[yellow]Reservation Menu ({HiddenDiscount.RandomCodePicker()}) ({State.LoggedInUser.GetFullName()})[/]"));
             }
             else AnsiConsole.Write(new Rule($"[yellow]Reservation Menu ({State.LoggedInUser.GetFullName()})[/]"));
-=======
-
-            AnsiConsole.Write(new Rule($" [yellow]Reservation Menu ({State.LoggedInUser.GetFullName()})[/] "));
->>>>>>> Stashed changes
 
             var userSelectionPrompt = new SelectionPrompt<string>()
                 .Title("[gray]A 10% off discount code is hidden somewhere in the main menu...[/]\n[cyan]Please select an option:[/]")
