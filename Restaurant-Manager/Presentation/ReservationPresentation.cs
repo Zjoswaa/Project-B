@@ -6,7 +6,7 @@ public static class ReservationPresentation
     public static void Present()
     {
         Console.Clear();
-        AnsiConsole.Write(new Rule($"[yellow]Make Reservation ({State.LoggedInUser.GetFullName()})[/]"));
+        AnsiConsole.Write(new Rule($" [yellow]Make Reservation ({State.LoggedInUser.GetFullName()})[/] "));
         long userID = State.LoggedInUser.ID;
 
         long locID = SelectLocation();
@@ -38,6 +38,7 @@ public static class ReservationPresentation
             //     Console.ReadKey();
             //     return;
             // }
+<<<<<<< Updated upstream
 
             string text = "";
             if (HiddenDiscount.selectedDiscountCode != null)
@@ -50,6 +51,9 @@ public static class ReservationPresentation
             }
             
             Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
+=======
+            Panel panel = new(new Markup($"[green]Your reservation has been made.[/]\nYour Table Number: {table}\n\n[yellow bold]Instructions:[/]\n{locMessage}\n\nA confirmation email has been sent to {State.LoggedInUser.Email}\n\nPress any key to continue.").Centered()); // Update the panel and the text in it with the updated buffer
+>>>>>>> Stashed changes
             panel.Expand = true; // Set expand again
             Console.Clear();
             AnsiConsole.Write(panel);
@@ -183,7 +187,7 @@ public static class ReservationPresentation
         string personOrPeople = (currentOption == minGroupSize) ? "person" : "people";
 
         string displayText = $"\n{arrowUp}\nReservation for {currentOption} {personOrPeople}\n{arrowDown}";
-        Panel panel = new(new Text($"Enter the amount of people for the reservation using the arrow keys:\n{displayText}\n\n\nPress ESC to exit.").Centered());
+        Panel panel = new(new Markup($"Enter the amount of people for the reservation using the arrow keys [gray](max. 6 people)[/]:\n{displayText}\n\n\nPress ESC to exit.").Centered());
         panel.Expand = true;
 
         AnsiConsole.Clear();

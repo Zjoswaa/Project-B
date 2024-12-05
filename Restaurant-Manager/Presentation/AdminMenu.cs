@@ -5,7 +5,7 @@ static class AdminMenu {
         while (State.LoggedInUser is not null) {
             Console.Clear();
 
-            AnsiConsole.Write(new Rule($"[blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/]"));
+            AnsiConsole.Write(new Rule($" [blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/] "));
 
             var userSelectionPrompt = new SelectionPrompt<string>()
                 .Title("[cyan]Please select an option:[/]")
@@ -34,30 +34,30 @@ static class AdminMenu {
     private static void ShowManageDishesMenu() {
         Console.Clear();
 
-        AnsiConsole.Write(new Rule($"[blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/]"));
+        AnsiConsole.Write(new Rule($" [blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/] "));
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
-            .AddChoices(new[] { "Add dish", "Delete dish", "Edit dish", "View dishes", "Exit" });
+            .AddChoices(new[] { "View dishes", "Add dish", "Edit dish", "Delete dish", "Back" });
 
         var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
         switch (userSelection) {
-            case "Add dish":
-                MenuManagement.AddDish();
-                break;
-            case "Delete dish":
-                MenuManagement.DeleteDish();
-                break;
-            case "Edit dish":
-                MenuManagement.EditDish();
-                break;
             case "View dishes":
                 MenuCard.DisplayMenuCard();
                 AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
                 Console.ReadKey();
                 break;
-            case "Exit":
+            case "Add dish":
+                MenuManagement.AddDish();
+                break;
+            case "Edit dish":
+                MenuManagement.EditDish();
+                break;
+            case "Delete dish":
+                MenuManagement.DeleteDish();
+                break;
+            case "Back":
                 break;
         }
     }
@@ -65,28 +65,28 @@ static class AdminMenu {
     private static void ShowManageReservationsMenu() {
         Console.Clear();
 
-        AnsiConsole.Write(new Rule($"[blue]Manage reservations ({State.LoggedInUser.GetFullName()})[/]"));
+        AnsiConsole.Write(new Rule($" [blue]Manage reservations ({State.LoggedInUser.GetFullName()})[/] "));
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
-            .AddChoices(new[] { "Create reservation", "Delete reservation", "Edit reservation", "View reservations", "Exit" });
+            .AddChoices(new[] { "View reservations", "Create reservation", "Edit reservation", "Delete reservation", "Back" });
 
         var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
         switch (userSelection) {
+            case "View reservations":
+                ShowViewReservationsMenu();
+                break;
             case "Create reservation":
+                break;
+            case "Edit reservation":
                 break;
             case "Delete reservation":
                 ReservationManagement.DeleteReservation();
                 AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
                 Console.ReadKey();
                 break;
-            case "Edit reservation":
-                break;
-            case "View reservations":
-                ShowViewReservationsMenu();
-                break;
-            case "Exit":
+            case "Back":
                 break;
         }
     }
@@ -94,7 +94,7 @@ static class AdminMenu {
     private static void ShowViewReservationsMenu() {
         Console.Clear();
 
-        AnsiConsole.Write(new Rule($"[blue]View Reservations ({State.LoggedInUser.GetFullName()})[/]"));
+        AnsiConsole.Write(new Rule($" [blue]View Reservations ({State.LoggedInUser.GetFullName()})[/] "));
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")

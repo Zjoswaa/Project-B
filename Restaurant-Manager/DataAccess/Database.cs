@@ -383,7 +383,7 @@ public static class Database {
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
         cmd.CommandText = "UPDATE reservations SET Timeslot = @Timeslot, Date = @Date, Groupsize = @Groupsize WHERE ID = @ID";
         cmd.Parameters.AddWithValue("@Timeslot", reservationToEdit.Timeslot);
-        cmd.Parameters.AddWithValue("@Date", reservationToEdit.Date.ToString("dd-MM-yyyy"));
+        cmd.Parameters.AddWithValue("@Date", reservationToEdit.Date?.ToString("dd-MM-yyyy"));
         cmd.Parameters.AddWithValue("@Groupsize", reservationToEdit.GroupSize);
         cmd.Parameters.AddWithValue("@ID", reservationToEdit.ID);
         cmd.ExecuteNonQuery();

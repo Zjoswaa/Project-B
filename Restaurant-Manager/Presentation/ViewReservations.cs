@@ -37,7 +37,7 @@ public static class ViewReservations
                     {
                         Update(100, () => table.AddRow(
                             reservation.Table.ToString(),
-                            reservation.Date.ToString("dd-MM-yyyy"),
+                            reservation.Date?.ToString("dd-MM-yyyy"),
                             reservation.Timeslot,
                             reservation.GroupSize.ToString()
                         ));

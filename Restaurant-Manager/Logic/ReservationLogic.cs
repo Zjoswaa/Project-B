@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 static class ReservationLogic
@@ -65,7 +64,7 @@ static class ReservationLogic
         return false;
     }
 
-    private static bool HasAvailableTable(long locID, string timeslot, DateOnly date, int maxTables)
+    private static bool HasAvailableTable(long locID, string timeslot, DateOnly? date, int maxTables)
     {
         List<Reservation> reservations = Database.GetAllReservations();
 
@@ -87,7 +86,7 @@ static class ReservationLogic
                reservation.Date == date;
     }
 
-    private static bool IsUnvailableTimeslot(Reservation reservation, long locID, string timeslot, DateOnly date, int maxTables)
+    private static bool IsUnvailableTimeslot(Reservation reservation, long locID, string timeslot, DateOnly? date, int maxTables)
     {
         return reservation.LocationID == locID &&
                reservation.Timeslot == timeslot &&
@@ -111,7 +110,7 @@ static class ReservationLogic
         return tableCount;
     }
 
-    public static (bool success, string message) VerifyDate(DateOnly date)
+    public static (bool success, string message) VerifyDate(DateOnly? date)
     {
         const int maxDaysInAdvance = 180;
         DateTime startDateTime = DateTime.Now;

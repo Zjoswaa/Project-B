@@ -22,7 +22,10 @@ static class EditReservationPresentation
         {
             if (variable == "Date")
             {
-                DateOnly date = EditDate();
+                DateOnly? date = EditDate();
+                if (date == null) {
+                    return;
+                }
                 reservationToEdit.UpdateDate(date);
             }
             if (variable == "Timeslot")
@@ -91,9 +94,12 @@ static class EditReservationPresentation
         return dataToChange;
     }
 
-    public static DateOnly EditDate()
+    public static DateOnly? EditDate()
     {
         (int Day, int Month, int Year) Date = ReservationPresentation.SelectDate();
+        if (Date == (0, 0, 0)) {
+            return null;
+        }
         string dateString = $"{Date.Day}-{Date.Month}-{Date.Year}";
         DateOnly date = ReservationLogic.ParseDate(dateString);
 

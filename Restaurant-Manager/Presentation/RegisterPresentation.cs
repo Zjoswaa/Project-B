@@ -6,7 +6,7 @@ static class RegisterPresentation
     {
         AnsiConsole.Clear();
         AnsiConsole.Write(
-            new Rule("[yellow]Register[/]")
+            new Rule(" [yellow]Register[/] ")
         );
 
         AnsiConsole.WriteLine();
@@ -97,7 +97,7 @@ static class RegisterPresentation
         {
             AnsiConsole.Clear();
             AnsiConsole.Write(
-                new Rule("[yellow]Register[/]")
+                new Rule(" [yellow]Register[/] ")
             );
             AnsiConsole.WriteLine();
             //AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
@@ -129,7 +129,7 @@ static class RegisterPresentation
         while (true) {
             AnsiConsole.Clear();
             AnsiConsole.Write(
-                new Rule("[yellow]Register[/]")
+                new Rule(" [yellow]Register[/] ")
             );
             AnsiConsole.WriteLine();
             //AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
@@ -157,7 +157,7 @@ static class RegisterPresentation
     {
         AnsiConsole.Clear();
         AnsiConsole.Write(
-            new Rule("[yellow]Register[/]")
+            new Rule(" [yellow]Register[/] ")
         );
         AnsiConsole.MarkupLine($"[green]Email:[/] {Email}");
         AnsiConsole.MarkupLine($"[green]Password:[/] {new string('*', Password.Length)}");
@@ -168,7 +168,7 @@ static class RegisterPresentation
     {
         AnsiConsole.Clear();
         AnsiConsole.Write(
-            new Rule("[yellow]Register[/]")
+            new Rule(" [yellow]Register[/] ")
         );
         AnsiConsole.MarkupLine($"[green]Email:[/] {Email}");
         AnsiConsole.MarkupLine($"[green]Password:[/] {new string('*', Password.Length)}");
