@@ -443,4 +443,30 @@ public static class Database {
         result.Read();
         return (string)result["Password"];
     }
+
+    public static List<User> GetAllUsers()
+{
+    List<User> users = new List<User>();
+
+    using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+    Connection.Open();
+    using SQLiteCommand cmd = new SQLiteCommand(Connection);
+    cmd.CommandText = "SELECT ID, Email, FirstName, LastName, Role FROM Users";
+
+    using SQLiteDataReader reader = cmd.ExecuteReader();
+    while (reader.Read())
+    {
+        long id = reader.GetInt64(0);
+        string email = reader.GetString(1);
+        string? firstName = reader.IsDBNull(2) ? null : reader.GetString(2);
+        string? lastName = reader.IsDBNull(3) ? null : reader.GetString(3);
+        string role = reader.GetString(4);
+
+        User user = new User(id, email, firstName, lastName, role);
+        users.Add(user);
+    }
+
+    return users;
+}
+
 }
