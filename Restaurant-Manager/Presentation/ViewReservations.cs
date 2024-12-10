@@ -23,7 +23,7 @@ public static class ViewReservations
                     ctx.Refresh();
                     Thread.Sleep(delay);
                 }
-
+                
                 // Columns
                 Update(200, () => table.AddColumn("Table"));
                 Update(200, () => table.AddColumn("Date"));
