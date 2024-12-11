@@ -215,6 +215,22 @@ public static class Database {
         return null;
     }
 
+    public static Location? GetLocationByName(string Name) {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "SELECT * FROM Locations WHERE Name = @Name LIMIT 1";
+        cmd.Parameters.AddWithValue("@Name", Name);
+        using SQLiteDataReader reader = cmd.ExecuteReader();
+        if (reader.Read()) {
+            int id = reader.GetInt32(0);
+            string name = reader.GetString(1);
+            string message = reader.GetString(2);
+            return new Location(id, name, message);
+        }
+        return null;
+    }
+
     public static List<Reservation> GetAllReservations()
     {
         List<Reservation> reservations = new(){};
@@ -444,29 +460,41 @@ public static class Database {
         return (string)result["Password"];
     }
 
-    public static List<User> GetAllUsers()
-{
-    List<User> users = new List<User>();
+    public static List<User> GetAllUsers() {
+        List<User> users = new List<User>();
 
-    using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
-    Connection.Open();
-    using SQLiteCommand cmd = new SQLiteCommand(Connection);
-    cmd.CommandText = "SELECT ID, Email, FirstName, LastName, Role FROM Users";
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "SELECT ID, Email, FirstName, LastName, Role FROM Users";
 
-    using SQLiteDataReader reader = cmd.ExecuteReader();
-    while (reader.Read())
-    {
-        long id = reader.GetInt64(0);
-        string email = reader.GetString(1);
-        string? firstName = reader.IsDBNull(2) ? null : reader.GetString(2);
-        string? lastName = reader.IsDBNull(3) ? null : reader.GetString(3);
-        string role = reader.GetString(4);
+        using SQLiteDataReader reader = cmd.ExecuteReader();
+        while (reader.Read()) {
+            long id = reader.GetInt64(0);
+            string email = reader.GetString(1);
+            string? firstName = reader.IsDBNull(2) ? null : reader.GetString(2);
+            string? lastName = reader.IsDBNull(3) ? null : reader.GetString(3);
+            string role = reader.GetString(4);
 
-        User user = new User(id, email, firstName, lastName, role);
-        users.Add(user);
+            User user = new User(id, email, firstName, lastName, role);
+            users.Add(user);
+        }
+        return users;
     }
 
-    return users;
-}
-
+    public static List<int> GetAvailableTables(string Date, string Timeslot) {
+        List<int> AvailableTables = [1, 2, 3, 4, 5, 6];
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "SELECT GroupTable FROM Reservations WHERE (Timeslot = @Timeslot AND Date = @Date)";
+        cmd.Parameters.AddWithValue("@Timeslot", Timeslot);
+        cmd.Parameters.AddWithValue("@Date", Date);
+        
+        using SQLiteDataReader reader = cmd.ExecuteReader();
+        while (reader.Read()) {
+            AvailableTables.Remove(reader.GetInt32(0));
+        }
+        return AvailableTables;
+    }
 }

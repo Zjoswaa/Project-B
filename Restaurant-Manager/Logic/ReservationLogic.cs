@@ -168,8 +168,6 @@ static class ReservationLogic
         {
             timeslotStrings.Add(slot.Slot);
         }
-        //Adds another option used for exiting the menu in ReservationPresentation.cs
-        timeslotStrings.Add("Exit Reservation");
 
         return timeslotStrings;
     }
