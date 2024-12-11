@@ -91,13 +91,14 @@ static class AdminMenu
                 ShowViewReservationsMenu();
                 break;
             case "Create reservation":
+                ReservationManagement.CreateReservation();
                 break;
             case "Edit reservation":
                 break;
             case "Delete reservation":
                 ReservationManagement.DeleteReservation();
-                AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
-                Console.ReadKey();
+                // AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                // Console.ReadKey();
                 break;
             case "Back":
                 break;

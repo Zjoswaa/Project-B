@@ -83,14 +83,15 @@ public static class ReservationPresentation
 
     public static string SelectTimeslot()
     {
-        Console.CursorVisible = false;
         Console.Clear();
+        List<string> Options = ReservationLogic.TimeslotsToList();
+        Options.Add("Exit Reservation");
 
         // Timeslot object gets converted into a list of times in string format, user can pick one
         var timeslotChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .Title("[cyan]Select a timeslot:[/]")
-            .AddChoices(ReservationLogic.TimeslotsToList()));
+            .AddChoices(Options));
         
         if (timeslotChoice == "Exit Reservation")
         {

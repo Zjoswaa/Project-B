@@ -11,7 +11,7 @@ public static class RemoveReservationPresentation {
                 .AddChoices(ReservationLogic.ReservationsToString(userReservations))
         );
 
-        if (reservationChoice == "Exit") {
+        if (reservationChoice == "Exit" || !ConfirmDeletion()) {
             return;
         }
 
@@ -29,5 +29,17 @@ public static class RemoveReservationPresentation {
         AnsiConsole.WriteLine("Reservation Removed");
         AnsiConsole.Markup("[gray]Press any key to continue[/]");
         Console.ReadKey();
+    }
+
+    private static bool ConfirmDeletion() {
+        var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Do you really want to remove this reservation?")
+                .AddChoices("Yes", "No"));
+
+        if (choice == "No") {
+            return false;
+        }
+        return true;
     }
 }
