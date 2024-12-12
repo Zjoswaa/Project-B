@@ -1,24 +1,32 @@
-﻿using Spectre.Console;
+using Spectre.Console;
 
 
 class UserMenu
 {
     public static void ShowUserMenu()
     {
+        HiddenDiscount.RemoveCodeFromMenu();
+        HiddenDiscount.RemoveCodeFromReservations();
+        HiddenDiscount.ChangeMenuHeadToFalse();
+        HiddenDiscount.InsertCodeIntoUI();
+        
         while (State.LoggedInUser is not null)
         {
             Console.Clear();
-
-            AnsiConsole.Write(new Rule($"[yellow]Reservation Menu ({State.LoggedInUser.GetFullName()})[/]"));
+            if (HiddenDiscount.ChangeMenuHead)
+            {
+                AnsiConsole.Write(new Rule($"[yellow]Reservation Menu ({HiddenDiscount.RandomCodePicker()}) ({State.LoggedInUser.GetFullName()})[/]"));
+            }
+            else AnsiConsole.Write(new Rule($"[yellow]Reservation Menu ({State.LoggedInUser.GetFullName()})[/]"));
 
             var userSelectionPrompt = new SelectionPrompt<string>()
-                .Title("[cyan]Please select an option:[/]")
+                .Title("[gray]A 10% off discount code is hidden somewhere in the main menu...[/]\n[cyan]Please select an option:[/]")
                 .AddChoices(new[]
                 {
-                    "Make a Reservation", "View Reservations", "Edit Reservation", "Remove Reservation", "View Menu", "About Us",
+                    "Make a Reservation", "View Reservations", "Edit Reservation", "Remove Reservation", "View Menu",
                     "Logout"
                 });
-
+            
             var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
             switch (userSelection)

@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿
+using Spectre.Console;
 
 static class PasswordRecoveryPresentation {
     public static void Present() {

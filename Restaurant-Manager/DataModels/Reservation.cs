@@ -4,7 +4,7 @@ public class Reservation
     public long UserID { get; }
     public long LocationID { get; }
     public string Timeslot { get; private set;}
-    public DateOnly Date { get; private set;}
+    public DateOnly? Date { get; private set;}
     public int GroupSize { get; private set;}
     public int Table { get; private set;}
 
@@ -29,7 +29,7 @@ public class Reservation
         Timeslot = timeslot;
     }
 
-    public void UpdateDate(DateOnly date)
+    public void UpdateDate(DateOnly? date)
     {
         Date = date;
     }

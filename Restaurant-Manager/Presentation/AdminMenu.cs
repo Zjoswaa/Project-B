@@ -1,24 +1,33 @@
 ﻿using Spectre.Console;
 
-static class AdminMenu {
-    public static void ShowAdminMenu() {
-        while (State.LoggedInUser is not null) {
+static class AdminMenu
+{
+    public static void ShowAdminMenu()
+    {
+        while (State.LoggedInUser is not null)
+        {
             Console.Clear();
 
-            AnsiConsole.Write(new Rule($"[blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/]"));
+            AnsiConsole.Write(new Rule($" [blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/] "));
 
             var userSelectionPrompt = new SelectionPrompt<string>()
                 .Title("[cyan]Please select an option:[/]")
-                .AddChoices(new[] { "Manage reservations", "Manage dishes", "Logout" });
+                .AddChoices(new[] { "Manage reservations", "Manage dishes", "View all users", "Logout" });
 
             var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
-            switch (userSelection) {
+            switch (userSelection)
+            {
                 case "Manage reservations":
                     ShowManageReservationsMenu();
                     break;
                 case "Manage dishes":
                     ShowManageDishesMenu();
+                    break;
+                case "View all users":
+                    ViewUsers.ViewAllUsers();
+                    AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                    Console.ReadKey();
                     break;
                 case "Logout":
                     AnsiConsole.MarkupLine("[red]Logging out...[/]");
@@ -31,78 +40,85 @@ static class AdminMenu {
         }
     }
 
-    private static void ShowManageDishesMenu() {
+    private static void ShowManageDishesMenu()
+    {
         Console.Clear();
 
-        AnsiConsole.Write(new Rule($"[blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/]"));
+        AnsiConsole.Write(new Rule($" [blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/] "));
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
-            .AddChoices(new[] { "Add dish", "Delete dish", "Edit dish", "View dishes", "Exit" });
+            .AddChoices(new[] { "View dishes", "Add dish", "Edit dish", "Delete dish", "Back" });
 
         var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
-        switch (userSelection) {
-            case "Add dish":
-                MenuManagement.AddDish();
-                break;
-            case "Delete dish":
-                MenuManagement.DeleteDish();
-                break;
-            case "Edit dish":
-                MenuManagement.EditDish();
-                break;
+        switch (userSelection)
+        {
             case "View dishes":
                 MenuCard.DisplayMenuCard();
                 AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
                 Console.ReadKey();
                 break;
-            case "Exit":
+            case "Add dish":
+                MenuManagement.AddDish();
+                break;
+            case "Edit dish":
+                MenuManagement.EditDish();
+                break;
+            case "Delete dish":
+                MenuManagement.DeleteDish();
+                break;
+            case "Back":
                 break;
         }
     }
 
-    private static void ShowManageReservationsMenu() {
+    private static void ShowManageReservationsMenu()
+    {
         Console.Clear();
 
-        AnsiConsole.Write(new Rule($"[blue]Manage reservations ({State.LoggedInUser.GetFullName()})[/]"));
+        AnsiConsole.Write(new Rule($" [blue]Manage reservations ({State.LoggedInUser.GetFullName()})[/] "));
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
-            .AddChoices(new[] { "Create reservation", "Delete reservation", "Edit reservation", "View reservations", "Exit" });
+            .AddChoices(new[] { "View reservations", "Create reservation", "Edit reservation", "Delete reservation", "Back" });
 
         var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
-        switch (userSelection) {
-            case "Create reservation":
-                break;
-            case "Delete reservation":
-                ReservationManagement.DeleteReservation();
-                AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
-                Console.ReadKey();
-                break;
-            case "Edit reservation":
-                break;
+        switch (userSelection)
+        {
             case "View reservations":
                 ShowViewReservationsMenu();
                 break;
-            case "Exit":
+            case "Create reservation":
+                ReservationManagement.CreateReservation();
+                break;
+            case "Edit reservation":
+                break;
+            case "Delete reservation":
+                ReservationManagement.DeleteReservation();
+                // AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                // Console.ReadKey();
+                break;
+            case "Back":
                 break;
         }
     }
 
-    private static void ShowViewReservationsMenu() {
+    private static void ShowViewReservationsMenu()
+    {
         Console.Clear();
 
-        AnsiConsole.Write(new Rule($"[blue]View Reservations ({State.LoggedInUser.GetFullName()})[/]"));
+        AnsiConsole.Write(new Rule($" [blue]View Reservations ({State.LoggedInUser.GetFullName()})[/] "));
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
-            .AddChoices(new[] {"View all", "Search by email", "Exit" });
+            .AddChoices(new[] { "View all", "Search by email", "Exit" });
 
         var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
-        switch (userSelection) {
+        switch (userSelection)
+        {
             case "View all":
                 ReservationManagement.ViewAllReservations();
                 AnsiConsole.MarkupLine("[grey]Press any key to return[/]");

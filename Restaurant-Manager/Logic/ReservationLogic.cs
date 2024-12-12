@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 static class ReservationLogic
@@ -23,7 +22,7 @@ static class ReservationLogic
             return (false, message);
         }
 
-        Database.InsertReservationsTable(userID, locID, timeslot, date, groupsize, table);
+        Database.InsertReservationsTable(null, userID, locID, timeslot, date, groupsize, table);
         return (true, "Your reservation has been made.");
     }
 
@@ -34,7 +33,13 @@ static class ReservationLogic
             return (false, "This timeslot is currently unavailable. Please try again later or pick a different time.");
         }
 
-        (bool success, string message) = VerifyDate(reservationToEdit.Date);
+        if (reservationToEdit.ID == HiddenDiscount.HiddenCodeID)
+        {
+            return (false, "This reservation exists only to contain the hidden discount. You cannot edit this.");
+        }
+
+        Reservation oldReservation = GetReservationByID(reservationToEdit.ID);
+        (bool success, string message) = VerifyDate(oldReservation.Date);
         if (!success)
         {
             return (false, message);
@@ -59,7 +64,7 @@ static class ReservationLogic
         return false;
     }
 
-    private static bool HasAvailableTable(long locID, string timeslot, DateOnly date, int maxTables)
+    private static bool HasAvailableTable(long locID, string timeslot, DateOnly? date, int maxTables)
     {
         List<Reservation> reservations = Database.GetAllReservations();
 
@@ -81,7 +86,7 @@ static class ReservationLogic
                reservation.Date == date;
     }
 
-    private static bool IsUnvailableTimeslot(Reservation reservation, long locID, string timeslot, DateOnly date, int maxTables)
+    private static bool IsUnvailableTimeslot(Reservation reservation, long locID, string timeslot, DateOnly? date, int maxTables)
     {
         return reservation.LocationID == locID &&
                reservation.Timeslot == timeslot &&
@@ -105,7 +110,7 @@ static class ReservationLogic
         return tableCount;
     }
 
-    public static (bool success, string message) VerifyDate(DateOnly date)
+    public static (bool success, string message) VerifyDate(DateOnly? date)
     {
         const int maxDaysInAdvance = 180;
         DateTime startDateTime = DateTime.Now;
@@ -125,7 +130,7 @@ static class ReservationLogic
 
         if (startDate.AddDays(1) == date || startDate == date)
         {
-            return (false, "Reservations must be made at least 24 hours in advance. Please select a different date.");
+            return (false, "Reservations must be made at least 24 hours in advance.");
         }
 
         return (true, null);
@@ -163,8 +168,6 @@ static class ReservationLogic
         {
             timeslotStrings.Add(slot.Slot);
         }
-        //Adds another option used for exiting the menu in ReservationPresentation.cs
-        timeslotStrings.Add("Exit Reservation");
 
         return timeslotStrings;
     }

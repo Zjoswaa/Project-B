@@ -21,7 +21,7 @@ class Authenticator
                 break;
             } else if (Input.Key == ConsoleKey.Backspace) {
                 if (!string.IsNullOrEmpty(Buffer)) {
-                    Buffer = Buffer.Substring(1);
+                    Buffer = Buffer.Remove(Buffer.Length - 1);
                 }
             } else {
                 Buffer += Input.KeyChar; // Append the character of pressed key to the buffer
@@ -44,9 +44,7 @@ class Authenticator
             return true;
         }
         else
-        {
-            Console.ReadKey();
-            Console.Clear();
+        { Console.Clear();
             Console.CursorVisible = false;
             return false;
         }
