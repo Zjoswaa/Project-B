@@ -2,7 +2,7 @@
 
 public static class RemoveReservationPresentation {
     public static void Present() {
-        AnsiConsole.Write(new Rule($"[yellow]Remove Reservation ({State.LoggedInUser.GetFullName()})[/]"));
+        AnsiConsole.Write(new Rule($"[maroon]Remove Reservation ({State.LoggedInUser.GetFullName()})[/]"));
         List<Reservation> userReservations = ReservationLogic.GetReservationsByUserID(State.LoggedInUser.ID);
 
         string reservationChoice = AnsiConsole.Prompt(

@@ -3,7 +3,7 @@
 static class ReservationManagement {
     public static void ViewAllReservations() {
         Console.Clear();
-        AnsiConsole.Write(new Rule($" [yellow]View Reservations[/] "));
+        AnsiConsole.Write(new Rule($" [maroon]View Reservations[/] "));
         var table = new Table().Centered();
         List<Reservation> Reservations = Database.GetAllReservations();
 

@@ -5,7 +5,7 @@ static class MenuCard
     public static void DisplayMenuCard()
     {
         Console.Clear();
-        AnsiConsole.Write(new Rule($"[yellow]Menu Card[/]"));
+        AnsiConsole.Write(new Rule($"[maroon]Menu Card[/]"));
         var table = new Table().Centered();
         List<Dish> dishes = Database.GetAllDishes();
 
