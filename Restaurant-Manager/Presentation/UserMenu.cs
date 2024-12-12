@@ -15,16 +15,16 @@ class UserMenu
             Console.Clear();
             if (HiddenDiscount.ChangeMenuHead)
             {
-                AnsiConsole.Write(new Rule($"[maroon]Reservation Menu ({HiddenDiscount.RandomCodePicker()}) ({State.LoggedInUser.GetFullName()})[/]"));
+                AnsiConsole.Write(new Rule($"[maroon]Main Menu ({HiddenDiscount.RandomCodePicker()}) ({State.LoggedInUser.GetFullName()})[/]"));
             }
-            else AnsiConsole.Write(new Rule($"[maroon]Reservation Menu ({State.LoggedInUser.GetFullName()})[/]"));
+            else AnsiConsole.Write(new Rule($"[maroon]Main Menu ({State.LoggedInUser.GetFullName()})[/]"));
 
             var userSelectionPrompt = new SelectionPrompt<string>()
                 .Title("[gray]A 10% off discount code is hidden somewhere in the main menu...[/]\n[cyan]Please select an option:[/]")
                 .AddChoices(new[]
                 {
                     "Make a Reservation", "View Reservations", "Edit Reservation", "Remove Reservation", "View Menu", "About Us",
-                    "Logout"
+                    "Sign Out"
                 });
             
             var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
@@ -61,7 +61,7 @@ class UserMenu
                     Console.Clear();
                     AboutUsPresentation.DisplayAboutUs();
                     break;
-                case "Logout":
+                case "Sign Out":
                     AnsiConsole.MarkupLine("[red]Logging out...[/]");
                     State.LoggedInUser = null;
                     Thread.Sleep(1000);

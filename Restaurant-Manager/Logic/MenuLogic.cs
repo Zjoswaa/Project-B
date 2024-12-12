@@ -1,1 +1,4 @@
-﻿// add menu logic
+﻿public static class MenuLogic
+{
+
+}
