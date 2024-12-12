@@ -10,7 +10,7 @@ static class LoginPresentation
         {
             // Display login header
             AnsiConsole.Clear();
-            AnsiConsole.Write(new Rule("[bold yellow]Login[/]"));
+            AnsiConsole.Write(new Rule("[bold maroon]Login[/]"));
             AnsiConsole.WriteLine();
 
             // Ask for a Email

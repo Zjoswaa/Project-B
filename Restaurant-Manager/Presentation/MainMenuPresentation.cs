@@ -5,7 +5,7 @@ static class MainMenuPresentation {
         while (true) {
             AnsiConsole.Clear();
             // Display welcome message in a box
-            AnsiConsole.Write(new Rule("[yellow] Welcome [/]"));
+            AnsiConsole.Write(new Rule("[maroon] Welcome [/]"));
 
             // Display selection menu
             var selection = AnsiConsole.Prompt(
