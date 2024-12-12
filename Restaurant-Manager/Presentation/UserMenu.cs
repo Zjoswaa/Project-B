@@ -15,7 +15,7 @@ class UserMenu
                 .Title("[cyan]Please select an option:[/]")
                 .AddChoices(new[]
                 {
-                    "Make a Reservation", "View Reservations", "Edit Reservation", "Remove Reservation", "View Menu",
+                    "Make a Reservation", "View Reservations", "Edit Reservation", "Remove Reservation", "View Menu", "About Us",
                     "Logout"
                 });
 
@@ -48,6 +48,10 @@ class UserMenu
                     MenuCard.DisplayMenuCard();
                     AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
                     Console.ReadKey();
+                    break;
+                case "About Us":
+                    Console.Clear();
+                    AboutUsPresentation.DisplayAboutUs();
                     break;
                 case "Logout":
                     AnsiConsole.MarkupLine("[red]Logging out...[/]");
