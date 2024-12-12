@@ -23,7 +23,7 @@ class UserMenu
                 .Title("[gray]A 10% off discount code is hidden somewhere in the main menu...[/]\n[cyan]Please select an option:[/]")
                 .AddChoices(new[]
                 {
-                    "Make a Reservation", "View Reservations", "Edit Reservation", "Remove Reservation", "View Menu",
+                    "Make a Reservation", "View Reservations", "Edit Reservation", "Remove Reservation", "View Menu", "About Us",
                     "Logout"
                 });
             

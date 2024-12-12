@@ -9,7 +9,7 @@ static class AboutUsPresentation
         AnsiConsole.Write(new Rule("[bold yellow]Escape Rooms[/]").RuleStyle("yellow"));
 
         AnsiConsole.MarkupLine("The best escape room in Rotterdam and the surrounding area");
-        AnsiConsole.MarkupLine("\nWill you conquer the most thrilling experience?\n");
+        AnsiConsole.MarkupLine("Will you conquer the most thrilling experience?\n");
 
         AnsiConsole.MarkupLine("Immerse yourself in one of our escape rooms, and who knows what might await you at the end.");
         AnsiConsole.MarkupLine("At our escape room in Rotterdam, you’ll experience an exhilarating adventure where you and your team are locked inside one of our four unique themed rooms. What’s the challenge? You must work together as a team to unravel riddles, solve puzzles, and complete various tasks to escape within 60 minutes.");
