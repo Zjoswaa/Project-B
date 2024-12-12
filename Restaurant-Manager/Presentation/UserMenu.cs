@@ -1,4 +1,4 @@
-﻿using Spectre.Console;
+using Spectre.Console;
 
 
 class UserMenu
@@ -56,6 +56,10 @@ class UserMenu
                     MenuCard.DisplayMenuCard();
                     AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
                     Console.ReadKey();
+                    break;
+                case "About Us":
+                    Console.Clear();
+                    AboutUsPresentation.DisplayAboutUs();
                     break;
                 case "Logout":
                     AnsiConsole.MarkupLine("[red]Logging out...[/]");
