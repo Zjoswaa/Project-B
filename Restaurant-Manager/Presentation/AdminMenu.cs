@@ -94,6 +94,7 @@ static class AdminMenu
                 ReservationManagement.CreateReservation();
                 break;
             case "Edit reservation":
+                ReservationManagement.EditReservation();
                 break;
             case "Delete reservation":
                 ReservationManagement.DeleteReservation();
