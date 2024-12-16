@@ -1,11 +1,11 @@
 public class Reservation
 {
     public long ID { get; }
-    public long UserID { get; }
-    public long LocationID { get; }
+    public long UserID { get; set; }
+    public long LocationID { get; set; }
     public string Timeslot { get; private set;}
-    public DateOnly? Date { get; private set;}
-    public int GroupSize { get; private set;}
+    public DateOnly? Date { get; set;}
+    public int GroupSize { get; set;}
     public int Table { get; private set;}
 
     public Reservation(long id, long user, long location, string timeslot, DateOnly date, int groupsize, int table)

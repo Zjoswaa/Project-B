@@ -201,6 +201,77 @@ static class ReservationManagement {
         }
     }
 
+    public static void EditReservation() {
+        List<Reservation> Reservations = Database.GetAllReservations();
+
+        var reservationChoice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[cyan]Select a reservation to edit:[/]")
+                .AddChoices(ReservationLogic.ReservationsToString(Reservations)));
+
+        if (reservationChoice == "Exit") {
+            return;
+        }
+
+        long reservationID = ReservationLogic.ParseIDFromString(reservationChoice);
+        Reservation SelectedReservation = Database.GetAllReservations().Where(r => r.ID == reservationID).ToList()[0];
+
+        List<string> DataToChange = AnsiConsole.Prompt(
+            new MultiSelectionPrompt<string>()
+                .Title("What data would you like to edit?")
+                .NotRequired()
+                .InstructionsText(
+                    "[gray](Press [blue]space[/] to select what to edit, " +
+                    "[green]Enter[/] to accept)[/]")
+                .AddChoices(new[] { "User", "Location", "Date", "Group Size", "Table" }));
+
+        if (DataToChange.Contains("User")) {
+            string Email = PromptEmail();
+            if (Email == "Quit") {
+                return;
+            }
+            SelectedReservation.UserID = Database.GetUserByEmail(Email)!.ID;
+        }
+        if (DataToChange.Contains("Location")) {
+            string Location = PromptLocation();
+            if (Location == "Quit") {
+                return;
+            }
+            SelectedReservation.LocationID = Database.GetLocationByName(PromptLocation())!.ID;
+        }
+        if (DataToChange.Contains("Date")) {
+            (int Day, int Month, int Year) Date = SelectDate();
+            if (Date == (0, 0, 0)) {
+                return;
+            }
+            SelectedReservation.Date = DateOnly.ParseExact($"{Date.Day}-{Date.Month}-{Date.Year}", "d-M-yyyy");
+        }
+        if (DataToChange.Contains("Group Size")) {
+            string GroupSize = PromptGroupSize();
+            if (GroupSize == "Quit") {
+                return;
+            }
+            SelectedReservation.GroupSize = Int32.Parse(GroupSize);
+        }
+        if (DataToChange.Contains("Table")) {
+            string Table = PromptTable(SelectedReservation.Date?.ToString("dd-MM-yyyy"), SelectedReservation.Timeslot, $"{SelectedReservation.Table}");
+            if (Table == "Quit") {
+                return;
+            }
+        }
+        try {
+            if (DataToChange.Count != 0) {
+                Database.UpdateReservation(SelectedReservation);
+                AnsiConsole.Clear();
+                AnsiConsole.MarkupLine("[green]Reservation updated[/]");
+                Console.ReadKey();
+            }
+        }
+        catch (Exception e) {
+            Console.WriteLine(e.Message);
+        }
+    }
+
     private static bool ConfirmDeletion() {
         var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -317,6 +388,23 @@ static class ReservationManagement {
             AnsiConsole.MarkupLine("[red]No tables are available at this date and time[/]");
             Console.ReadKey();
             return "Quit";
+        }
+        Choices.Add("Quit");
+
+        var TableNumber = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[cyan]What is the table for the reservation:[/]")
+                .AddChoices(Choices));
+
+        return TableNumber;
+    }
+
+    private static string PromptTable(string Date, string Timeslot, string Current) {
+        Console.Clear();
+        List<string> Choices = Database.GetAvailableTables(Date, Timeslot).Select(number => number.ToString()).ToList();
+        if (!Choices.Contains(Current)) {
+            Choices.Add(Current);
+            Choices.Sort();
         }
         Choices.Add("Quit");
 
