@@ -6,6 +6,44 @@ public static class ReservationPresentation
     public static void Present()
     {
         Console.Clear();
+        var userSelectionPrompt = new SelectionPrompt<string>()
+            .Title("[cyan]Please select an option:[/]")
+            .AddChoices(new[]
+            {
+                    "Make a Reservation", "View Reservations", "Edit Reservation", "Remove Reservation", "Back"
+            });
+
+        string userSelection = AnsiConsole.Prompt(userSelectionPrompt);
+
+        switch (userSelection)
+        {
+            case "Back":
+                Console.Clear();
+                return;
+            case "Make a Reservation":
+                Console.Clear();
+                ReservationPresentation.CreateReservationPresentation();
+                break;
+            case "View Reservations":
+                Console.Clear();
+                ViewReservations.PrintUserReservations();
+                break;
+            case "Edit Reservation":
+                Console.Clear();
+                EditReservationPresentation.Present();
+                break;
+            case "Remove Reservation":
+                //Console.WriteLine("TBA...");
+                //Thread.Sleep(1000);
+                Console.Clear();
+                RemoveReservationPresentation.Present();
+                break;
+        }
+    }
+
+        public static void CreateReservationPresentation()
+    {
+        Console.Clear();
         AnsiConsole.Write(new Rule($" [maroon]Make Reservation ({State.LoggedInUser.GetFullName()})[/] "));
         long userID = State.LoggedInUser.ID;
 

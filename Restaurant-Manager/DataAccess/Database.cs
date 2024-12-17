@@ -50,8 +50,16 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText =
-            "CREATE TABLE IF NOT EXISTS Timeslots(ID INTEGER PRIMARY KEY AUTOINCREMENT, Timeslot TEXT NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Timeslots(ID INTEGER PRIMARY KEY AUTOINCREMENT, Timeslot TEXT NOT NULL)";
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void CreateReviewsTable()
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Reviews(ID INTEGER PRIMARY KEY AUTOINCREMENT, User INTEGER NOT NULL, Rating INTEGER NOT NULL, UserMessage TEXT, Date DATE NOT NULL, Admin INTEGER, AdminMessage TEXT, FOREIGN KEY(User) REFERENCES Users(ID), FOREIGN KEY(Admin) REFERENCES Users(ID))";
         cmd.ExecuteNonQuery();
     }
 
@@ -89,6 +97,21 @@ public static class Database {
                             SELECT @Timeslot
                             WHERE NOT EXISTS (SELECT 1 FROM Timeslots WHERE Timeslot = @Timeslot)";
         cmd.Parameters.AddWithValue("@Timeslot", timeslot);
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void InsertReviewsTable(long user, int rating, string userMessage, DateOnly date)
+    {
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+
+        cmd.CommandText = "INSERT INTO Reviews(User, Rating, UserMessage, Date) VALUES (@User, @Rating, @UserMessage, @Date)";
+
+        cmd.Parameters.AddWithValue("@User", user);
+        cmd.Parameters.AddWithValue("@Rating", rating);
+        cmd.Parameters.AddWithValue("@UserMessage", userMessage);
+        cmd.Parameters.AddWithValue("@Date", $"{date.Day}-{date.Month}-{date.Year}");
         cmd.ExecuteNonQuery();
     }
 
@@ -497,4 +520,6 @@ public static class Database {
         }
         return AvailableTables;
     }
+
+
 }
