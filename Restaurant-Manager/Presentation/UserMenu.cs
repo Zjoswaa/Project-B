@@ -23,31 +23,16 @@ class UserMenu
                 .Title("[gray]A 10% off discount code is hidden somewhere in the main menu...[/]\n[cyan]Please select an option:[/]")
                 .AddChoices(new[]
                 {
-                    "Make a Reservation", "View Reservations", "Edit Reservation", "Remove Reservation", "View Menu", "About Us",
-                    "Sign Out"
+                    "Manage Reservations", "View Menu", "About Us", "Reviews", "Sign Out"
                 });
             
-            var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
+            string userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
             switch (userSelection)
             {
-                case "Make a Reservation":
+                case "Manage Reservations":
                     Console.Clear();
                     ReservationPresentation.Present();
-                    break;
-                case "View Reservations":
-                    Console.Clear();
-                    ViewReservations.PrintUserReservations();
-                    break;
-                case "Edit Reservation":
-                    Console.Clear();
-                    EditReservationPresentation.Present();
-                    break;
-                case "Remove Reservation":
-                    //Console.WriteLine("TBA...");
-                    //Thread.Sleep(1000);
-                    Console.Clear();
-                    RemoveReservationPresentation.Present();
                     break;
                 case "View Menu":
                     //Console.WriteLine("TBA...");
@@ -60,6 +45,10 @@ class UserMenu
                 case "About Us":
                     Console.Clear();
                     AboutUsPresentation.DisplayAboutUs();
+                    break;
+                case "Reviews":
+                    Console.Clear();
+                    ReviewPresentation.Present();
                     break;
                 case "Sign Out":
                     AnsiConsole.MarkupLine("[red]Logging out...[/]");
