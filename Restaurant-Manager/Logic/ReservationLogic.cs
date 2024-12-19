@@ -130,7 +130,7 @@ static class ReservationLogic
 
         if (startDate.AddDays(1) == date || startDate == date)
         {
-            return (false, "Reservations must be made at least 24 hours in advance.");
+            return (false, "Reservations can only be made starting the day after tomorrow.");
         }
 
         return (true, null);
