@@ -282,7 +282,13 @@ static class ReservationLogic
     }
 
     public static void DecreaseDateByDay(ref int Day, ref int Month, ref int Year) {
+        
         if (Day == DateTime.Now.Day && Month == DateTime.Now.Month && Year == DateTime.Now.Year) {
+            return;
+        }
+
+        if (Day == DateTime.Now.AddDays(2).Day && Month == DateTime.Now.AddDays(2).Month && Year == DateTime.Now.AddDays(2).Year)
+        {
             return;
         }
 
@@ -350,10 +356,10 @@ static class ReservationLogic
             }
         }
         
-        if (new DateTime(Year, Month, Day) < DateTime.Today) {
-            Year = DateTime.Now.Year;
-            Month = DateTime.Now.Month;
-            Day = DateTime.Now.Day;
+        if (new DateTime(Year, Month, Day) < DateTime.Today.AddDays(2)) {
+            Year = DateTime.Now.AddDays(2).Year;
+            Month = DateTime.Now.AddDays(2).Month;
+            Day = DateTime.Now.AddDays(2).Day;
         }
     }
 }
