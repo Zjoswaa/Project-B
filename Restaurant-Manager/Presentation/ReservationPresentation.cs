@@ -144,6 +144,8 @@ public static class ReservationPresentation
         int SelectedDay = DateTime.Now.Day;
         int SelectedMonth = DateTime.Now.Month;
         int SelectedYear = DateTime.Now.Year;
+        ReservationLogic.IncreaseDateByDay(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
+        ReservationLogic.IncreaseDateByDay(ref SelectedDay, ref SelectedMonth, ref SelectedYear);
         var Calendar = new Spectre.Console.Calendar(SelectedYear, SelectedMonth);
 
         while (true) {
