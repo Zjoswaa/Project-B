@@ -292,7 +292,7 @@ static class ReservationManagement {
             new SelectionPrompt<string>()
                 .Title("[cyan]For what user is this reservation?[/]")
                 .PageSize(10)
-                .MoreChoicesText("[grey](Move up and down to see more emails)[/]")
+                .MoreChoicesText("[grey](Move up or down to see more emails)[/]")
                 .AddChoices(Emails));
 
         return Email;
@@ -306,7 +306,7 @@ static class ReservationManagement {
             new SelectionPrompt<string>()
                 .Title("[cyan]At what location is this reservation?[/]")
                 .PageSize(10)
-                .MoreChoicesText("[grey](Move up and down to see more locations)[/]")
+                .MoreChoicesText("[grey](Move up or down to see more locations)[/]")
                 .AddChoices(Names));
 
         return LocationName;

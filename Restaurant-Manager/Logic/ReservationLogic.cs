@@ -151,14 +151,14 @@ static class ReservationLogic
         
         foreach (Location location in locations)
         {
-            locationNames.Add(location.Name);
+            locationNames.Add(location.City + "\t - " + location.Name);
         }
         //Adds another option used for exiting the menu in ReservationPresentation.cs
         locationNames.Add("Exit");
 
         return locationNames;
     }
-
+    
     public static List<string> TimeslotsToList()
     {
         List<string> timeslotStrings = new(){};
