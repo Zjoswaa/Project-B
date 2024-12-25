@@ -14,7 +14,12 @@ class Program
             Database.CreateTimeslotsTable();
             Database.CreateReviewsTable();
 
+            Database.InsertLocationsTable("Amsterdam", "Enter 'Freddy's Comfort Food, ask for 'Secret Menu #2' and an employee will lead you to your designated starting point.");
+            Database.InsertLocationsTable("Groningen", "Enter 'Freddy's Comfort Food, ask for 'Secret Menu #2' and an employee will lead you to your designated starting point.");
             Database.InsertLocationsTable("Rotterdam", "Enter 'Freddy's Comfort Food, ask for 'Secret Menu #2' and an employee will lead you to your designated starting point.");
+            Database.InsertLocationsTable("Utrecht", "Enter 'Freddy's Comfort Food, ask for 'Secret Menu #2' and an employee will lead you to your designated starting point.");
+            Database.InsertLocationsTable("Zwolle", "Enter 'Freddy's Comfort Food, ask for 'Secret Menu #2' and an employee will lead you to your designated starting point.");
+
             Database.InsertTimeslotsTable("12:00");
             Database.InsertTimeslotsTable("15:00");
             Database.InsertTimeslotsTable("18:00");
