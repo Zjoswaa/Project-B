@@ -34,7 +34,7 @@ static class MenuCard
                 // Rows
                 foreach (Dish dish in dishes)
                 {
-                    Update(100, () => table.AddRow(dish.Name, $"{dish.Price:F2}", dish.IsVegan ? "[green]Yes[/]" : "[red]No[/]", dish.IsVegetarian ? "[green]Yes[/]" : "[red]No[/]", dish.IsHalal ? "[green]Yes[/]" : "[red]No[/]", dish.IsGlutenFree ? "[green]Yes[/]" : "[red]No[/]"));
+                    Update(100, () => table.AddRow(dish.Name, $"${dish.Price:F2}", dish.IsVegan ? "[green]Yes[/]" : "[red]No[/]", dish.IsVegetarian ? "[green]Yes[/]" : "[red]No[/]", dish.IsHalal ? "[green]Yes[/]" : "[red]No[/]", dish.IsGlutenFree ? "[green]Yes[/]" : "[red]No[/]"));
                 }
 
                 // Column footer

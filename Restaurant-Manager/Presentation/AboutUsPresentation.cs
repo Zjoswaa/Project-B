@@ -19,21 +19,55 @@ static class AboutUsPresentation
         // misschien eerst key input vragen aan user voordat de verschillende themes gedisplayed worden ?
 
         // The different escape room themes
-        var escapeRooms = new[]
+        var escapeRoomsRotterdam = new[]
         {
-            new { Name = "The Asylum of Whisperers", Storyline = "The asylum was abandoned years ago, yet the townsfolk still speak of the eerie cries that echo from its crumbling halls. Legends tell of a doctor who conducted unspeakable experiments on his patients, searching for a way to silence the voices in their heads. But instead of quieting their minds, he unleashed something far worse.\r\n\r\nTonight, you and your team find yourselves at the gates of this forsaken place, driven by curiosity or perhaps something darker. As you step inside, the air grows thick, and a faint whisper brushes past your ear. It's not long before the doors slam shut behind you. The whispers grow louder, guiding you deeper into the asylum’s labyrinthine corridors.\r\n\r\nYou must uncover the truth behind the whispers and escape before you, too, are lost to the madness. But beware, some secrets are better left buried." },
-            new { Name = "The Silent Hotel", Storyline = "It was supposed to be a quick overnight stay. The Silent Hotel, nestled in the middle of nowhere, seemed like the perfect place to rest before continuing your journey. Its antique charm and the promise of a quiet night’s sleep drew you in.\r\n\r\nBut something feels... off. The receptionist barely speaks as they hand you a tarnished key with the number 13 etched into it. The elevator creaks as it takes you to your floor, but instead of stopping at your room, the doors open onto an unfamiliar hallway. Dim lights flicker, and the air is heavy with the scent of mildew and something metallic.\r\n\r\nAs you step out, the elevator vanishes behind you. The walls seem to shift, and the faint sound of footsteps echoes in the distance. Is it your imagination, or is someone or something following you? You must navigate the eerie halls, uncover the secrets of the Silent Hotel, and find your way back to the real world before the hotel claims you as its next permanent guest." },
-            new { Name = "Midnight at the Observatory", Storyline = "The famous astronomer, Dr. Evelyn Mercer, vanished without a trace five years ago while conducting research at the Hillcrest Observatory. Since then, the facility has been locked up, abandoned. But rumors persist of strange lights emanating from the dome at night and an otherworldly hum that grows louder as midnight approaches.\r\n\r\nYou’ve been invited to investigate these phenomena under the guise of a scientific experiment. As the clock strikes twelve, the observatory’s mechanisms roar to life. The telescope begins to move on its own, locking onto a star that grows brighter and brighter. The hum transforms into a deafening vibration, and suddenly, the room is bathed in a blinding light.\r\n\r\nWhen you open your eyes, the observatory is no longer the same. Time and space seem distorted, and cryptic symbols glow faintly on the walls. You must work together to decipher the celestial clues, repair the observatory’s systems, and stop the rift from tearing reality apart." },
-            new { Name = "Depths of the Abyss", Storyline = "What was meant to be an exciting deep sea exploration has turned into a fight for survival. Your team of researchers descended to explore the legendary ruins of a lost underwater city, thought to hold artifacts of unimaginable power. But as you approached the site, a sudden tremor shook your vessel, and you lost contact with the surface.\r\n\r\nWhen you awaken, your submersible is partially flooded, and the ancient ruins loom outside, eerily illuminated by bioluminescent flora. The tremors have triggered something deep within the city a mechanism long dormant now groans to life. Strange symbols pulse with an ominous light, and the water pressure rises dangerously.\r\n\r\nYou must navigate the labyrinth of underwater tunnels, solve the mysteries of the ruins, and reactivate the ancient technology to power your escape. But hurry oxygen is running low, and the abyss is awakening." },
+            new { Name = "The Asylum of Whisperers", Storyline = "The abandoned asylum whispers secrets of its tormented patients. As you explore its shadowy halls, the whispers grow louder, revealing dark truths about the past—and your own connection to them. Can you escape before the whispers consume you?" },
+            new { Name = "The Silent Hotel", Storyline = "An eerie hotel sits empty, its halls echoing with the absence of guests who vanished one fateful night. As you investigate, the silence feels oppressive, and each room hides a piece of the mystery. Will you check out in time?" },
+            new { Name = "Midnight at the Observatory", Storyline = "At midnight, the abandoned observatory comes alive with celestial maps and strange instruments. The stars shift unnaturally, and you must decode the astronomer’s last discovery before the sky locks you in forever." },
+            new { Name = "Depths of the Abyss", Storyline = "Deep beneath the ocean, an underwater station has gone silent. As you descend, cryptic clues and a growing sense of dread point to something ancient lurking in the depths. Escape before the abyss swallows you whole." }
         };
 
-        foreach (var room in escapeRooms)
+        var escapeRoomsAmsterdam = new[]
         {
-            AnsiConsole.Write(new Panel($"[bold maroon]{room.Name}[/]\n\n[italic]{room.Storyline}[/]")
-                .Header("[green]Escape Room[/]")
-                .Expand());
-            Console.WriteLine();
-        }
+            new { Name = "The Vanishing Vault", Storyline = "You’ve been hired to investigate an old bank that mysteriously shut down overnight in 1923. The vault remains sealed, and every previous attempt to open it ended in failure—--or worse, disappearance. Can you uncover the truth before the vault consumes you too?" },
+            new { Name = "Labyrinth of Shadows", Storyline = "Hidden beneath the ruins of an ancient cathedral is a labyrinth filled with shifting walls and whispers of a lost relic. Your team must navigate the maze, solve its riddles, and escape before the shadows take form." },
+            new { Name = "The Alchemist's Sanctum", Storyline = "In the heart of a crumbling tower lies the laboratory of an alchemist who sought the secret of eternal life. The room is alive with his unfinished experiments, and it’s up to you to escape before becoming his next subject." },
+            new { Name = "Secrets of the Forgotten Asylum", Storyline = "An abandoned asylum holds the secrets of a doctor who conducted unethical experiments on his patients. You must uncover his dark research to find a way out before the spirits of the past catch up to you." }
+        };
+
+        var escapeRoomsGroningen = new[]
+        {
+            new { Name = "Timekeeper’s Paradox", Storyline = "You’ve stumbled upon the workshop of a mysterious clockmaker who vanished decades ago. The clocks within tick backward, and reality seems to shift with each chime. Can you repair the timeline and escape?" },
+            new { Name = "Curse of the Crimson Manor", Storyline = "The once-grand Crimson Manor is rumored to be cursed, and those who enter are said to vanish forever. As you investigate, the walls seem to close in, and a sinister presence begins to manifest." },
+            new { Name = "The Phantom's Playhouse", Storyline = "An abandoned theater is haunted by the spirit of a playwright whose final work was never performed. You must bring the script to life to free his soul and escape the stage before the final curtain falls." },
+            new { Name = "The Oracle’s Chamber", Storyline = "Buried deep within the mountains is the Oracle’s Chamber, a place said to reveal your future—if you survive its trials. The chamber tests your mind and resolve. Will you uncover the truth or be lost to time?" }
+        };
+
+        var escapeRoomsZwolle = new[]
+        {
+            new { Name = "Whispering Woods Cottage", Storyline = "You’ve sought refuge in a small cottage in the woods, but as night falls, the house begins to whisper your darkest fears. Solve its mysteries to escape before dawn breaks—or you may never leave." },
+            new { Name = "Crypt of the Forgotten Pharaoh", Storyline = "You’ve been hired to explore an undiscovered Egyptian tomb. But the deeper you go, the more it feels like the tomb is alive. Can you escape before the Forgotten Pharaoh claims you as part of his eternal court?" },
+            new { Name = "The Ship of Lost Souls", Storyline = "A ghostly ship has reappeared after centuries, shrouded in mist. You and your team board it, but the doors slam shut behind you. Solve its mysteries to escape before the ship disappears again—with you on it." },
+            new { Name = "The Midnight Apothecary", Storyline = "An ancient apothecary’s shop opens only at midnight, selling cures for ailments no modern doctor can treat. But the cure comes with a price—and a clock counting down. Can you escape before it’s too late?" }
+        };
+
+        var escapeRoomsUtrecht = new[]
+        {
+            new { Name = "Echoes of the Enchanted Library", Storyline = "Books in this ancient library hold more than words—they hold trapped souls. You must solve the riddles within the enchanted texts to find your way out before you become part of the collection." },
+            new { Name = "The Blackwell Experiment", Storyline = "A biotech lab known as Blackwell Industries has gone dark. Inside, you discover a chilling experiment that has gone horribly wrong. The only way out is through a series of locked doors—and the answers lie in the experiments themselves." },
+            new { Name = "The Silent Carnival", Storyline = "A carnival suddenly appeared on the outskirts of town, but it’s eerily silent. Each attraction seems designed to test your courage, wit, and sanity. Can you survive the games and escape?" },
+            new { Name = "Portal of the Forgotten Realm", Storyline = "An abandoned observatory is home to a strange portal humming with energy. When you step inside, you’re transported to a realm of impossible geometry and ancient beings. Solve the puzzles to reopen the portal and return to your world." }
+        };
+
+
+
+        //foreach (var room in escapeRoomsRotterdam)
+        //{
+        //    AnsiConsole.Write(new Panel($"[bold maroon]{room.Name}[/]\n\n[italic]{room.Storyline}[/]")
+        //        .Header("[green]Escape Room[/]")
+        //        .Expand());
+        //    Console.WriteLine();
+        //}
 
         AnsiConsole.MarkupLine("[grey italic]Escape & Dine offers an adventure like no other, full of mystery, puzzles and unforgettable surprises.[/]");
         AnsiConsole.MarkupLine("[italic]We can't wait to see you![/]\n");

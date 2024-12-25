@@ -25,7 +25,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Message TEXT NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY AUTOINCREMENT, City TEXT NOT NULL, Name TEXT NOT NULL, Message TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -151,15 +151,16 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void InsertLocationsTable(string name, string message)
+    public static void InsertLocationsTable(string city, string name, string message)
     {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = @"INSERT INTO Locations(Name, Message)
-                            SELECT @Name, @Message
+        cmd.CommandText = @"INSERT INTO Locations(City, Name, Message)
+                            SELECT @City, @Name, @Message
                             WHERE NOT EXISTS (SELECT 1 FROM Locations WHERE Name = @Name)";
 
+        cmd.Parameters.AddWithValue("@City", city);
         cmd.Parameters.AddWithValue("@Name", name);
         cmd.Parameters.AddWithValue("@Message", message);
         cmd.ExecuteNonQuery();
@@ -214,9 +215,10 @@ public static class Database {
         while (reader.Read())
         {
             int id = reader.GetInt32(0);
-            string name = reader.GetString(1);
-            string message = reader.GetString(2);
-            locations.Add(new Location(id, name, message));
+            string city = reader.GetString(1);
+            string name = reader.GetString(2);
+            string message = reader.GetString(3);
+            locations.Add(new Location(id, city, name, message));
         }
 
         return locations;
@@ -231,9 +233,10 @@ public static class Database {
         using SQLiteDataReader reader = cmd.ExecuteReader();
         if (reader.Read()) {
             int id = reader.GetInt32(0);
-            string name = reader.GetString(1);
-            string message = reader.GetString(2);
-            return new Location(id, name, message);
+            string city = reader.GetString(1);
+            string name = reader.GetString(2);
+            string message = reader.GetString(3);
+            return new Location(id, city, name, message);
         }
         return null;
     }
@@ -247,9 +250,10 @@ public static class Database {
         using SQLiteDataReader reader = cmd.ExecuteReader();
         if (reader.Read()) {
             int id = reader.GetInt32(0);
-            string name = reader.GetString(1);
-            string message = reader.GetString(2);
-            return new Location(id, name, message);
+            string city = reader.GetString(1);
+            string name = reader.GetString(2);
+            string message = reader.GetString(3);
+            return new Location(id, city, name, message);
         }
         return null;
     }
