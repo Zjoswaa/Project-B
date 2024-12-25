@@ -151,7 +151,7 @@ static class ReservationLogic
         
         foreach (Location location in locations)
         {
-            locationNames.Add(location.City + "\t - " + location.Name);
+            locationNames.Add(location.City + "    \t - " + location.Name);
         }
         //Adds another option used for exiting the menu in ReservationPresentation.cs
         locationNames.Add("Exit");
@@ -190,16 +190,20 @@ static class ReservationLogic
 
     public static string GetLocationDescription(long ID)
     {
-        List<Location> locations = Database.GetAllLocations();
-
-        foreach (Location location in locations)
-        {
-            if (location.ID == ID)
-            {
-                return location.Message;
-            }
+        // List<Location> locations = Database.GetAllLocations();
+        //
+        // foreach (Location location in locations)
+        // {
+        //     if (location.ID == ID)
+        //     {
+        //         return location.Message;
+        //     }
+        // }
+        string? Message = Database.GetLocationByID(ID)?.Message;
+        if (Message is null) {
+            return "unknown";
         }
-        return "unknown";
+        return Message;
     }
 
     public static List<Reservation> GetReservationsByUserID(long userID)

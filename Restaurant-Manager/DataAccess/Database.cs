@@ -241,12 +241,13 @@ public static class Database {
         return null;
     }
 
-    public static Location? GetLocationByName(string Name) {
+    public static Location? GetLocationByCityAndName(string City, string Name) {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "SELECT * FROM Locations WHERE Name = @Name LIMIT 1";
+        cmd.CommandText = "SELECT * FROM Locations WHERE (City = @City AND Name = @Name) LIMIT 1";
         cmd.Parameters.AddWithValue("@Name", Name);
+        cmd.Parameters.AddWithValue("@City", City);
         using SQLiteDataReader reader = cmd.ExecuteReader();
         if (reader.Read()) {
             int id = reader.GetInt32(0);

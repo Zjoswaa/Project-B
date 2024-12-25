@@ -166,7 +166,8 @@ static class ReservationManagement {
         if (LocationName == "Quit") {
             return;
         }
-        long LocationID = Database.GetLocationByName(LocationName)!.ID;
+        
+        long LocationID = Database.GetLocationByCityAndName(LocationName.Split("    \t - ")[0], LocationName.Split("    \t - ")[1])!.ID;
 
         (int Day, int Month, int Year) Date = SelectDate();
         if (Date is (0, 0, 0)) {
@@ -237,7 +238,7 @@ static class ReservationManagement {
             if (Location == "Quit") {
                 return;
             }
-            SelectedReservation.LocationID = Database.GetLocationByName(PromptLocation())!.ID;
+            SelectedReservation.LocationID = Database.GetLocationByCityAndName(Location.Split("    \t - ")[0], Location.Split("    \t - ")[1])!.ID;
         }
         if (DataToChange.Contains("Date")) {
             (int Day, int Month, int Year) Date = SelectDate();
@@ -299,9 +300,7 @@ static class ReservationManagement {
     }
 
     private static string PromptLocation() {
-        List<Location> Locations = Database.GetAllLocations();
-        List<string> Names = Locations.Select(loc => loc.Name).ToList();
-        Names.Add("Quit");
+        List<string> Names = ReservationLogic.LocationNamesToList();
         var LocationName = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[cyan]At what location is this reservation?[/]")
