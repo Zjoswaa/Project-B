@@ -41,7 +41,7 @@ public static class ReservationPresentation
         }
     }
 
-        public static void CreateReservationPresentation()
+    public static void CreateReservationPresentation()
     {
         Console.Clear();
         AnsiConsole.Write(new Rule($" [maroon]Make Reservation ({State.LoggedInUser.GetFullName()})[/] "));
@@ -50,7 +50,7 @@ public static class ReservationPresentation
         long locID = SelectLocation();
         if (locID == -1) return;
         string locMessage = ReservationLogic.GetLocationDescription(locID);
-
+        
         (int Day, int Month, int Year) Date = SelectDate();
         if (Date is (0, 0, 0)) return;
         string dateString = $"{Date.Day}-{Date.Month}-{Date.Year}";
@@ -115,8 +115,8 @@ public static class ReservationPresentation
         {
             return -1;
         }
-
-        return ReservationLogic.GetLocationIDByName(locationChoice);
+        
+        return Database.GetLocationByCityAndName(locationChoice.Split("    \t - ")[0], locationChoice.Split("    \t - ")[1]).ID;
     }
 
     public static string SelectTimeslot()
