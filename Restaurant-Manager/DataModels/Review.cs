@@ -5,10 +5,10 @@
     public int Rating { get; }
     public string UserMessage { get; }
     public DateOnly Date { get; }
-    public long Admin { get; }
-    public string AdminMessage { get; }
+    public long? Admin { get; }
+    public string? AdminMessage { get; }
 
-    public Review(long id, long user, int rating, string userMessage, DateOnly date, long admin, string adminMessage)
+    public Review(long id, long user, int rating, string userMessage, DateOnly date, long? admin, string? adminMessage)
     {
         this.ID = id;
         this.User = user;

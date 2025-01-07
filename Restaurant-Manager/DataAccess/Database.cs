@@ -285,8 +285,32 @@ public static class Database {
         return reservations;
     }
 
+    public static List<Reservation> GetReservationsByUserID(long userID)
+    {
+        List<Reservation> reservations = new();
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+
+        cmd.CommandText = "SELECT * FROM Reservations WHERE User = @ID";
+        cmd.Parameters.AddWithValue("@ID", userID);
+        using SQLiteDataReader reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            long ID = reader.GetInt32(0);
+            long locId = reader.GetInt32(2);
+            string timeslot = reader.GetString(3);
+            string date = reader.GetString(4);
+            int groupsize = reader.GetInt32(5);
+            int table = reader.GetInt32(6);
+
+            reservations.Add(new Reservation(ID, userID, locId, timeslot, DateOnly.ParseExact(date, "d-M-yyyy"), groupsize, table));
+        }
+        return reservations;
+    }
+
     public static List<Reservation> GetReservationsByEmail(string Email) {
-        List<Reservation> reservations = new() { };
+        List<Reservation> reservations = new();
 
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
@@ -344,13 +368,39 @@ public static class Database {
         var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
-            long id = reader.GetInt32(0);
+            long id = reader.GetInt64(0);
             string timeslot = reader.GetString(1);
 
             timeslots.Add(new Timeslot(id, timeslot));
         }
 
         return timeslots;
+    }
+
+    public static List<Review> GetAllReviews()
+    {
+        List<Review> reviews = new();
+
+        using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
+        Connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(Connection);
+
+        cmd.CommandText = "SELECT * FROM Reviews";
+        SQLiteDataReader reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            long id = reader.GetInt64(0);
+            long user = reader.GetInt64(1);
+            int rating = reader.GetInt32(2);
+            string userMessage = reader.GetString(3);
+            string date = reader.GetString(4);
+            long? admin = reader.IsDBNull(5) ? null : reader.GetInt64(5);
+            string? adminMessage = reader.IsDBNull(6) ? null : reader.GetString(6);
+
+            reviews.Add(new Review(id, user, rating, userMessage, DateOnly.ParseExact(date, "d-M-yyyy"), admin, adminMessage));
+        }
+
+        return reviews;
     }
 
     public static void InsertUsersTable(string Email, string Password, string? FirstName, string? LastName, string Role)
