@@ -12,7 +12,7 @@ static class AdminMenu
 
             var userSelectionPrompt = new SelectionPrompt<string>()
                 .Title("[cyan]Please select an option:[/]")
-                .AddChoices(new[] { "Manage reservations", "Manage dishes", "View all users", "Logout" });
+                .AddChoices(new[] { "Manage reservations", "Manage dishes", "Manage reviews", "View all users", "Logout" });
 
             var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
@@ -23,6 +23,9 @@ static class AdminMenu
                     break;
                 case "Manage dishes":
                     ShowManageDishesMenu();
+                    break;
+                case "Manage reviews":
+                    ShowManageReviewsMenu();
                     break;
                 case "View all users":
                     ViewUsers.ViewAllUsers();
@@ -98,8 +101,6 @@ static class AdminMenu
                 break;
             case "Delete reservation":
                 ReservationManagement.DeleteReservation();
-                // AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
-                // Console.ReadKey();
                 break;
             case "Back":
                 break;
@@ -131,5 +132,88 @@ static class AdminMenu
             case "Exit":
                 break;
         }
+    }
+
+    private static void ShowManageReviewsMenu()
+    {
+        Console.Clear();
+
+        AnsiConsole.Write(new Rule($" [blue]Manage Reviews ({State.LoggedInUser.GetFullName()})[/] "));
+
+        var userSelectionPrompt = new SelectionPrompt<string>()
+            .Title("[cyan]Please select an option:[/]")
+            .AddChoices(new[] { "View reviews", "Reply to review", "Delete review", "Back" });
+
+        var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
+
+        switch (userSelection)
+        {
+            case "View reviews":
+                PrintAllReviews();
+                break;
+            case "Reply to review":
+                SelectReviewForAction("Reply");
+                break;
+            case "Delete review":
+                SelectReviewForAction("Delete");
+                break;
+            case "Back":
+                break;
+        }
+    }
+
+    private static void SelectReviewForAction(string action)
+    {
+        var reviews = Database.GetAllReviews();
+        var reviewSelectionPrompt = new SelectionPrompt<string>()
+            .Title("[cyan]Select a review to manage:[/]")
+            .AddChoices(reviews.Select(review => $"{review.ID}: {review.UserMessage ?? "No review text"}").ToArray());
+
+        var selectedReviewString = AnsiConsole.Prompt(reviewSelectionPrompt);
+        var selectedReviewId = long.Parse(selectedReviewString.Split(':')[0]);
+        var selectedReview = reviews.First(review => review.ID == selectedReviewId);
+
+        switch (action)
+        {
+            case "Reply":
+                ReviewOperations.ReplyToReview(selectedReview);
+                break;
+            case "Delete":
+                ReviewOperations.DeleteReview(selectedReview);
+                break;
+        }
+    }
+
+
+    private static void PrintAllReviews()
+    {
+        Console.Clear();
+        AnsiConsole.Write(new Rule($" [blue]All Reviews[/] "));
+
+        var reviews = Database.GetAllReviews();
+        var table = new Table().Centered();
+
+        table.AddColumn("Review ID");
+        table.AddColumn("User");
+        table.AddColumn("Rating");
+        table.AddColumn("Review");
+        table.AddColumn("Date");
+        table.AddColumn("Reply");
+
+        foreach (var review in reviews)
+        {
+            table.AddRow(
+                review.ID.ToString(),
+                Database.GetUserByID(review.User).GetFullName(),
+                review.Rating.ToString(),
+                review.UserMessage ?? "No review text",
+                review.Date.ToString(),
+                review.AdminMessage ?? "No reply"
+            );
+        }
+
+        AnsiConsole.Write(table);
+        AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+        Console.ReadKey();
     }
 }
