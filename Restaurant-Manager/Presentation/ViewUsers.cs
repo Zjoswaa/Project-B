@@ -37,8 +37,7 @@ static class ViewUsers
                     Update(100, () => table.AddRow($"{user.ID}", $"{user.Email}", $"{user.FirstName}", $"{user.LastName}", $"{user.Role}"));
                 }
             });
-
-        Console.ReadKey();
+        
         Console.CursorVisible = true;
     }
 }
