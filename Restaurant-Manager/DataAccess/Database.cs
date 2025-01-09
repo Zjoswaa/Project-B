@@ -576,5 +576,25 @@ public static class Database {
         return AvailableTables;
     }
 
+    public static void UpdateReviewReply(long reviewId, string reply)
+    {
+        using SQLiteConnection connection = new($"Data Source={ConnectionString}");
+        connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(connection);
+        cmd.CommandText = "UPDATE Reviews SET AdminMessage = @AdminMessage WHERE ID = @ID";
+        cmd.Parameters.AddWithValue("@AdminMessage", reply);
+        cmd.Parameters.AddWithValue("@ID", reviewId);
+        cmd.ExecuteNonQuery();
+    }
+
+    public static void DeleteReview(long reviewId)
+    {
+        using SQLiteConnection connection = new($"Data Source={ConnectionString}");
+        connection.Open();
+        using SQLiteCommand cmd = new SQLiteCommand(connection);
+        cmd.CommandText = "DELETE FROM Reviews WHERE ID = @ID";
+        cmd.Parameters.AddWithValue("@ID", reviewId);
+        cmd.ExecuteNonQuery();
+    }
 
 }
