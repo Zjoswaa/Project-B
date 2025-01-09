@@ -165,6 +165,14 @@ static class AdminMenu
     private static void SelectReviewForAction(string action)
     {
         var reviews = Database.GetAllReviews();
+        if (!reviews.Any())
+        {
+            AnsiConsole.MarkupLine("[red]No reviews available to manage.[/]");
+            AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+            Console.ReadKey();
+            return;
+        }
+
         var reviewSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Select a review to manage:[/]")
             .AddChoices(reviews.Select(review => $"{review.ID}: {review.UserMessage ?? "No review text"}").ToArray());
