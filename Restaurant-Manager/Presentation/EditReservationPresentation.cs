@@ -7,15 +7,14 @@ static class EditReservationPresentation
         AnsiConsole.Write(new Rule($"[yellow]Edit Reservation ({State.LoggedInUser.GetFullName()})[/]"));
         long currentUserID = State.LoggedInUser.ID;
         Reservation reservationToEdit = SelectReservation(currentUserID);
-        DateOnly? date = reservationToEdit.Date;
-        string dateString = $"{date?.Day}-{date?.Month}-{date?.Year}";
-        string timeslot = reservationToEdit.Timeslot;
-        int groupSize = reservationToEdit.GroupSize;
-
         if (reservationToEdit is null)
         {
             return;
         }
+        DateOnly? date = reservationToEdit.Date;
+        string dateString = $"{date?.Day}-{date?.Month}-{date?.Year}";
+        string timeslot = reservationToEdit.Timeslot;
+        int groupSize = reservationToEdit.GroupSize;
         
         List<string> dataToChange = InfoToEdit();
 

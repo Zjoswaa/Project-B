@@ -20,7 +20,7 @@ class UserMenu
             else AnsiConsole.Write(new Rule($"[maroon]Main Menu ({State.LoggedInUser.GetFullName()})[/]"));
 
             var userSelectionPrompt = new SelectionPrompt<string>()
-                .Title("[gray]A 10% off discount code is hidden somewhere in the main menu...[/]\n[cyan]Please select an option:[/]")
+                .Title("[gray]A 10% off discount code is hidden somewhere...[/]\n[cyan]Please select an option:[/]")
                 .AddChoices(new[]
                 {
                     "Manage Reservations", "View Menu", "About Us", "Reviews", "Sign Out"
