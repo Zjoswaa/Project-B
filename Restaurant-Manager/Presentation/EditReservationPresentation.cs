@@ -7,6 +7,10 @@ static class EditReservationPresentation
         AnsiConsole.Write(new Rule($"[yellow]Edit Reservation ({State.LoggedInUser.GetFullName()})[/]"));
         long currentUserID = State.LoggedInUser.ID;
         Reservation reservationToEdit = SelectReservation(currentUserID);
+        DateOnly? date = reservationToEdit.Date;
+        string dateString = $"{date?.Day}-{date?.Month}-{date?.Year}";
+        string timeslot = reservationToEdit.Timeslot;
+        int groupSize = reservationToEdit.GroupSize;
 
         if (reservationToEdit is null)
         {
@@ -22,7 +26,7 @@ static class EditReservationPresentation
         {
             if (variable == "Date")
             {
-                DateOnly? date = EditDate();
+                date = EditDate();
                 if (date == null) {
                     return;
                 }
@@ -30,12 +34,12 @@ static class EditReservationPresentation
             }
             if (variable == "Timeslot")
             {
-                string timeslot = EditTimeslot();
+                timeslot = EditTimeslot();
                 reservationToEdit.UpdateTimeslot(timeslot);
             }
             if (variable == "Group size")
             {
-                int groupSize = EditGroupSize();
+                groupSize = EditGroupSize();
                 reservationToEdit.UpdateGroupSize(groupSize);
             }
         }
@@ -45,6 +49,12 @@ static class EditReservationPresentation
         (bool success, string message) = ReservationLogic.UpdateReservation(reservationToEdit);
         if (success)
         {
+            if (!EmailService.SendEdittedReservationEmail(State.LoggedInUser.GetFullName(), Database.GetLocationByID(reservationToEdit.LocationID)?.City, ReservationLogic.GetLocationName(reservationToEdit.LocationID), dateString, timeslot, groupSize, State.LoggedInUser.Email)) {
+                AnsiConsole.MarkupLine("[gray]Press any key to continue.[/]");
+                Console.ReadKey();
+                return;
+            }
+            
             string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {reservationToEdit.Table}\n\n{locMessage}\n\nPress any key to continue.";
             Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
             panel.Expand = true; // Set expand again

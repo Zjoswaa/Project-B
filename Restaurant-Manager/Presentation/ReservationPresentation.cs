@@ -50,6 +50,7 @@ public static class ReservationPresentation
         long locID = SelectLocation();
         if (locID == -1) return;
         string locMessage = ReservationLogic.GetLocationDescription(locID);
+        string locName = ReservationLogic.GetLocationName(locID);
         
         (int Day, int Month, int Year) Date = SelectDate();
         if (Date is (0, 0, 0)) return;
@@ -69,13 +70,12 @@ public static class ReservationPresentation
         (bool success, string message) = ReservationLogic.CreateReservation(userID, locID, timeslot, date, groupsize, table);
         if (success)
         {
-            // Send the reservation confirmation email.
-            // TODO: Uncomment
-            // if (!EmailService.SendReservationEmail(State.LoggedInUser.GetFullName(), Database.GetLocationByID(locID)?.Name, dateString, timeslot, groupsize, State.LoggedInUser.Email)) {
-            //     AnsiConsole.MarkupLine("[gray]Press any key to continue.[/]");
-            //     Console.ReadKey();
-            //     return;
-            // }
+            if (!EmailService.SendReservationEmail(State.LoggedInUser.GetFullName(), Database.GetLocationByID(locID)?.City, ReservationLogic.GetLocationName(locID), dateString, timeslot, groupsize, State.LoggedInUser.Email)) {
+                AnsiConsole.MarkupLine("[gray]Press any key to continue.[/]");
+                Console.ReadKey();
+                return;
+            }
+            
             string text = "";
             if (HiddenDiscount.selectedDiscountCode != null)
             {

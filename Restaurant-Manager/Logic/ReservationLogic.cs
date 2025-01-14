@@ -206,6 +206,15 @@ static class ReservationLogic
         return Message;
     }
 
+    public static string GetLocationName(long ID)
+    {
+        string? Name = Database.GetLocationByID(ID)?.Name;
+        if (Name is null) {
+            return "unknown";
+        }
+        return Name;
+    }
+    
     public static List<Reservation> GetReservationsByUserID(long userID)
     {
         List<Reservation> userReservations = new(){};
