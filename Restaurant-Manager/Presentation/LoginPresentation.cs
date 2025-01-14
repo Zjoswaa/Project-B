@@ -1,13 +1,10 @@
 ﻿using Spectre.Console;
 
-static class LoginPresentation
-{
-    public static void Present()
-    {
+static class LoginPresentation {
+    public static void Present() {
         //bool loginSuccessful = false;
 
-        while (State.LoggedInUser is null)
-        {
+        while (State.LoggedInUser is null) {
             // Display login header
             AnsiConsole.Clear();
             AnsiConsole.Write(new Rule("[bold maroon]Login[/]"));
@@ -15,7 +12,7 @@ static class LoginPresentation
 
             // Ask for a Email
             AnsiConsole.MarkupLine("[blue]Please enter your email, or leave empty to cancel:[/]");
-            string Email = PromptEmail();
+            string Email = PromptEmail().ToLower();
             if (string.IsNullOrEmpty(Email)) {
                 AnsiConsole.Clear();
                 MainMenuPresentation.ShowMainMenu();
@@ -30,27 +27,25 @@ static class LoginPresentation
             }
 
             // Check if user input correct password
-            if (LoginLogic.VerifyPassword(Email, Password))
-            {
+            if (LoginLogic.VerifyPassword(Email, Password)) {
                 State.LoggedInUser = Database.GetUserByEmail(Email);
                 Console.WriteLine("Successful login");
                 //loginSuccessful = true;
             }
-            else
-            {
+            else {
                 AnsiConsole.MarkupLine("[red]Invalid Email or password. Please try again.[/]");
                 Thread.Sleep(1500);
             }
         }
     }
 
-    private static string PromptEmail()
+private static string PromptEmail()
     {
         return AnsiConsole.Prompt(
             new TextPrompt<string>("[green]Email[/]:")
                 .PromptStyle("yellow")
                 .AllowEmpty()
-            );
+            ).ToLower();
     }
 
     private static string PromptPassword()

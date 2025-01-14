@@ -12,7 +12,7 @@ static class RegisterPresentation
         AnsiConsole.WriteLine();
 
         // Ask for new user email
-        string Email = PromptEmail();
+        string Email = PromptEmail().ToLower();
         if (string.IsNullOrEmpty(Email)) {
             AnsiConsole.Clear();
             MainMenuPresentation.ShowMainMenu();
@@ -70,7 +70,7 @@ static class RegisterPresentation
                 .PromptStyle("yellow")
                 .Validate(n => {
                     // Another user with that Email already exists
-                    if (Database.UsersTableContainsUser(n))
+                    if (Database.UsersTableContainsUser(n.ToLower()))
                     {
                         return ValidationResult.Error("[red]This email is already registered to another account[/]");
                     }
@@ -85,7 +85,7 @@ static class RegisterPresentation
                     return ValidationResult.Success();
                 })
                 .AllowEmpty()
-            );
+            ).ToLower();
 
             return Email;
         }
