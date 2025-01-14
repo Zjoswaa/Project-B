@@ -115,7 +115,7 @@ static class AdminMenu
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
-            .AddChoices(new[] { "View all", "Search by email", "Exit" });
+            .AddChoices(new[] { "View all", "Search by email", "Back" });
 
         var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
@@ -129,7 +129,7 @@ static class AdminMenu
             case "Search by email":
                 ReservationManagement.ViewReservationsByEmail();
                 break;
-            case "Exit":
+            case "Back":
                 break;
         }
     }
@@ -175,11 +175,11 @@ static class AdminMenu
 
         var reviewSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Select a review to manage:[/]")
-            .AddChoices(reviews.Select(review => $"{review.ID}: {review.UserMessage ?? "No review text"}").ToArray().Append("Exit"));
+            .AddChoices(reviews.Select(review => $"{review.ID}: {review.UserMessage ?? "No review text"}").ToArray().Append("Back"));
 
         var selectedReviewString = AnsiConsole.Prompt(reviewSelectionPrompt);
 
-        if (selectedReviewString == "Exit") {
+        if (selectedReviewString == "Back") {
             return;
         }
         var selectedReviewId = long.Parse(selectedReviewString.Split(':')[0]);

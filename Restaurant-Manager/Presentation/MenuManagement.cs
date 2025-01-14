@@ -110,10 +110,10 @@ static class MenuManagement
                 .Title("Select a dish to [yellow]delete[/]")
                 .PageSize(10)
                 .MoreChoicesText("[grey]Move up or down to see more dishes[/]")
-                .AddChoices(dishes.Select(d => d.Name).Append("Exit"))
+                .AddChoices(dishes.Select(d => d.Name).Append("Back"))
         );
         
-        if (DishToDelete == "Exit") {
+        if (DishToDelete == "Back") {
             return;
         }
         
@@ -146,10 +146,10 @@ static class MenuManagement
             .Title("Select a dish to [yellow]edit[/]")
             .PageSize(10)
             .MoreChoicesText("[grey]Move up or down to see more dishes[/]")
-            .AddChoices(Dishes.Select(d => d.Name).Append("Exit"))
+            .AddChoices(Dishes.Select(d => d.Name).Append("Back"))
             );
 
-        if (DishToEdit == "Exit") {
+        if (DishToEdit == "Back") {
             return;
         }
 

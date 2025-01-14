@@ -11,7 +11,7 @@ public static class RemoveReservationPresentation {
                 .AddChoices(ReservationLogic.ReservationsToString(userReservations))
         );
 
-        if (reservationChoice == "Exit" || !ConfirmDeletion()) {
+        if (reservationChoice == "Back" || !ConfirmDeletion()) {
             return;
         }
 

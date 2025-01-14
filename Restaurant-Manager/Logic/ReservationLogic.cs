@@ -254,7 +254,7 @@ static class ReservationLogic
         {
             reservationStrings.Add($"ID: {reservation.ID} Date: {reservation.Date}, Timeslot: {reservation.Timeslot}, Group size: {reservation.GroupSize}");
         }
-        reservationStrings.Add("Exit");
+        reservationStrings.Add("Back");
 
         return reservationStrings;
     }

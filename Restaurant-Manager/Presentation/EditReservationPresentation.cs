@@ -79,7 +79,7 @@ static class EditReservationPresentation
             .Title("[cyan]Select a reservation to edit:[/]")
             .AddChoices(ReservationLogic.ReservationsToString(userReservations)));
 
-        if (reservationChoice == "Exit")
+        if (reservationChoice == "Back")
         {
             return null;
         }
