@@ -1,3 +1,5 @@
+using Microsoft.VisualBasic.CompilerServices;
+
 namespace Restaurant_Manager_UnitTests;
 
 [TestClass]
@@ -168,4 +170,23 @@ public class UnitTests
         Reservation hiddenCodeReservation = Database.GetAllReservations()[0];
         Assert.IsTrue(HiddenDiscount.HiddenCodes.Contains(hiddenCodeReservation.Timeslot));
     }
+
+    [TestMethod]
+    public void TestSetUserPassword() {
+        File.Delete("db10.db");
+        Database.ConnectionString = "db10.db";
+        Database.CreateUsersTable();
+        Database.CreateDishesTable();
+        Database.CreateLocationsTable();
+        Database.CreateReservationsTable();
+        
+        Database.InsertUsersTable(new User(1, "test@mail.com", "Test", "Test", "USER"), "Password123");
+        Assert.AreEqual(Encryptor.Decrypt(Database.GetEncryptedPassword("test@mail.com")), "Password123");
+        
+        Database.SetUserPassword("test@mail.com", "MyNewPassword");
+        Assert.AreEqual(Encryptor.Decrypt(Database.GetEncryptedPassword("test@mail.com")), "MyNewPassword");
+    }
+    
+    // [TestMethod]
+    // public void Test 
 }

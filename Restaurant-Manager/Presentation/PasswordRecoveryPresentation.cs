@@ -63,7 +63,7 @@ static class PasswordRecoveryPresentation {
             }
 
             if (NewPassword == ConfirmPassword) {
-                Database.SetUserPassword(Email, NewPassword);
+                Database.SetUserPassword(Email.ToLower(), NewPassword);
                 AnsiConsole.MarkupLine("[green]Password updated successfully.[/]");
                 break;
             } else {
