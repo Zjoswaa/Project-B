@@ -71,7 +71,7 @@ public static class ReservationPresentation
         if (success)
         {
             if (!EmailService.SendReservationEmail(State.LoggedInUser.GetFullName(), Database.GetLocationByID(locID)?.City, ReservationLogic.GetLocationName(locID), dateString, timeslot, groupsize, State.LoggedInUser.Email)) {
-                AnsiConsole.MarkupLine("[gray]Press any key to continue.[/]");
+                AnsiConsole.MarkupLine("[gray]Press any key to continue...[/]");
                 Console.ReadKey();
                 return;
             }

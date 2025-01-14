@@ -20,14 +20,14 @@ public static class RemoveReservationPresentation {
         if (reservationID == HiddenDiscount.HiddenCodeID)
         {
             Console.WriteLine("This reservation exists only to contain the hidden discount. You cannot remove this.");
-            AnsiConsole.Markup("[gray]Press any key to continue[/]");
+            AnsiConsole.Markup("[gray]Press any key to continue...[/]");
             Console.ReadKey();
             return;
         }
         
         Database.DeleteReservationsTable(reservationID);
         AnsiConsole.WriteLine("Reservation Removed");
-        AnsiConsole.Markup("[gray]Press any key to continue[/]");
+        AnsiConsole.Markup("[gray]Press any key to continue...[/]");
         Console.ReadKey();
     }
 

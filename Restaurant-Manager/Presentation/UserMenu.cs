@@ -36,7 +36,7 @@ class UserMenu
                     break;
                 case "View Menu":
                     MenuCard.DisplayMenuCard();
-                    AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                    AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
                     Console.ReadKey();
                     break;
                 case "About Us":

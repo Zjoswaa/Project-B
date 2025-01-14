@@ -180,7 +180,7 @@ static class RegisterPresentation
     {
         AnsiConsole.Clear();
         AnsiConsole.MarkupLine("[bold green]Registration Successful![/]");
-        AnsiConsole.MarkupLine("[bold yellow]Please log in.[/]");
+        AnsiConsole.MarkupLine("[bold yellow]Press any key to continue...[/]");
         Console.Read();
         AnsiConsole.Clear();
 

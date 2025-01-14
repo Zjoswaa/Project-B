@@ -29,7 +29,7 @@ static class AdminMenu
                     break;
                 case "View all users":
                     ViewUsers.ViewAllUsers();
-                    AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                    AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
                     Console.ReadKey();
                     break;
                 case "Logout":
@@ -59,7 +59,7 @@ static class AdminMenu
         {
             case "View dishes":
                 MenuCard.DisplayMenuCard();
-                AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
                 Console.ReadKey();
                 break;
             case "Add dish":
@@ -168,7 +168,7 @@ static class AdminMenu
         if (!reviews.Any())
         {
             AnsiConsole.MarkupLine("[red]No reviews available to manage.[/]");
-            AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+            AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
             Console.ReadKey();
             return;
         }

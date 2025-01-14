@@ -49,12 +49,12 @@ static class EditReservationPresentation
         if (success)
         {
             if (!EmailService.SendEdittedReservationEmail(State.LoggedInUser.GetFullName(), Database.GetLocationByID(reservationToEdit.LocationID)?.City, ReservationLogic.GetLocationName(reservationToEdit.LocationID), dateString, timeslot, groupSize, State.LoggedInUser.Email)) {
-                AnsiConsole.MarkupLine("[gray]Press any key to continue.[/]");
+                AnsiConsole.MarkupLine("[gray]Press any key to continue...[/]");
                 Console.ReadKey();
                 return;
             }
             
-            string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {reservationToEdit.Table}\n\n{locMessage}\n\nPress any key to continue.";
+            string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {reservationToEdit.Table}\n\n{locMessage}\n\nPress any key to continue...";
             Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
             panel.Expand = true; // Set expand again
             Console.Clear();
@@ -65,7 +65,7 @@ static class EditReservationPresentation
         {
             Console.Clear();
             Console.WriteLine(message);
-            Console.WriteLine("Press any key to continue.");
+            Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
         }
     }
