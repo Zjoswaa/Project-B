@@ -129,7 +129,7 @@ static class ReservationManagement {
     public static void DeleteReservation() {
         var Reservations = Database.GetAllReservations();
         if (Reservations == null || Reservations.Count == 0) {
-            AnsiConsole.MarkupLine("[red]No reservations available to edit.[/]");
+            AnsiConsole.MarkupLine("[red]No reservations available to delete.[/]");
             Console.ReadKey();
             return;
         }
@@ -158,12 +158,12 @@ static class ReservationManagement {
 
     public static void CreateReservation() {
         string Email = PromptEmail();
-        if (Email == "Quit") {
+        if (Email == "Back") {
             return;
         }
 
         string LocationName = PromptLocation();
-        if (LocationName == "Quit") {
+        if (LocationName == "Back") {
             return;
         }
         
@@ -204,6 +204,12 @@ static class ReservationManagement {
 
     public static void EditReservation() {
         List<Reservation> Reservations = Database.GetAllReservations();
+
+        if (Reservations == null || Reservations.Count == 0) {
+            AnsiConsole.MarkupLine("[red]No reservations available to edit.[/]");
+            Console.ReadKey();
+            return;
+        }
 
         var reservationChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -288,7 +294,7 @@ static class ReservationManagement {
     private static string PromptEmail() {
         List<User> Users = Database.GetAllUsers();
         List<string> Emails = Users.Select(user => user.Email).ToList();
-        Emails.Add("Quit");
+        Emails.Add("Back");
         var Email = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[cyan]For what user is this reservation?[/]")

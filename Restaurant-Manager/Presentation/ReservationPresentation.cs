@@ -111,7 +111,7 @@ public static class ReservationPresentation
             .Title("[cyan]Select a location:[/]")
             .AddChoices(ReservationLogic.LocationNamesToList()));
 
-        if (locationChoice == "Exit")
+        if (locationChoice == "Back")
         {
             return -1;
         }
