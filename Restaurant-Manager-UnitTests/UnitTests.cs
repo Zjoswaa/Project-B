@@ -162,7 +162,7 @@ public class UnitTests
         Database.CreateReservationsTable();
             
         HiddenDiscount.RemoveCodeFromMenu();
-        State.LoggedInUser = new(1, "test@mail.com", "Test", "Test", "User");
+        State.LoggedInUser = new(1, "test@mail.com", "Test", "Test", "USER");
         HiddenDiscount.AddCodeToReservations();
             
         Reservation hiddenCodeReservation = Database.GetAllReservations()[0];
