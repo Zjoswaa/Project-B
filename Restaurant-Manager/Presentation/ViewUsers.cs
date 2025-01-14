@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using System.Collections.Generic;
 
 static class ViewUsers
 {
