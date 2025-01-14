@@ -43,7 +43,7 @@ static class AboutUsPresentation
         AnsiConsole.MarkupLine("[grey italic]Escape & Dine offers an adventure like no other, full of mystery, puzzles and unforgettable surprises.[/]");
         AnsiConsole.MarkupLine("[italic]We can't wait to see you![/]\n");
 
-        AnsiConsole.MarkupLine("[italic grey]Press any key to return to the main menu...[/]");
+        AnsiConsole.MarkupLine("[italic grey]Press any key to return...[/]");
         Console.ReadKey();
         Console.Clear();
         Console.WriteLine("\x1b[3J");
