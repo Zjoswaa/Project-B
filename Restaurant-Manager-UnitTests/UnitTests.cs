@@ -186,7 +186,53 @@ public class UnitTests
         Database.SetUserPassword("test@mail.com", "MyNewPassword");
         Assert.AreEqual(Encryptor.Decrypt(Database.GetEncryptedPassword("test@mail.com")), "MyNewPassword");
     }
-    
-    // [TestMethod]
-    // public void Test 
+
+    [TestMethod]
+    public void TestInsertReview() {
+        File.Delete("db11.db");
+        Database.ConnectionString = "db11.db";
+        Database.CreateUsersTable();
+        Database.CreateDishesTable();
+        Database.CreateLocationsTable();
+        Database.CreateReservationsTable();
+        Database.CreateReviewsTable();
+
+        // First there are no reviews
+        Assert.AreEqual(Database.GetAllReservations().Count, 0);
+        
+        // Insert a new reservation
+        Database.InsertReviewsTable(1, 5, "Test Message", DateOnly.FromDateTime(DateTime.Now));
+
+        // Now there should be a review
+        Assert.AreEqual(Database.GetAllReviews().Count, 1);
+        Assert.AreEqual(Database.GetAllReviews()[0].UserMessage, "Test Message");
+    }
+
+    [TestMethod]
+    public void TestRemoveReview() {
+        File.Delete("db12.db");
+        Database.ConnectionString = "db12.db";
+        Database.CreateUsersTable();
+        Database.CreateDishesTable();
+        Database.CreateLocationsTable();
+        Database.CreateReservationsTable();
+        Database.CreateReviewsTable();
+
+        // First there are no reviews
+        Assert.AreEqual(Database.GetAllReservations().Count, 0);
+
+        // Insert a new reservation
+        Database.InsertReviewsTable(1, 5, "Test Message", DateOnly.FromDateTime(DateTime.Now));
+
+        // Now there should be a review
+        Assert.AreEqual(Database.GetAllReviews().Count, 1);
+        Assert.AreEqual(Database.GetAllReviews()[0].UserMessage, "Test Message");
+
+        // Remove the review
+        Review Review = Database.GetAllReviews()[0];
+        Database.DeleteReview(Review.ID);
+        
+        // Now there should be no reviews
+        Assert.AreEqual(Database.GetAllReviews().Count, 0);
+    }
 }

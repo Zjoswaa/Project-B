@@ -12,7 +12,7 @@ static class MainMenuPresentation {
                 new SelectionPrompt<string>()
                     .Title("")
                     //.Title("[yellow]Please make a choice:[/]")
-                    .AddChoices(new[] { "Login", "Register", "Forgot Password", "Back" }));
+                    .AddChoices(new[] { "Login", "Register", "Forgot Password", "Exit" }));
 
             // Handle user selection
             switch (selection) {
@@ -25,7 +25,7 @@ static class MainMenuPresentation {
                 case "Forgot Password":
                     PasswordRecoveryPresentation.Present();
                     break;
-                case "Back":
+                case "Exit":
                     AnsiConsole.MarkupLine("[red]Exiting the program...[/]");
                     Thread.Sleep(1000);
                     Environment.Exit(0);

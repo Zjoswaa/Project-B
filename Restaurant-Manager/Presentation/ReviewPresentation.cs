@@ -50,7 +50,7 @@ static class ReviewPresentation
         string rating = AnsiConsole.Prompt(userSelectionPrompt);
 
         if (rating == "Back")
-            Present();
+            return;
 
         string review = AnsiConsole.Prompt(
             new TextPrompt<string>("Write a Review [grey](optional)[/]:")
