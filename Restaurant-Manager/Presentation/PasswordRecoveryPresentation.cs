@@ -1,5 +1,4 @@
-﻿
-using Spectre.Console;
+﻿using Spectre.Console;
 
 static class PasswordRecoveryPresentation {
     public static void Present() {
@@ -24,39 +23,56 @@ static class PasswordRecoveryPresentation {
             return;
         }
         AnsiConsole.MarkupLine("[blue]Email sent, please enter the code provided in the recovery email.[/]");
-        string EnteredCode = PromptCode();
-        AnsiConsole.Clear();
 
-        if (EnteredCode == Code) {
-            while (true) {
-                AnsiConsole.MarkupLine("[blue]Please enter your new password [/][gray](min. 8 characters)[/]:");
-                string NewPassword = PromptNewPassword();
-                if (string.IsNullOrEmpty(NewPassword)) {
-                    AnsiConsole.Clear();
-                    return;
-                }
+        int attempts = 0;
+        bool codeCorrect = false;
+        while (attempts < 3) {
+            string EnteredCode = PromptCode();
+            AnsiConsole.Clear();
 
-                AnsiConsole.MarkupLine("[blue]Confirm your new password.[/]");
-                string ConfirmPassword = PromptNewPassword();
-                if (string.IsNullOrEmpty(ConfirmPassword)) {
-                    AnsiConsole.Clear();
-                    return;
-                }
-
-                if (NewPassword == ConfirmPassword) {
-                    Database.SetUserPassword(Email, NewPassword);
-                    AnsiConsole.MarkupLine("[green]Password updated successfully.[/]");
-                    break;
-                } else {
-                    AnsiConsole.MarkupLine("[red]Passwords do not match. Please try again or press enter to cancel.[/]");
-                }
+            if (EnteredCode == Code) {
+                codeCorrect = true;
+                break;
+            } else {
+                attempts++;
+                AnsiConsole.MarkupLine($"[red]Incorrect code. You have {3 - attempts} attempts left.[/]");
             }
-        } else {
-            AnsiConsole.MarkupLine("[red]Incorrect code.[/]");
+        }
+
+        if (!codeCorrect) {
+            AnsiConsole.MarkupLine("[red]You have entered the wrong code 3 times. Returning to the main menu.[/]");
+            AnsiConsole.MarkupLine("[bold yellow]Press any key to continue to the main menu.[/]");
+            Console.ReadKey();
+            AnsiConsole.Clear();
+            return;
+        }
+
+        while (true) {
+            AnsiConsole.MarkupLine("[blue]Please enter your new password [/][gray](min. 8 characters)[/]:");
+            string NewPassword = PromptNewPassword();
+            if (string.IsNullOrEmpty(NewPassword)) {
+                AnsiConsole.Clear();
+                return;
+            }
+
+            AnsiConsole.MarkupLine("[blue]Confirm your new password.[/]");
+            string ConfirmPassword = PromptNewPassword();
+            if (string.IsNullOrEmpty(ConfirmPassword)) {
+                AnsiConsole.Clear();
+                return;
+            }
+
+            if (NewPassword == ConfirmPassword) {
+                Database.SetUserPassword(Email, NewPassword);
+                AnsiConsole.MarkupLine("[green]Password updated successfully.[/]");
+                break;
+            } else {
+                AnsiConsole.MarkupLine("[red]Passwords do not match. Please try again or press enter to cancel.[/]");
+            }
         }
 
         AnsiConsole.MarkupLine("[bold yellow]Press any key to continue to the main menu.[/]");
-        Console.Read();
+        Console.ReadKey();
         AnsiConsole.Clear();
     }
 
