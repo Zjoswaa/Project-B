@@ -1,4 +1,5 @@
-﻿using System.Data.SQLite;
+﻿using System.Data.Entity.Migrations.History;
+using System.Data.SQLite;
 
 public static class Database {
     public static string ConnectionString { get; set; } = "database.db";
@@ -25,7 +26,7 @@ public static class Database {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY AUTOINCREMENT, City TEXT NOT NULL, Name TEXT NOT NULL, Message TEXT NOT NULL)";
+        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Locations(ID INTEGER PRIMARY KEY AUTOINCREMENT, City TEXT NOT NULL, Name TEXT NOT NULL, Storyline TEXT NOT NULL, Message TEXT NOT NULL)";
         cmd.ExecuteNonQuery();
     }
 
@@ -151,17 +152,18 @@ public static class Database {
         cmd.ExecuteNonQuery();
     }
 
-    public static void InsertLocationsTable(string city, string name, string message)
+    public static void InsertLocationsTable(string city, string name, string storyline, string message)
     {
         using SQLiteConnection Connection = new($"Data Source={ConnectionString}");
         Connection.Open();
         using SQLiteCommand cmd = new SQLiteCommand(Connection);
-        cmd.CommandText = @"INSERT INTO Locations(City, Name, Message)
-                            SELECT @City, @Name, @Message
+        cmd.CommandText = @"INSERT INTO Locations(City, Name, Storyline, Message)
+                            SELECT @City, @Name, @Storyline, @Message
                             WHERE NOT EXISTS (SELECT 1 FROM Locations WHERE Name = @Name)";
 
         cmd.Parameters.AddWithValue("@City", city);
         cmd.Parameters.AddWithValue("@Name", name);
+        cmd.Parameters.AddWithValue("@Storyline", storyline);
         cmd.Parameters.AddWithValue("@Message", message);
         cmd.ExecuteNonQuery();
     }
@@ -217,8 +219,9 @@ public static class Database {
             int id = reader.GetInt32(0);
             string city = reader.GetString(1);
             string name = reader.GetString(2);
-            string message = reader.GetString(3);
-            locations.Add(new Location(id, city, name, message));
+            string storyline = reader.GetString(3);
+            string message = reader.GetString(4);
+            locations.Add(new Location(id, city, name, storyline, message));
         }
 
         return locations;
@@ -235,8 +238,9 @@ public static class Database {
             int id = reader.GetInt32(0);
             string city = reader.GetString(1);
             string name = reader.GetString(2);
-            string message = reader.GetString(3);
-            return new Location(id, city, name, message);
+            string storyline = reader.GetString(3);
+            string message = reader.GetString(4);
+            return new Location(id, city, name, storyline, message);
         }
         return null;
     }
@@ -253,8 +257,9 @@ public static class Database {
             int id = reader.GetInt32(0);
             string city = reader.GetString(1);
             string name = reader.GetString(2);
-            string message = reader.GetString(3);
-            return new Location(id, city, name, message);
+            string storyline = reader.GetString(3);
+            string message = reader.GetString(4);
+            return new Location(id, city, name, storyline, message);
         }
         return null;
     }
