@@ -34,7 +34,7 @@ static class ReservationManagement {
                 foreach (Reservation res in Reservations) {
                     User? User = Database.GetUserByID(res.UserID);
                     Location? Location = Database.GetLocationByID(res.LocationID);
-                    Update(100, () => table.AddRow($"{res.ID}", $"({res.UserID}) {User?.Email}", $"({res.LocationID}) {Location?.Name}", $"{res.Timeslot}", res.Date.ToString(), $"{res.GroupSize}", $"{res.Table}"));
+                    Update(100, () => table.AddRow($"{res.ID}", $"({res.UserID}) {User?.Email}", $"({res.LocationID}) {Location?.City} - {Location?.Name}", $"{res.Timeslot}", res.Date.ToString(), $"{res.GroupSize}", $"{res.Table}"));
                 }
             });
     }
