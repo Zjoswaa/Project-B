@@ -30,7 +30,7 @@ public static class EmailService
         return true;
     }
     
-    public static bool SendEdittedReservationEmail(string RecipientName, string LocationCity, string LocationName, string Date, string Time, int PlayerAmount, string RecipientEmail)
+    public static bool SendEditedReservationEmail(string RecipientName, string LocationCity, string LocationName, string Date, string Time, int PlayerAmount, string RecipientEmail)
     {
         // Define the email message
         MailMessage mail = new MailMessage();

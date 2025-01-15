@@ -2,7 +2,7 @@
 
 class Authenticator
 {
-    public const string SecretCode = "0000";
+    public const string SecretCode = "3781";
 
     public static bool Authenticate()
     {
