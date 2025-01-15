@@ -31,6 +31,7 @@ static class EditReservationPresentation
                 if (date == null) {
                     return;
                 }
+                dateString = $"{date?.Day}-{date?.Month}-{date?.Year}";
                 reservationToEdit.UpdateDate(date);
             }
             if (variable == "Timeslot")
@@ -50,7 +51,7 @@ static class EditReservationPresentation
         (bool success, string message) = ReservationLogic.UpdateReservation(reservationToEdit);
         if (success)
         {
-            if (!EmailService.SendEdittedReservationEmail(State.LoggedInUser.GetFullName(), Database.GetLocationByID(reservationToEdit.LocationID)?.City, ReservationLogic.GetLocationName(reservationToEdit.LocationID), dateString, timeslot, groupSize, State.LoggedInUser.Email)) {
+            if (!EmailService.SendEditedReservationEmail(State.LoggedInUser.GetFullName(), Database.GetLocationByID(reservationToEdit.LocationID)?.City, ReservationLogic.GetLocationName(reservationToEdit.LocationID), dateString, timeslot, groupSize, State.LoggedInUser.Email)) {
                 AnsiConsole.MarkupLine("[gray]Press any key to continue...[/]");
                 Console.ReadKey();
                 return;
