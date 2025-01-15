@@ -6,7 +6,13 @@ static class EditReservationPresentation
     {
         AnsiConsole.Write(new Rule($"[yellow]Edit Reservation ({State.LoggedInUser.GetFullName()})[/]"));
         long currentUserID = State.LoggedInUser.ID;
+        
         Reservation reservationToEdit = SelectReservation(currentUserID);
+        if (reservationToEdit == null)
+        {
+            AnsiConsole.Write(new Rule("[yellow]No Reservation Found.[/]"));
+            return;
+        }
         DateOnly? date = reservationToEdit.Date;
         string dateString = $"{date?.Day}-{date?.Month}-{date?.Year}";
         string timeslot = reservationToEdit.Timeslot;
@@ -55,7 +61,7 @@ static class EditReservationPresentation
                 return;
             }
             
-            string text = $"[green]Your reservation has been made.[/]\nYour Table Number: {reservationToEdit.Table}\n\n{locMessage}\n\nPress any key to continue.";
+            string text = $"[green]Your reservation has been editted.[/]\nYour Table Number: {reservationToEdit.Table}\n\n{locMessage}\n\nPress any key to continue.";
             Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
             panel.Expand = true; // Set expand again
             Console.Clear();
