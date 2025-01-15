@@ -71,7 +71,7 @@ public static class ReservationPresentation
         if (success)
         {
             if (!EmailService.SendReservationEmail(State.LoggedInUser.GetFullName(), Database.GetLocationByID(locID)?.City, ReservationLogic.GetLocationName(locID), dateString, timeslot, groupsize, State.LoggedInUser.Email)) {
-                AnsiConsole.MarkupLine("[gray]Press any key to continue.[/]");
+                AnsiConsole.MarkupLine("[gray]Press any key to continue...[/]");
                 Console.ReadKey();
                 return;
             }
@@ -111,7 +111,7 @@ public static class ReservationPresentation
             .Title("[cyan]Select a location:[/]")
             .AddChoices(ReservationLogic.LocationNamesToList()));
 
-        if (locationChoice == "Exit")
+        if (locationChoice == "Back")
         {
             return -1;
         }
@@ -243,22 +243,17 @@ public static class ReservationPresentation
 
         while (true)
         {
-            ConsoleKeyInfo Input = Console.ReadKey();
-
-            if (Input.Key == ConsoleKey.Backspace)
-            {
-                if (!string.IsNullOrEmpty(Buffer))
-                {
-                    Buffer = Buffer.Substring(1);
+            ConsoleKeyInfo Input = Console.ReadKey(); // Read the pressed key
+            if (Input.Key == ConsoleKey.Enter) { // If key was Enter, break the loop
+                break;
+            }
+            else if (Input.Key == ConsoleKey.Backspace) {
+                if (!string.IsNullOrEmpty(Buffer)) {
+                    Buffer = Buffer.Remove(Buffer.Length - 1);
                 }
             }
-
-            Buffer = Buffer.Trim();
-            if (Input.Key == ConsoleKey.Enter && Buffer.Length == 0) break;
-            
-            else
-            {
-                Buffer += Input.KeyChar;
+            else {
+                Buffer += Input.KeyChar; // Append the character of pressed key to the buffer
             }
 
             Panel = new(new Text($"Please enter a discount code or leave empty to continue:\n{Buffer}\n").Centered());

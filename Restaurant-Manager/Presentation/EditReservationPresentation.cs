@@ -8,20 +8,15 @@ static class EditReservationPresentation
         long currentUserID = State.LoggedInUser.ID;
         
         Reservation reservationToEdit = SelectReservation(currentUserID);
-        if (reservationToEdit == null)
+
+        if (reservationToEdit is null)
         {
-            AnsiConsole.Write(new Rule("[yellow]No Reservation Found.[/]"));
             return;
         }
         DateOnly? date = reservationToEdit.Date;
         string dateString = $"{date?.Day}-{date?.Month}-{date?.Year}";
         string timeslot = reservationToEdit.Timeslot;
         int groupSize = reservationToEdit.GroupSize;
-
-        if (reservationToEdit is null)
-        {
-            return;
-        }
         
         List<string> dataToChange = InfoToEdit();
 
@@ -56,12 +51,13 @@ static class EditReservationPresentation
         if (success)
         {
             if (!EmailService.SendEdittedReservationEmail(State.LoggedInUser.GetFullName(), Database.GetLocationByID(reservationToEdit.LocationID)?.City, ReservationLogic.GetLocationName(reservationToEdit.LocationID), dateString, timeslot, groupSize, State.LoggedInUser.Email)) {
-                AnsiConsole.MarkupLine("[gray]Press any key to continue.[/]");
+                AnsiConsole.MarkupLine("[gray]Press any key to continue...[/]");
                 Console.ReadKey();
                 return;
             }
             
-            string text = $"[green]Your reservation has been editted.[/]\nYour Table Number: {reservationToEdit.Table}\n\n{locMessage}\n\nPress any key to continue.";
+            string text = $"[green]Your reservation has been edited.[/]\nYour Table Number: {reservationToEdit.Table}\n\n{locMessage}\n\nPress any key to continue.";
+
             Panel panel = new(new Markup(text).Centered()); // Update the panel and the text in it with the updated buffer
             panel.Expand = true; // Set expand again
             Console.Clear();
@@ -72,7 +68,7 @@ static class EditReservationPresentation
         {
             Console.Clear();
             Console.WriteLine(message);
-            Console.WriteLine("Press any key to continue.");
+            Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
         }
     }
@@ -86,7 +82,7 @@ static class EditReservationPresentation
             .Title("[cyan]Select a reservation to edit:[/]")
             .AddChoices(ReservationLogic.ReservationsToString(userReservations)));
 
-        if (reservationChoice == "Exit")
+        if (reservationChoice == "Back")
         {
             return null;
         }

@@ -4,7 +4,7 @@ static class PasswordRecoveryPresentation {
     public static void Present() {
         AnsiConsole.Clear();
         AnsiConsole.Write(
-            new Rule("[yellow]Forgor Password[/]")
+            new Rule("[maroon]Forgot Password[/]")
         );
 
         AnsiConsole.WriteLine();
@@ -18,7 +18,7 @@ static class PasswordRecoveryPresentation {
         string Code = Util.RandomString(5);
         AnsiConsole.MarkupLine($"[blue]Sending a recovery email to {Email}, this may take a moment.[/]");
         if (!EmailService.SendPasswordForgorEmail(Email, Code)) {
-            AnsiConsole.MarkupLine("[gray]Press any key to continue.[/]");
+            AnsiConsole.MarkupLine("[gray]Press any key to continue...[/]");
             Console.ReadKey();
             return;
         }
@@ -41,7 +41,7 @@ static class PasswordRecoveryPresentation {
 
         if (!codeCorrect) {
             AnsiConsole.MarkupLine("[red]You have entered the wrong code 3 times. Returning to the main menu.[/]");
-            AnsiConsole.MarkupLine("[bold yellow]Press any key to continue to the main menu.[/]");
+            AnsiConsole.MarkupLine("[bold yellow]Press any key to continue...[/]");
             Console.ReadKey();
             AnsiConsole.Clear();
             return;
@@ -63,7 +63,7 @@ static class PasswordRecoveryPresentation {
             }
 
             if (NewPassword == ConfirmPassword) {
-                Database.SetUserPassword(Email, NewPassword);
+                Database.SetUserPassword(Email.ToLower(), NewPassword);
                 AnsiConsole.MarkupLine("[green]Password updated successfully.[/]");
                 break;
             } else {
@@ -71,7 +71,7 @@ static class PasswordRecoveryPresentation {
             }
         }
 
-        AnsiConsole.MarkupLine("[bold yellow]Press any key to continue to the main menu.[/]");
+        AnsiConsole.MarkupLine("[bold yellow]Press any key to continue...[/]");
         Console.ReadKey();
         AnsiConsole.Clear();
     }

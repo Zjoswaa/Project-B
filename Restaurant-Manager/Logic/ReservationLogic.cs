@@ -154,7 +154,7 @@ static class ReservationLogic
             locationNames.Add(location.City + "    \t - " + location.Name);
         }
         //Adds another option used for exiting the menu in ReservationPresentation.cs
-        locationNames.Add("Exit");
+        locationNames.Add("Back");
 
         return locationNames;
     }
@@ -254,7 +254,7 @@ static class ReservationLogic
         {
             reservationStrings.Add($"ID: {reservation.ID} Date: {reservation.Date}, Timeslot: {reservation.Timeslot}, Group size: {reservation.GroupSize}");
         }
-        reservationStrings.Add("Exit");
+        reservationStrings.Add("Back");
 
         return reservationStrings;
     }

@@ -20,7 +20,7 @@ class UserMenu
             else AnsiConsole.Write(new Rule($"[maroon]Main Menu ({State.LoggedInUser.GetFullName()})[/]"));
 
             var userSelectionPrompt = new SelectionPrompt<string>()
-                .Title("[gray]A 10% off discount code is hidden somewhere in the main menu...[/]\n[cyan]Please select an option:[/]")
+                .Title("[gray]A 10% off discount code is hidden somewhere...[/]\n[cyan]Please select an option:[/]")
                 .AddChoices(new[]
                 {
                     "Manage Reservations", "View Menu", "About Us", "Reviews", "Sign Out"
@@ -35,11 +35,8 @@ class UserMenu
                     ReservationPresentation.Present();
                     break;
                 case "View Menu":
-                    //Console.WriteLine("TBA...");
-                    //Thread.Sleep(1000);
-                    //Console.Clear();
                     MenuCard.DisplayMenuCard();
-                    AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                    AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
                     Console.ReadKey();
                     break;
                 case "About Us":

@@ -34,7 +34,7 @@ static class ReservationManagement {
                 foreach (Reservation res in Reservations) {
                     User? User = Database.GetUserByID(res.UserID);
                     Location? Location = Database.GetLocationByID(res.LocationID);
-                    Update(100, () => table.AddRow($"{res.ID}", $"({res.UserID}) {User?.Email}", $"({res.LocationID}) {Location?.Name}", $"{res.Timeslot}", res.Date.ToString(), $"{res.GroupSize}", $"{res.Table}"));
+                    Update(100, () => table.AddRow($"{res.ID}", $"({res.UserID}) {User?.Email}", $"({res.LocationID}) {Location?.City} - {Location?.Name}", $"{res.Timeslot}", res.Date.ToString(), $"{res.GroupSize}", $"{res.Table}"));
                 }
             });
     }
@@ -129,7 +129,7 @@ static class ReservationManagement {
     public static void DeleteReservation() {
         var Reservations = Database.GetAllReservations();
         if (Reservations == null || Reservations.Count == 0) {
-            AnsiConsole.MarkupLine("[red]No reservations available to edit.[/]");
+            AnsiConsole.MarkupLine("[red]No reservations available to delete.[/]");
             Console.ReadKey();
             return;
         }
@@ -140,10 +140,10 @@ static class ReservationManagement {
                 .Title("Select a reservation to [yellow]delete[/]")
                 .PageSize(10)
                 .MoreChoicesText("[grey]Move up or down to see more reservations[/]")
-                .AddChoices(Reservations.Select(r => $"{r.ID} {Database.GetUserByID(r.UserID)?.Email} - {Database.GetLocationByID(r.LocationID)?.Name} {r.Date.ToString()} {r.Timeslot} {(r.GroupSize == 1 ? "1 person" : $"{r.GroupSize} people")}").Append("Quit"))
+                .AddChoices(Reservations.Select(r => $"{r.ID} {Database.GetUserByID(r.UserID)?.Email} - {Database.GetLocationByID(r.LocationID)?.Name} {r.Date.ToString()} {r.Timeslot} {(r.GroupSize == 1 ? "1 person" : $"{r.GroupSize} people")}").Append("Back"))
         );
 
-        if (ReservationToDelete == "Quit" || !ConfirmDeletion()) {
+        if (ReservationToDelete == "Back" || !ConfirmDeletion()) {
             return;
         }
 
@@ -158,12 +158,12 @@ static class ReservationManagement {
 
     public static void CreateReservation() {
         string Email = PromptEmail();
-        if (Email == "Quit") {
+        if (Email == "Back") {
             return;
         }
 
         string LocationName = PromptLocation();
-        if (LocationName == "Quit") {
+        if (LocationName == "Back") {
             return;
         }
         
@@ -175,17 +175,17 @@ static class ReservationManagement {
         }
 
         string Timeslot = PromptTimeslot();
-        if (Timeslot == "Quit") {
+        if (Timeslot == "Back") {
             return;
         }
 
         string GroupSize = PromptGroupSize();
-        if (GroupSize == "Quit") {
+        if (GroupSize == "Back") {
             return;
         }
 
         string Table = PromptTable($"{Date.Day}-{Date.Month}-{Date.Year}", Timeslot);
-        if (Table == "Quit") {
+        if (Table == "Back") {
             return;
         }
 
@@ -205,12 +205,18 @@ static class ReservationManagement {
     public static void EditReservation() {
         List<Reservation> Reservations = Database.GetAllReservations();
 
+        if (Reservations == null || Reservations.Count == 0) {
+            AnsiConsole.MarkupLine("[red]No reservations available to edit.[/]");
+            Console.ReadKey();
+            return;
+        }
+
         var reservationChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[cyan]Select a reservation to edit:[/]")
                 .AddChoices(ReservationLogic.ReservationsToString(Reservations)));
 
-        if (reservationChoice == "Exit") {
+        if (reservationChoice == "Back") {
             return;
         }
 
@@ -228,14 +234,14 @@ static class ReservationManagement {
 
         if (DataToChange.Contains("User")) {
             string Email = PromptEmail();
-            if (Email == "Quit") {
+            if (Email == "Back") {
                 return;
             }
             SelectedReservation.UserID = Database.GetUserByEmail(Email)!.ID;
         }
         if (DataToChange.Contains("Location")) {
             string Location = PromptLocation();
-            if (Location == "Quit") {
+            if (Location == "Back") {
                 return;
             }
             SelectedReservation.LocationID = Database.GetLocationByCityAndName(Location.Split("    \t - ")[0], Location.Split("    \t - ")[1])!.ID;
@@ -249,14 +255,14 @@ static class ReservationManagement {
         }
         if (DataToChange.Contains("Group Size")) {
             string GroupSize = PromptGroupSize();
-            if (GroupSize == "Quit") {
+            if (GroupSize == "Back") {
                 return;
             }
             SelectedReservation.GroupSize = Int32.Parse(GroupSize);
         }
         if (DataToChange.Contains("Table")) {
             string Table = PromptTable(SelectedReservation.Date?.ToString("dd-MM-yyyy"), SelectedReservation.Timeslot, $"{SelectedReservation.Table}");
-            if (Table == "Quit") {
+            if (Table == "Back") {
                 return;
             }
         }
@@ -288,7 +294,7 @@ static class ReservationManagement {
     private static string PromptEmail() {
         List<User> Users = Database.GetAllUsers();
         List<string> Emails = Users.Select(user => user.Email).ToList();
-        Emails.Add("Quit");
+        Emails.Add("Back");
         var Email = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[cyan]For what user is this reservation?[/]")
@@ -359,7 +365,7 @@ static class ReservationManagement {
     private static string PromptTimeslot() {
         Console.Clear();
         List<string> Options = ReservationLogic.TimeslotsToList();
-        Options.Add("Quit");
+        Options.Add("Back");
         
         var timeslotChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -375,7 +381,7 @@ static class ReservationManagement {
         var GroupSize = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[cyan]What is the group size for the reservation:[/]")
-                .AddChoices(["1", "2", "3", "4", "5", "6", "Quit"]));
+                .AddChoices(["1", "2", "3", "4", "5", "6", "Back"]));
 
         return GroupSize;
     }
@@ -386,9 +392,9 @@ static class ReservationManagement {
         if (Choices.Count == 0) {
             AnsiConsole.MarkupLine("[red]No tables are available at this date and time[/]");
             Console.ReadKey();
-            return "Quit";
+            return "Back";
         }
-        Choices.Add("Quit");
+        Choices.Add("Back");
 
         var TableNumber = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -405,7 +411,7 @@ static class ReservationManagement {
             Choices.Add(Current);
             Choices.Sort();
         }
-        Choices.Add("Quit");
+        Choices.Add("Back");
 
         var TableNumber = AnsiConsole.Prompt(
             new SelectionPrompt<string>()

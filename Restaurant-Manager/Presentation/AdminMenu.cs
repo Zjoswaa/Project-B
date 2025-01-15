@@ -29,7 +29,7 @@ static class AdminMenu
                     break;
                 case "View all users":
                     ViewUsers.ViewAllUsers();
-                    AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                    AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
                     Console.ReadKey();
                     break;
                 case "Logout":
@@ -47,7 +47,7 @@ static class AdminMenu
     {
         Console.Clear();
 
-        AnsiConsole.Write(new Rule($" [blue]Admin Menu ({State.LoggedInUser.GetFullName()})[/] "));
+        AnsiConsole.Write(new Rule($" [blue]Manage Dishes ({State.LoggedInUser.GetFullName()})[/] "));
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
@@ -59,7 +59,7 @@ static class AdminMenu
         {
             case "View dishes":
                 MenuCard.DisplayMenuCard();
-                AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
                 Console.ReadKey();
                 break;
             case "Add dish":
@@ -80,7 +80,7 @@ static class AdminMenu
     {
         Console.Clear();
 
-        AnsiConsole.Write(new Rule($" [blue]Manage reservations ({State.LoggedInUser.GetFullName()})[/] "));
+        AnsiConsole.Write(new Rule($" [blue]Manage Reservations ({State.LoggedInUser.GetFullName()})[/] "));
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
@@ -115,7 +115,7 @@ static class AdminMenu
 
         var userSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Please select an option:[/]")
-            .AddChoices(new[] { "View all", "Search by email", "Exit" });
+            .AddChoices(new[] { "View all", "Search by email", "Back" });
 
         var userSelection = AnsiConsole.Prompt(userSelectionPrompt);
 
@@ -123,13 +123,13 @@ static class AdminMenu
         {
             case "View all":
                 ReservationManagement.ViewAllReservations();
-                AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+                AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
                 Console.ReadKey();
                 break;
             case "Search by email":
                 ReservationManagement.ViewReservationsByEmail();
                 break;
-            case "Exit":
+            case "Back":
                 break;
         }
     }
@@ -168,16 +168,20 @@ static class AdminMenu
         if (!reviews.Any())
         {
             AnsiConsole.MarkupLine("[red]No reviews available to manage.[/]");
-            AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+            AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
             Console.ReadKey();
             return;
         }
 
         var reviewSelectionPrompt = new SelectionPrompt<string>()
             .Title("[cyan]Select a review to manage:[/]")
-            .AddChoices(reviews.Select(review => $"{review.ID}: {review.UserMessage ?? "No review text"}").ToArray());
+            .AddChoices(reviews.Select(review => $"{review.ID}: {review.UserMessage ?? "No review text"}").ToArray().Append("Back"));
 
         var selectedReviewString = AnsiConsole.Prompt(reviewSelectionPrompt);
+
+        if (selectedReviewString == "Back") {
+            return;
+        }
         var selectedReviewId = long.Parse(selectedReviewString.Split(':')[0]);
         var selectedReview = reviews.First(review => review.ID == selectedReviewId);
 
@@ -221,7 +225,7 @@ static class AdminMenu
         }
 
         AnsiConsole.Write(table);
-        AnsiConsole.MarkupLine("[grey]Press any key to return[/]");
+        AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
         Console.ReadKey();
     }
 }

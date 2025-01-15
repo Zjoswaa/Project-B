@@ -50,7 +50,7 @@ static class ReviewPresentation
         string rating = AnsiConsole.Prompt(userSelectionPrompt);
 
         if (rating == "Back")
-            Present();
+            return;
 
         string review = AnsiConsole.Prompt(
             new TextPrompt<string>("Write a Review [grey](optional)[/]:")
@@ -124,7 +124,7 @@ static class ReviewPresentation
                     Update(100, () => table.AddRow(Database.GetUserByID(review.User).GetFullName(), $"{review.Rating}/5", review.UserMessage, $"{review.Date}", review.AdminMessage is null ? "" : review.AdminMessage));
                 }
             });
-        AnsiConsole.MarkupLine("[grey]Press any key to return to the Main Menu.[/]");
+        AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
         Console.ReadKey();
     }
 }
